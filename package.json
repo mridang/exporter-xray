@@ -62,7 +62,7 @@
 		"@tsconfig/node20": "latest",
 		"@types/jest": "^29.5.11",
 		"@types/node": "^20.3.2",
-		"@typescript-eslint/eslint-plugin": "^7.0.2",
+		"@typescript-eslint/eslint-plugin": "^7.14.1",
 		"@typescript-eslint/parser": "^7.0.2",
 		"eslint": "^8.0.1",
 		"eslint-config-love": "^53.0.0",
