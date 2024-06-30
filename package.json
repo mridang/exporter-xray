@@ -31,7 +31,7 @@
 		"dist"
 	],
 	"license": "ISC",
-	"description": "OpenTelemetry Exporter Jaeger allows user to send collected traces to AWS X-Ray",
+	"description": "OpenTelemetry Exporter that allows the user to send the collected traces to AWS X-Ray",
 	"private": false,
 	"peerDependencies": {
 		"@opentelemetry/api": "^1.0.0"

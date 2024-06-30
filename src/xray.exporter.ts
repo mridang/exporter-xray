@@ -48,7 +48,6 @@ export default class XraySpanExporter implements SpanExporter {
         }),
       );
 
-    console.log(JSON.stringify(trace, null, 2));
     this.xRayClient
       .send(
         new PutTraceSegmentsCommand({

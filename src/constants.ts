@@ -49,27 +49,6 @@ export declare const XSEMATTRS_AWS_TABLE_NAME = 'aws.table_name';
 export declare const XSEMATTRS_AWS_TABLE_NAME_2 = 'aws.table.name';
 
 /**
- * Flag indicating if an X-Ray segment is in progress.
- */
-export declare const XSEMATTRS_AWS_XRAY_IN_PROGRESS = 'aws.xray.inprogress';
-
-/**
- * Flag indicating if an X-Ray segment has forwarded IP addresses.
- */
-export declare const XSEMATTRS_AWS_XRAY_X_FORWARDED_FOR =
-  'aws.xray.x_forwarded_for';
-
-/**
- * Resource ARN associated with an X-Ray segment.
- */
-export declare const XSEMATTRS_AWS_XRAY_RESOURCE_ARN = 'aws.xray.resource_arn';
-
-/**
- * Flag indicating if an X-Ray subsegment is traced.
- */
-export declare const XSEMATTRS_AWS_XRAY_TRACED = 'aws.xray.traced';
-
-/**
  * Annotations associated with an X-Ray segment.
  */
 export declare const XSEMATTRS_AWS_XRAY_ANNOTATIONS = 'aws.xray.annotations';
@@ -78,37 +57,3 @@ export declare const XSEMATTRS_AWS_XRAY_ANNOTATIONS = 'aws.xray.annotations';
  * Prefix for metadata associated with an X-Ray segment.
  */
 export declare const XSEMATTRS_AWS_XRAY_METADATA_PREFIX = 'aws.xray.metadata.';
-
-/**
- * Number of retries associated with an X-Ray segment.
- */
-export declare const XSEMATTRS_AWS_XRAY_RETRIES = 'aws.xray.retries';
-
-/**
- * ID of an exception associated with an X-Ray segment.
- */
-export declare const XSEMATTRS_AWS_XRAY_EXCEPTION_ID = 'aws.xray.exception.id';
-
-/**
- * Remote indicator for an exception associated with an X-Ray segment.
- */
-export declare const XSEMATTRS_AWS_XRAY_EXCEPTION_REMOTE =
-  'aws.xray.exception.remote';
-
-/**
- * Truncated indicator for an exception associated with an X-Ray segment.
- */
-export declare const XSEMATTRS_AWS_XRAY_EXCEPTION_TRUNCATED =
-  'aws.xray.exception.truncated';
-
-/**
- * Skipped indicator for an exception associated with an X-Ray segment.
- */
-export declare const XSEMATTRS_AWS_XRAY_EXCEPTION_SKIPPED =
-  'aws.xray.exception.skipped';
-
-/**
- * Cause of an exception associated with an X-Ray segment.
- */
-export declare const XSEMATTRS_AWS_XRAY_EXCEPTION_CAUSE =
-  'aws.xray.exception.cause';
