@@ -1,13 +1,14 @@
 export interface AWS {
   ecs?: {
-    container_name?: string;
-    container_id?: string;
-    availability_zone?: string;
-    container_arn?: string;
-    cluster_arn?: string;
-    task_arn?: string;
-    task_family?: string;
-    launch_type?: string;
+    container?: string; // Renamed to match schema
+    container_name?: string; // Not in schema
+    container_id?: string; // Not in schema
+    availability_zone?: string; // Not in schema
+    container_arn?: string; // Not in schema
+    cluster_arn?: string; // Not in schema
+    task_arn?: string; // Not in schema
+    task_family?: string; // Not in schema
+    launch_type?: string; // Not in schema
   };
   ec2?: {
     instance_id?: string;
@@ -30,15 +31,18 @@ export interface AWS {
     sdk_version?: string;
     auto_instrumentation?: boolean;
   };
+  tracing?: {
+    sdk?: string;
+  };
   account_id?: string;
-  retries?: number;
-  region?: string;
+  retries?: number; // Not in schema
+  region?: string; // Not in schema
   operation?: string;
   request_id?: string;
-  id_2?: string;
-  bucket_name?: string;
+  id_2?: string; // Not in schema
+  bucket_name?: string; // Not in schema
   table_name?: string;
-  resource_names?: string[];
+  resource_names?: string[]; // Not in schema
 }
 
 export interface Request {
@@ -62,14 +66,14 @@ export interface Link {
 
 export interface Service {
   version: string;
-  runtime: string;
-  runtime_version: string;
-  name: string;
+  runtime?: string; // Not in schema
+  runtime_version?: string; // Not in schema
+  name?: string; // Not in schema
 }
 
 export interface HTTP {
   request?: Request;
-  response: Response;
+  response?: Response;
 }
 
 export interface Cause {
@@ -95,9 +99,9 @@ export interface Stack {
 }
 
 export interface SQL {
-  connection_string?: string;
+  connection_string?: string; // Not in schema
   url?: string;
-  sanitized_query?: string;
+  sanitized_query?: string; // Not in schema
   database_type?: string;
   database_version?: string;
   driver_version?: string;
@@ -106,13 +110,11 @@ export interface SQL {
 }
 
 export interface XrayTraceDataSegmentDocument {
-  // Same as Segment Id
   id: string;
   name: string;
   start_time: number;
   end_time?: number;
   in_progress?: boolean;
-  // Same as top level Id
   trace_id?: string;
   subsegments?: XrayTraceDataSegmentDocument[];
   parent_id?: string;
@@ -124,12 +126,12 @@ export interface XrayTraceDataSegmentDocument {
   namespace?: 'aws' | 'remote';
   user?: string;
   http?: HTTP;
-  inferred?: boolean;
+  inferred?: boolean; // Not in schema
   cause?: Cause;
   annotations?: { [key: string]: string | number | boolean };
   metadata?: { [key: string]: { [key: string]: unknown } };
   sql?: SQL;
   service?: Service;
   type?: 'subsegment';
-  links?: Link[];
+  links?: Link[]; // Not in schema
 }
