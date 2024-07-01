@@ -36,7 +36,11 @@ tracer.addSpanProcessor(new BatchSpanProcessor(exporter));
 You can inject the `xRayClient` and other dependencies into the `XraySpanExporter` to customize its behavior:
 
 ```js
-const { DefaultIdParser, DefaultCauseParser, DefaultHttpParser } = require('your-parser-modules');
+const {
+  DefaultIdParser,
+  DefaultCauseParser,
+  DefaultHttpParser,
+} = require('your-parser-modules');
 
 // Instantiate the parsers
 const idParser = new DefaultIdParser();
@@ -44,7 +48,12 @@ const causeParser = new DefaultCauseParser();
 const httpParser = new DefaultHttpParser();
 
 // Instantiate the custom exporter with injected dependencies
-const exporter = new XraySpanExporter(xRayClient, idParser, causeParser, httpParser);
+const exporter = new XraySpanExporter(
+  xRayClient,
+  idParser,
+  causeParser,
+  httpParser,
+);
 ```
 
 ## Viewing your traces
