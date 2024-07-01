@@ -25,6 +25,11 @@ export interface HttpParser {
   parseHttp(span: ReadableSpan): HTTP | undefined;
 }
 
+/**
+ * TODO: also parse the content length from the events
+ *
+ * {@link https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/6dd3baea75a38706ff2611659d3ae8ad92720df1/exporter/awsxrayexporter/internal/translator/http.go}
+ */
 export class DefaultHttpParser implements HttpParser {
   toURL(url: {
     scheme: string;
@@ -151,7 +156,7 @@ export class DefaultHttpParser implements HttpParser {
                 ? Number(
                     attributes[SEMATTRS_MESSAGING_MESSAGE_PAYLOAD_SIZE_BYTES],
                   )
-                : 0, //TODO: Extract it from events too
+                : 0,
           },
         }
       : undefined;
