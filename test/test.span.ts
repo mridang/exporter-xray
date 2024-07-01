@@ -9,11 +9,7 @@ import {
   SpanStatus,
 } from '@opentelemetry/api';
 import { IResource } from '@opentelemetry/resources';
-import {
-  hrTimeDuration,
-  InstrumentationLibrary,
-  timeInputToHrTime,
-} from '@opentelemetry/core';
+import { InstrumentationLibrary } from '@opentelemetry/core';
 
 export interface SpanData {
   traceId: string;
@@ -70,9 +66,20 @@ export class WrappedReadableSpan implements ReadableSpan {
     this.droppedAttributesCount = spanData.droppedAttributesCount;
     this.droppedEventsCount = spanData.droppedEventsCount;
     this.droppedLinksCount = spanData.droppedLinksCount;
-    this.startTime = timeInputToHrTime(spanData.timestamp / 1000);
-    this.duration = timeInputToHrTime(spanData.duration / 1000);
-    this.endTime = hrTimeDuration(this.startTime, this.duration);
+    this.startTime = [
+      Math.floor(spanData.timestamp / 1e6),
+      (spanData.timestamp % 1e6) * 1e3,
+    ];
+    this.duration = [
+      Math.floor(spanData.duration / 1e6),
+      (spanData.duration % 1e6) * 1e3,
+    ];
+    this.endTime = [
+      this.startTime[0] +
+        this.duration[0] +
+        Math.floor((this.startTime[1] + this.duration[1]) / 1e9),
+      (this.startTime[1] + this.duration[1]) % 1e9,
+    ];
     this._spanContext = {
       traceId: spanData.traceId,
       spanId: spanData.id,

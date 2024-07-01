@@ -7,7 +7,7 @@ import net from 'node:net';
  * @returns { number } The timestamp converted to seconds.
  */
 export function hrt(timestamp: [number, number]): number {
-  return (timestamp[0] * 1000 + timestamp[1] / 1000000) / 1000;
+  return timestamp[0] + timestamp[1] / 1e9;
 }
 
 /**
