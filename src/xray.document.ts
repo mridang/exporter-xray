@@ -61,6 +61,9 @@ export interface Link {
 
 export interface Service {
   version: string;
+  runtime: string;
+  runtime_version: string;
+  name: string;
 }
 
 export interface HTTP {

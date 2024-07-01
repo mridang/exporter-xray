@@ -30,7 +30,10 @@ import {
   SEMRESATTRS_HOST_TYPE,
   SEMRESATTRS_K8S_CLUSTER_NAME,
   SEMRESATTRS_K8S_POD_NAME,
+  SEMRESATTRS_PROCESS_RUNTIME_NAME,
+  SEMRESATTRS_PROCESS_RUNTIME_VERSION,
   SEMRESATTRS_SERVICE_INSTANCE_ID,
+  SEMRESATTRS_SERVICE_NAME,
   SEMRESATTRS_SERVICE_VERSION,
   SEMRESATTRS_TELEMETRY_AUTO_VERSION,
   SEMRESATTRS_TELEMETRY_SDK_LANGUAGE,
@@ -39,7 +42,7 @@ import {
 import { SpanKind } from '@opentelemetry/api';
 import { hrt, str, undef } from './util';
 import { ReadableSpan } from '@opentelemetry/sdk-trace-base';
-import { AWS, Cause, HTTP, Link, SQL } from './xray.document';
+import { AWS, Cause, HTTP, Link, Service, SQL } from './xray.document';
 import {
   XSEMATTRS_AWS_ACCOUNT,
   XSEMATTRS_AWS_OPERATION,
@@ -100,11 +103,11 @@ export class EnhancedReadableSpan {
    *
    * @returns {boolean} True if the span is throttled, otherwise false.
    */
-  public isThrottled(): boolean {
+  public isThrottled(): true | undefined {
     if (Number(this.span.attributes[SEMATTRS_HTTP_STATUS_CODE]) === 429) {
       return true;
     } else {
-      return false;
+      return undefined;
     }
   }
 
@@ -114,13 +117,14 @@ export class EnhancedReadableSpan {
    *
    * @returns {boolean} True if the span represents a fault, otherwise false.
    */
-  public isFault(): boolean {
+  public isFault(): true | undefined {
     if (Number(this.span.attributes[SEMATTRS_HTTP_STATUS_CODE] || 0) >= 400) {
       return (
-        Number(this.span.attributes[SEMATTRS_HTTP_STATUS_CODE] || 0) <= 499
+        Number(this.span.attributes[SEMATTRS_HTTP_STATUS_CODE] || 0) <= 499 ||
+        undefined
       );
     } else {
-      return false;
+      return undefined;
     }
   }
 
@@ -130,13 +134,14 @@ export class EnhancedReadableSpan {
    *
    * @returns {boolean} True if the span represents an error, otherwise false.
    */
-  public isError(): boolean {
+  public isError(): true | undefined {
     if (Number(this.span.attributes[SEMATTRS_HTTP_STATUS_CODE] || 0) >= 500) {
       return (
-        Number(this.span.attributes[SEMATTRS_HTTP_STATUS_CODE] || 0) <= 599
+        Number(this.span.attributes[SEMATTRS_HTTP_STATUS_CODE] || 0) <= 599 ||
+        undefined
       );
     } else {
-      return false;
+      return undefined;
     }
   }
 
@@ -146,25 +151,26 @@ export class EnhancedReadableSpan {
    * The service data is derived from the resource attributes. The method looks
    * for the service version or container image tag to set the service version.
    *
-   * @returns {{ Version: string } | undefined} The service data, or undefined
+   * @returns {Service} The service data
    * if no relevant attributes are found.
    */
-  public getService(): { version: string } | undefined {
-    if (
-      !str(
-        this.span.resource.attributes[SEMRESATTRS_SERVICE_VERSION] ||
-          this.span.resource.attributes[SEMRESATTRS_CONTAINER_IMAGE_TAG],
-      )
-    ) {
-      return undefined;
-    } else {
-      return {
-        version: str(
-          this.span.resource.attributes[SEMRESATTRS_SERVICE_VERSION] ||
-            this.span.resource.attributes[SEMRESATTRS_CONTAINER_IMAGE_TAG],
-        ) as string,
-      };
-    }
+  public getService(): Service {
+    return {
+      version:
+        str(this.span.resource.attributes[SEMRESATTRS_SERVICE_VERSION]) ||
+        str(this.span.resource.attributes[SEMRESATTRS_CONTAINER_IMAGE_TAG]) ||
+        'unknown',
+      runtime:
+        str(this.span.resource.attributes[SEMRESATTRS_PROCESS_RUNTIME_NAME]) ||
+        'unknown',
+      runtime_version:
+        str(
+          this.span.resource.attributes[SEMRESATTRS_PROCESS_RUNTIME_VERSION],
+        ) || 'unknown',
+      name:
+        str(this.span.resource.attributes[SEMRESATTRS_SERVICE_NAME]) ||
+        'unknown',
+    };
   }
 
   /**
@@ -228,7 +234,7 @@ export class EnhancedReadableSpan {
   }
 
   public getName() {
-    return this.span.name;
+    return this.span.name; //TODO: Implement the logic in fixSegmentName
   }
 
   public getSpanId() {
