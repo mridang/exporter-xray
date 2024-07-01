@@ -11,12 +11,12 @@
 				"process.executable.path": "/Users/mridang/.local/share/fnm/node-versions/v20.9.0/installation/bin/node",
 				"process.command_args": [
 					"/Users/mridang/.local/share/fnm/node-versions/v20.9.0/installation/bin/node",
-					"/Users/mridang/Junk/tmp-express-js-xray/app.js"
+					"/app/app.js"
 				],
 				"process.runtime.version": "20.9.0",
 				"process.runtime.name": "nodejs",
 				"process.runtime.description": "Node.js",
-				"process.command": "/Users/mridang/Junk/tmp-express-js-xray/app.js",
+				"process.command": "/app/app.js",
 				"process.owner": "mridang",
 				"host.name": "Mridangs-MacBook-Pro.local",
 				"host.arch": "arm64"
@@ -53,12 +53,12 @@
 				"process.executable.path": "/Users/mridang/.local/share/fnm/node-versions/v20.9.0/installation/bin/node",
 				"process.command_args": [
 					"/Users/mridang/.local/share/fnm/node-versions/v20.9.0/installation/bin/node",
-					"/Users/mridang/Junk/tmp-express-js-xray/app.js"
+					"/app/app.js"
 				],
 				"process.runtime.version": "20.9.0",
 				"process.runtime.name": "nodejs",
 				"process.runtime.description": "Node.js",
-				"process.command": "/Users/mridang/Junk/tmp-express-js-xray/app.js",
+				"process.command": "/app/app.js",
 				"process.owner": "mridang",
 				"host.name": "Mridangs-MacBook-Pro.local",
 				"host.arch": "arm64"
@@ -95,12 +95,12 @@
 				"process.executable.path": "/Users/mridang/.local/share/fnm/node-versions/v20.9.0/installation/bin/node",
 				"process.command_args": [
 					"/Users/mridang/.local/share/fnm/node-versions/v20.9.0/installation/bin/node",
-					"/Users/mridang/Junk/tmp-express-js-xray/app.js"
+					"/app/app.js"
 				],
 				"process.runtime.version": "20.9.0",
 				"process.runtime.name": "nodejs",
 				"process.runtime.description": "Node.js",
-				"process.command": "/Users/mridang/Junk/tmp-express-js-xray/app.js",
+				"process.command": "/app/app.js",
 				"process.owner": "mridang",
 				"host.name": "Mridangs-MacBook-Pro.local",
 				"host.arch": "arm64"
@@ -137,12 +137,12 @@
 				"process.executable.path": "/Users/mridang/.local/share/fnm/node-versions/v20.9.0/installation/bin/node",
 				"process.command_args": [
 					"/Users/mridang/.local/share/fnm/node-versions/v20.9.0/installation/bin/node",
-					"/Users/mridang/Junk/tmp-express-js-xray/app.js"
+					"/app/app.js"
 				],
 				"process.runtime.version": "20.9.0",
 				"process.runtime.name": "nodejs",
 				"process.runtime.description": "Node.js",
-				"process.command": "/Users/mridang/Junk/tmp-express-js-xray/app.js",
+				"process.command": "/app/app.js",
 				"process.owner": "mridang",
 				"host.name": "Mridangs-MacBook-Pro.local",
 				"host.arch": "arm64"

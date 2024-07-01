@@ -11,12 +11,12 @@
 				"process.executable.path": "/Users/mridang/.local/share/fnm/node-versions/v20.9.0/installation/bin/node",
 				"process.command_args": [
 					"/Users/mridang/.local/share/fnm/node-versions/v20.9.0/installation/bin/node",
-					"/Users/mridang/Junk/tmp-express-js-xray/app.js"
+					"/app/app.js"
 				],
 				"process.runtime.version": "20.9.0",
 				"process.runtime.name": "nodejs",
 				"process.runtime.description": "Node.js",
-				"process.command": "/Users/mridang/Junk/tmp-express-js-xray/app.js",
+				"process.command": "/app/app.js",
 				"process.owner": "mridang",
 				"host.name": "Mridangs-MacBook-Pro.local",
 				"host.arch": "arm64"
@@ -53,12 +53,12 @@
 				"process.executable.path": "/Users/mridang/.local/share/fnm/node-versions/v20.9.0/installation/bin/node",
 				"process.command_args": [
 					"/Users/mridang/.local/share/fnm/node-versions/v20.9.0/installation/bin/node",
-					"/Users/mridang/Junk/tmp-express-js-xray/app.js"
+					"/app/app.js"
 				],
 				"process.runtime.version": "20.9.0",
 				"process.runtime.name": "nodejs",
 				"process.runtime.description": "Node.js",
-				"process.command": "/Users/mridang/Junk/tmp-express-js-xray/app.js",
+				"process.command": "/app/app.js",
 				"process.owner": "mridang",
 				"host.name": "Mridangs-MacBook-Pro.local",
 				"host.arch": "arm64"
@@ -95,12 +95,12 @@
 				"process.executable.path": "/Users/mridang/.local/share/fnm/node-versions/v20.9.0/installation/bin/node",
 				"process.command_args": [
 					"/Users/mridang/.local/share/fnm/node-versions/v20.9.0/installation/bin/node",
-					"/Users/mridang/Junk/tmp-express-js-xray/app.js"
+					"/app/app.js"
 				],
 				"process.runtime.version": "20.9.0",
 				"process.runtime.name": "nodejs",
 				"process.runtime.description": "Node.js",
-				"process.command": "/Users/mridang/Junk/tmp-express-js-xray/app.js",
+				"process.command": "/app/app.js",
 				"process.owner": "mridang",
 				"host.name": "Mridangs-MacBook-Pro.local",
 				"host.arch": "arm64"
@@ -137,12 +137,12 @@
 				"process.executable.path": "/Users/mridang/.local/share/fnm/node-versions/v20.9.0/installation/bin/node",
 				"process.command_args": [
 					"/Users/mridang/.local/share/fnm/node-versions/v20.9.0/installation/bin/node",
-					"/Users/mridang/Junk/tmp-express-js-xray/app.js"
+					"/app/app.js"
 				],
 				"process.runtime.version": "20.9.0",
 				"process.runtime.name": "nodejs",
 				"process.runtime.description": "Node.js",
-				"process.command": "/Users/mridang/Junk/tmp-express-js-xray/app.js",
+				"process.command": "/app/app.js",
 				"process.owner": "mridang",
 				"host.name": "Mridangs-MacBook-Pro.local",
 				"host.arch": "arm64"
@@ -183,7 +183,7 @@
 				"attributes": {
 					"exception.type": "Error",
 					"exception.message": "boox",
-					"exception.stacktrace": "Error: boox\n    at /Users/mridang/Junk/tmp-express-js-xray/app.js:53:23\n    at Layer.handle [as handle_request] (/Users/mridang/Junk/tmp-express-js-xray/node_modules/express/lib/router/layer.js:95:5)\n    at next (/Users/mridang/Junk/tmp-express-js-xray/node_modules/express/lib/router/route.js:149:13)\n    at Route.dispatch (/Users/mridang/Junk/tmp-express-js-xray/node_modules/express/lib/router/route.js:119:3)\n    at patched (/Users/mridang/Junk/tmp-express-js-xray/node_modules/@opentelemetry/instrumentation-express/build/src/instrumentation.js:214:37)\n    at Layer.handle [as handle_request] (/Users/mridang/Junk/tmp-express-js-xray/node_modules/express/lib/router/layer.js:95:5)\n    at /Users/mridang/Junk/tmp-express-js-xray/node_modules/express/lib/router/index.js:284:15\n    at Function.process_params (/Users/mridang/Junk/tmp-express-js-xray/node_modules/express/lib/router/index.js:346:12)\n    at next (/Users/mridang/Junk/tmp-express-js-xray/node_modules/express/lib/router/index.js:280:10)\n    at arguments.<computed> (/Users/mridang/Junk/tmp-express-js-xray/node_modules/@opentelemetry/instrumentation-express/build/src/instrumentation.js:210:41)"
+					"exception.stacktrace": "Error: boox\n    at /app/app.js:53:23\n    at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)\n    at next (/app/node_modules/express/lib/router/route.js:149:13)\n    at Route.dispatch (/app/node_modules/express/lib/router/route.js:119:3)\n    at patched (/app/node_modules/@opentelemetry/instrumentation-express/build/src/instrumentation.js:214:37)\n    at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)\n    at /app/node_modules/express/lib/router/index.js:284:15\n    at Function.process_params (/app/node_modules/express/lib/router/index.js:346:12)\n    at next (/app/node_modules/express/lib/router/index.js:280:10)\n    at arguments.<computed> (/app/node_modules/@opentelemetry/instrumentation-express/build/src/instrumentation.js:210:41)"
 				},
 				"droppedAttributesCount": 0
 			}

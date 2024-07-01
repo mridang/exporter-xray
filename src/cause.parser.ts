@@ -14,7 +14,8 @@ export interface CauseParser {
 }
 
 export class DefaultCauseParser implements CauseParser {
-  private readonly regex = /^\s*at\s+([^()]+)(?:\s+\(([^:]+):(\d+):\d+\))?$/;
+  private readonly regex =
+    /^\s*at\s+(?:(?<label>[^()]+)\s+\((?<path>[^:]+):(?<line>\d+):\d+\)|(?<path2>[^:]+):(?<line2>\d+):\d+)$/;
 
   constructor(
     private readonly idGen: () => string = () => randomBytes(8).toString('hex'),
@@ -79,9 +80,12 @@ export class DefaultCauseParser implements CauseParser {
                   .map((line) => this.regex.exec(line))
                   .filter(Boolean)
                   .map((match) => ({
-                    label: match![1],
-                    path: match![2],
-                    line: match![3] ? Number(match![3]) : undefined,
+                    label: match?.groups?.label || undefined,
+                    path: match?.groups?.path || match?.groups?.path2,
+                    line: match?.groups?.line
+                      ? Number(match.groups.line)
+                      : // @ts-expect-error xf wts
+                        Number(match.groups.line2),
                   })),
               })),
           ),

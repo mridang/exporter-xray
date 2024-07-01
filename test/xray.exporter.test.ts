@@ -40,6 +40,10 @@ describe('XraySpanExporter', () => {
     );
   });
 
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   test(`should export the span from`, async () => {
     const filePath = join(__dirname, 'samples', 'request.axios.json');
     const rawData = readFileSync(filePath, 'utf-8');
@@ -378,52 +382,52 @@ describe('XraySpanExporter', () => {
                 remote: false,
                 stack: [
                   {
-                    label:
-                      '/Users/mridang/Junk/tmp-express-js-xray/app.js:53:23',
+                    line: 53,
+                    path: '/app/app.js',
                   },
                   {
                     label: 'Layer.handle [as handle_request]',
                     line: 95,
-                    path: '/Users/mridang/Junk/tmp-express-js-xray/node_modules/express/lib/router/layer.js',
+                    path: '/app/node_modules/express/lib/router/layer.js',
                   },
                   {
                     label: 'next',
                     line: 149,
-                    path: '/Users/mridang/Junk/tmp-express-js-xray/node_modules/express/lib/router/route.js',
+                    path: '/app/node_modules/express/lib/router/route.js',
                   },
                   {
                     label: 'Route.dispatch',
                     line: 119,
-                    path: '/Users/mridang/Junk/tmp-express-js-xray/node_modules/express/lib/router/route.js',
+                    path: '/app/node_modules/express/lib/router/route.js',
                   },
                   {
                     label: 'patched',
                     line: 214,
-                    path: '/Users/mridang/Junk/tmp-express-js-xray/node_modules/@opentelemetry/instrumentation-express/build/src/instrumentation.js',
+                    path: '/app/node_modules/@opentelemetry/instrumentation-express/build/src/instrumentation.js',
                   },
                   {
                     label: 'Layer.handle [as handle_request]',
                     line: 95,
-                    path: '/Users/mridang/Junk/tmp-express-js-xray/node_modules/express/lib/router/layer.js',
+                    path: '/app/node_modules/express/lib/router/layer.js',
                   },
                   {
-                    label:
-                      '/Users/mridang/Junk/tmp-express-js-xray/node_modules/express/lib/router/index.js:284:15',
+                    line: 284,
+                    path: '/app/node_modules/express/lib/router/index.js',
                   },
                   {
                     label: 'Function.process_params',
                     line: 346,
-                    path: '/Users/mridang/Junk/tmp-express-js-xray/node_modules/express/lib/router/index.js',
+                    path: '/app/node_modules/express/lib/router/index.js',
                   },
                   {
                     label: 'next',
                     line: 280,
-                    path: '/Users/mridang/Junk/tmp-express-js-xray/node_modules/express/lib/router/index.js',
+                    path: '/app/node_modules/express/lib/router/index.js',
                   },
                   {
                     label: 'arguments.<computed>',
                     line: 210,
-                    path: '/Users/mridang/Junk/tmp-express-js-xray/node_modules/@opentelemetry/instrumentation-express/build/src/instrumentation.js',
+                    path: '/app/node_modules/@opentelemetry/instrumentation-express/build/src/instrumentation.js',
                   },
                 ],
                 type: 'Error',
