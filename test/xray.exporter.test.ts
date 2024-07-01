@@ -465,4 +465,130 @@ describe('XraySpanExporter', () => {
       ],
     });
   });
+
+  test(`should export the span from 400`, async () => {
+    const filePath = join(__dirname, 'samples', 'error.400.json');
+    const rawData = readFileSync(filePath, 'utf-8');
+    const parsedData = JSON.parse(rawData) as SpanData[];
+
+    expect(
+      await new Promise((resolve) => {
+        exporter.export(
+          parsedData.map((span) => new WrappedReadableSpan(span)),
+          resolve,
+        );
+      }),
+    ).toEqual({ code: ExportResultCode.SUCCESS });
+
+    const commandArg = (mockXRayClient.send as jest.Mock).mock.calls[0][0];
+    expect({
+      documents: (commandArg.input.TraceSegmentDocuments as string[])?.map(
+        (json) => JSON.parse(json),
+      ),
+    }).toEqual({
+      documents: [
+        {
+          aws: {
+            xray: {
+              auto_instrumentation: false,
+              sdk: 'nodejs/1.25.1',
+              sdk_version: '1.25.1',
+            },
+          },
+          end_time: 1719764505.780089,
+          id: '2512e85d39a63929',
+          name: 'middleware - query',
+          parent_id: '8ece99b9bf5e9940',
+          service: {
+            name: 'my-express-app',
+            runtime: 'nodejs',
+            runtime_version: '20.9.0',
+            version: 'unknown',
+          },
+          start_time: 1719764505.78,
+          trace_id: '1-659f1ca8-f58c205e8386cc27886c69fc',
+          type: 'subsegment',
+        },
+        {
+          aws: {
+            xray: {
+              auto_instrumentation: false,
+              sdk: 'nodejs/1.25.1',
+              sdk_version: '1.25.1',
+            },
+          },
+          end_time: 1719764505.7810695,
+          id: '2119767beef9ebec',
+          name: 'middleware - expressInit',
+          parent_id: '8ece99b9bf5e9940',
+          service: {
+            name: 'my-express-app',
+            runtime: 'nodejs',
+            runtime_version: '20.9.0',
+            version: 'unknown',
+          },
+          start_time: 1719764505.781,
+          trace_id: '1-659f1ca8-f58c205e8386cc27886c69fc',
+          type: 'subsegment',
+        },
+        {
+          aws: {
+            xray: {
+              auto_instrumentation: false,
+              sdk: 'nodejs/1.25.1',
+              sdk_version: '1.25.1',
+            },
+          },
+          end_time: 1719764505.7830122,
+          id: '04c6519652781f70',
+          name: 'request handler - /error400',
+          parent_id: '8ece99b9bf5e9940',
+          service: {
+            name: 'my-express-app',
+            runtime: 'nodejs',
+            runtime_version: '20.9.0',
+            version: 'unknown',
+          },
+          start_time: 1719764505.783,
+          trace_id: '1-659f1ca8-f58c205e8386cc27886c69fc',
+          type: 'subsegment',
+        },
+        {
+          aws: {
+            xray: {
+              auto_instrumentation: false,
+              sdk: 'nodejs/1.25.1',
+              sdk_version: '1.25.1',
+            },
+          },
+          end_time: 1719764505.786133,
+          error: true,
+          http: {
+            request: {
+              client_ip: '::1',
+              method: 'GET',
+              url: 'http://localhost:3000/error400',
+              user_agent:
+                'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+              x_forwarded_for: true,
+            },
+            response: {
+              status: 400,
+            },
+          },
+          id: '8ece99b9bf5e9940',
+          name: 'my-express-app',
+          parent_id: 'undefined',
+          service: {
+            name: 'my-express-app',
+            runtime: 'nodejs',
+            runtime_version: '20.9.0',
+            version: 'unknown',
+          },
+          start_time: 1719764505.78,
+          trace_id: '1-659f1ca8-f58c205e8386cc27886c69fc',
+        },
+      ],
+    });
+  });
 });
