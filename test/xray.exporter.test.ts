@@ -376,12 +376,12 @@ describe('XraySpanExporter', () => {
           cause: {
             exceptions: [
               {
-                cause: '',
                 id: '0',
                 message: 'boox',
                 remote: false,
                 stack: [
                   {
+                    label: 'anonymous',
                     line: 53,
                     path: '/app/app.js',
                   },
@@ -411,6 +411,7 @@ describe('XraySpanExporter', () => {
                     path: '/app/node_modules/express/lib/router/layer.js',
                   },
                   {
+                    label: 'anonymous',
                     line: 284,
                     path: '/app/node_modules/express/lib/router/index.js',
                   },

@@ -69,7 +69,6 @@ export class DefaultCauseParser implements CauseParser {
               .filter((event) => event.name === 'exception')
               .map((event) => ({
                 id: this.idGen(),
-                cause: '',
                 type: str(event.attributes?.[SEMATTRS_EXCEPTION_TYPE]),
                 message: str(event.attributes?.[SEMATTRS_EXCEPTION_MESSAGE]),
                 remote: [SpanKind.PRODUCER, SpanKind.CLIENT].includes(
@@ -80,7 +79,7 @@ export class DefaultCauseParser implements CauseParser {
                   .map((line) => this.regex.exec(line))
                   .filter(Boolean)
                   .map((match) => ({
-                    label: match?.groups?.label || undefined,
+                    label: match?.groups?.label || 'anonymous',
                     path: match?.groups?.path || match?.groups?.path2,
                     line: match?.groups?.line
                       ? Number(match.groups.line)
