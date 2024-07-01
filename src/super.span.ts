@@ -54,6 +54,7 @@ import {
 import { IdParser } from './id.parser';
 import { HttpParser } from './http.parser';
 import { CauseParser } from './cause.parser';
+import { NameParser } from './name.parser';
 
 export class EnhancedReadableSpan {
   private readonly DBS = [
@@ -233,8 +234,8 @@ export class EnhancedReadableSpan {
     return causeParser.getCause(this.span);
   }
 
-  public getName() {
-    return this.span.name; //TODO: Implement the logic in fixSegmentName
+  public getName(nameParser: NameParser) {
+    return nameParser.parseName(this.span);
   }
 
   public getSpanId() {
@@ -282,12 +283,17 @@ export class EnhancedReadableSpan {
     return httpParser.parseHttp(this.span);
   }
 
+  /**
+   * 	Despite what the X-Ray documents say, having the DB connection string
+   * 	set as the URL value of the segment is not useful. So let's use the
+   * 	current span name instead
+   */
   public getSql(): SQL | undefined {
     if (
       this.DBS.includes(str(this.span.attributes[SEMATTRS_DB_SYSTEM]) || '')
     ) {
       return {
-        url: this.getName(),
+        url: this.span.name,
         connection_string: `${this.span.attributes[SEMATTRS_DB_CONNECTION_STRING] || 'localhost'}/${this.span.attributes[SEMATTRS_DB_NAME] || ''}`,
         database_type: str(this.span.attributes[SEMATTRS_DB_SYSTEM]),
         user: str(this.span.attributes[SEMATTRS_DB_USER]),

@@ -8,6 +8,7 @@ import { DefaultIdParser, IdParser } from './id.parser';
 import { DefaultCauseParser, CauseParser } from './cause.parser';
 import { DefaultHttpParser, HttpParser } from './http.parser';
 import { diag } from '@opentelemetry/api';
+import { DefaultNameParser, NameParser } from './name.parser';
 
 export default class XraySpanExporter implements SpanExporter {
   constructor(
@@ -15,6 +16,7 @@ export default class XraySpanExporter implements SpanExporter {
     private readonly idParser: IdParser = new DefaultIdParser(),
     private readonly causeParser: CauseParser = new DefaultCauseParser(),
     private readonly httpParser: HttpParser = new DefaultHttpParser(),
+    private readonly nameParser: NameParser = new DefaultNameParser(),
   ) {
     //
   }
@@ -26,7 +28,7 @@ export default class XraySpanExporter implements SpanExporter {
         (span): XrayTraceDataSegmentDocument => ({
           id: span.getSpanId(),
           trace_id: span.getTraceId(this.idParser),
-          name: span.getName(),
+          name: span.getName(this.nameParser),
           start_time: span.getStartTime(),
           end_time: span.getEndTime(),
           parent_id: span.getParentId(),
