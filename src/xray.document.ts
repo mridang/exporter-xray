@@ -32,11 +32,12 @@ export interface AWS {
   };
   account_id?: string;
   retries?: number;
-  remote_region?: string;
+  region?: string;
   operation?: string;
   request_id?: string;
+  id_2?: string;
+  bucket_name?: string;
   table_name?: string;
-  attribute_names_substituted?: any[];
   resource_names?: string[];
 }
 

@@ -16,12 +16,12 @@ export declare const XSEMATTRS_AWS_REGION = 'aws.region';
 /**
  * An identifier for the AWS request ID.
  */
-export declare const XSEMATTRS_AWS_REQUEST_ID = 'aws.request_id';
+export declare const XSEMATTRS_AWS_REQUEST_ID = 'aws.request.id';
 
 /**
  * An identifier for the AWS request ID (alternate format).
  */
-export declare const XSEMATTRS_AWS_REQUEST_ID_2 = 'aws.requestId';
+export declare const XSEMATTRS_AWS_REQUEST_ID_2 = 'aws.request.extended_id';
 
 /**
  * An identifier for the AWS queue URL.

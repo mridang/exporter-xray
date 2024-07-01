@@ -311,11 +311,9 @@ export class EnhancedReadableSpan {
         this.span.attributes[XSEMATTRS_AWS_OPERATION] ||
           this.span.attributes[SEMATTRS_RPC_METHOD],
       ),
-      remote_region: str(this.span.attributes[XSEMATTRS_AWS_REGION]),
-      request_id: str(
-        this.span.attributes[XSEMATTRS_AWS_REQUEST_ID] ||
-          this.span.attributes[XSEMATTRS_AWS_REQUEST_ID_2],
-      ),
+      region: str(this.span.attributes[XSEMATTRS_AWS_REGION]),
+      request_id: str(this.span.attributes[XSEMATTRS_AWS_REQUEST_ID]),
+      id_2: str(this.span.attributes[XSEMATTRS_AWS_REQUEST_ID_2]),
       // 		QueueURL:     awsxray.String(queueURL),
       // 		TableName:    awsxray.String(tableName),
       // 		TableNames:   tableNames,
