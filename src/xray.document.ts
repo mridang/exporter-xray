@@ -126,8 +126,8 @@ export interface XrayTraceDataSegmentDocument {
   http?: HTTP;
   inferred?: boolean;
   cause?: Cause;
-  annotations?: any;
-  metadata?: any;
+  annotations?: { [key: string]: string | number | boolean };
+  metadata?: { [key: string]: { [key: string]: unknown } };
   sql?: SQL;
   service?: Service;
   type?: 'subsegment';

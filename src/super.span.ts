@@ -427,4 +427,12 @@ export class EnhancedReadableSpan {
   getTraceId(idParser: IdParser) {
     return idParser.parseId(this.span.spanContext().traceId);
   }
+
+  getAnnotations(): { [key: string]: string | number | boolean } | undefined {
+    return undefined; //TODO: Implement this
+  }
+
+  getMetadata(): { [key: string]: { [key: string]: unknown } } | undefined {
+    return undefined; //TODO: Implement this
+  }
 }
