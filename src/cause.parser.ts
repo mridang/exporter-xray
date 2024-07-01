@@ -10,7 +10,7 @@ import {
 import { SpanKind } from '@opentelemetry/api';
 
 export interface CauseParser {
-  getCause(span: ReadableSpan): Cause;
+  getCause(span: ReadableSpan): Cause | undefined;
 }
 
 export class DefaultCauseParser implements CauseParser {
@@ -54,28 +54,32 @@ export class DefaultCauseParser implements CauseParser {
    * @returns An object representing the cause of the error, including an array
    *   of parsed exceptions.
    */
-  public getCause(span: ReadableSpan): Cause {
-    return {
-      exceptions: undef(
-        span.events
-          .filter((event) => event.name === 'exception')
-          .map((event) => ({
-            id: randomBytes(8).toString('hex'),
-            cause: '',
-            type: str(event.attributes?.[SEMATTRS_EXCEPTION_TYPE]),
-            message: str(event.attributes?.[SEMATTRS_EXCEPTION_MESSAGE]),
-            remote: [SpanKind.PRODUCER, SpanKind.CLIENT].includes(span.kind),
-            stack: str(event.attributes?.[SEMATTRS_EXCEPTION_STACKTRACE])
-              ?.split('\n')
-              .map((line) => this.regex.exec(line))
-              .filter(Boolean)
-              .map((match) => ({
-                label: match![1],
-                path: match![2],
-                line: match![3] ? Number(match![3]) : undefined,
+  public getCause(span: ReadableSpan): Cause | undefined {
+    return span.events.some((event) => event.name === 'exception')
+      ? {
+          exceptions: undef(
+            span.events
+              .filter((event) => event.name === 'exception')
+              .map((event) => ({
+                id: randomBytes(8).toString('hex'),
+                cause: '',
+                type: str(event.attributes?.[SEMATTRS_EXCEPTION_TYPE]),
+                message: str(event.attributes?.[SEMATTRS_EXCEPTION_MESSAGE]),
+                remote: [SpanKind.PRODUCER, SpanKind.CLIENT].includes(
+                  span.kind,
+                ),
+                stack: str(event.attributes?.[SEMATTRS_EXCEPTION_STACKTRACE])
+                  ?.split('\n')
+                  .map((line) => this.regex.exec(line))
+                  .filter(Boolean)
+                  .map((match) => ({
+                    label: match![1],
+                    path: match![2],
+                    line: match![3] ? Number(match![3]) : undefined,
+                  })),
               })),
-          })),
-      ),
-    };
+          ),
+        }
+      : undefined;
   }
 }

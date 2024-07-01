@@ -252,7 +252,7 @@ export class EnhancedReadableSpan {
     return hrt(this.span.startTime);
   }
 
-  public getCause(causeParser: CauseParser): Cause {
+  public getCause(causeParser: CauseParser): Cause | undefined {
     return causeParser.getCause(this.span);
   }
 

@@ -156,7 +156,7 @@ export class DefaultHttpParser implements HttpParser {
                 ? Number(
                     attributes[SEMATTRS_MESSAGING_MESSAGE_PAYLOAD_SIZE_BYTES],
                   )
-                : 0,
+                : undefined,
           },
         }
       : undefined;

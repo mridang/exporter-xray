@@ -63,7 +63,6 @@ describe('XraySpanExporter', () => {
               sdk_version: '1.25.1',
             },
           },
-          cause: {},
           end_time: 1719733144.7892985,
           id: 'c4c9aaec061808db',
           name: 'middleware - query',
@@ -86,7 +85,6 @@ describe('XraySpanExporter', () => {
               sdk_version: '1.25.1',
             },
           },
-          cause: {},
           end_time: 1719733144.7903323,
           id: '5e3863393e4458cc',
           name: 'middleware - expressInit',
@@ -109,7 +107,6 @@ describe('XraySpanExporter', () => {
               sdk_version: '1.25.1',
             },
           },
-          cause: {},
           end_time: 1719733144.792175,
           id: '3810ceb0646ec0c4',
           name: 'request handler - /axios',
@@ -132,7 +129,6 @@ describe('XraySpanExporter', () => {
               sdk_version: '1.25.1',
             },
           },
-          cause: {},
           end_time: 1719733144.7980335,
           id: '5983fc0be789dfb4',
           name: 'fs realpathSync',
@@ -155,7 +151,6 @@ describe('XraySpanExporter', () => {
               sdk_version: '1.25.1',
             },
           },
-          cause: {},
           end_time: 1719733145.1952214,
           http: {
             request: {
@@ -163,7 +158,6 @@ describe('XraySpanExporter', () => {
               x_forwarded_for: true,
             },
             response: {
-              content_length: 0,
               status: null,
             },
           },
@@ -188,7 +182,6 @@ describe('XraySpanExporter', () => {
               sdk_version: '1.25.1',
             },
           },
-          cause: {},
           end_time: 1719733145.407536,
           id: '59a9a738d9b789bb',
           name: 'tls.connect',
@@ -211,7 +204,6 @@ describe('XraySpanExporter', () => {
               sdk_version: '1.25.1',
             },
           },
-          cause: {},
           end_time: 1719733145.8978295,
           http: {
             request: {
@@ -221,7 +213,6 @@ describe('XraySpanExporter', () => {
               x_forwarded_for: true,
             },
             response: {
-              content_length: 0,
               status: 200,
             },
           },
@@ -247,7 +238,6 @@ describe('XraySpanExporter', () => {
               sdk_version: '1.25.1',
             },
           },
-          cause: {},
           end_time: 1719733145.9074056,
           http: {
             request: {
@@ -259,7 +249,6 @@ describe('XraySpanExporter', () => {
               x_forwarded_for: true,
             },
             response: {
-              content_length: 0,
               status: 200,
             },
           },
