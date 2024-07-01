@@ -177,7 +177,17 @@
 		"status": {
 			"code": 2
 		},
-		"events": [],
+		"events": [
+			{
+				"name": "exception",
+				"attributes": {
+					"exception.type": "Error",
+					"exception.message": "boox",
+					"exception.stacktrace": "Error: boox\n    at /Users/mridang/Junk/tmp-express-js-xray/app.js:53:23\n    at Layer.handle [as handle_request] (/Users/mridang/Junk/tmp-express-js-xray/node_modules/express/lib/router/layer.js:95:5)\n    at next (/Users/mridang/Junk/tmp-express-js-xray/node_modules/express/lib/router/route.js:149:13)\n    at Route.dispatch (/Users/mridang/Junk/tmp-express-js-xray/node_modules/express/lib/router/route.js:119:3)\n    at patched (/Users/mridang/Junk/tmp-express-js-xray/node_modules/@opentelemetry/instrumentation-express/build/src/instrumentation.js:214:37)\n    at Layer.handle [as handle_request] (/Users/mridang/Junk/tmp-express-js-xray/node_modules/express/lib/router/layer.js:95:5)\n    at /Users/mridang/Junk/tmp-express-js-xray/node_modules/express/lib/router/index.js:284:15\n    at Function.process_params (/Users/mridang/Junk/tmp-express-js-xray/node_modules/express/lib/router/index.js:346:12)\n    at next (/Users/mridang/Junk/tmp-express-js-xray/node_modules/express/lib/router/index.js:280:10)\n    at arguments.<computed> (/Users/mridang/Junk/tmp-express-js-xray/node_modules/@opentelemetry/instrumentation-express/build/src/instrumentation.js:210:41)"
+				},
+				"droppedAttributesCount": 0
+			}
+		],
 		"links": []
 	}
 ]

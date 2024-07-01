@@ -16,6 +16,12 @@ export interface CauseParser {
 export class DefaultCauseParser implements CauseParser {
   private readonly regex = /^\s*at\s+([^()]+)(?:\s+\(([^:]+):(\d+):\d+\))?$/;
 
+  constructor(
+    private readonly idGen: () => string = () => randomBytes(8).toString('hex'),
+  ) {
+    //
+  }
+
   /**
    * Parses the span events to identify the cause of an error, including
    * detailed information about exceptions.
@@ -61,7 +67,7 @@ export class DefaultCauseParser implements CauseParser {
             span.events
               .filter((event) => event.name === 'exception')
               .map((event) => ({
-                id: randomBytes(8).toString('hex'),
+                id: this.idGen(),
                 cause: '',
                 type: str(event.attributes?.[SEMATTRS_EXCEPTION_TYPE]),
                 message: str(event.attributes?.[SEMATTRS_EXCEPTION_MESSAGE]),
