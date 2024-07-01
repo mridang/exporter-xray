@@ -119,9 +119,9 @@ export class EnhancedReadableSpan {
    * @returns {boolean} True if the span represents a fault, otherwise false.
    */
   public isFault(): true | undefined {
-    if (Number(this.span.attributes[SEMATTRS_HTTP_STATUS_CODE] || 0) >= 400) {
+    if (Number(this.span.attributes[SEMATTRS_HTTP_STATUS_CODE] || 0) >= 500) {
       return (
-        Number(this.span.attributes[SEMATTRS_HTTP_STATUS_CODE] || 0) <= 499 ||
+        Number(this.span.attributes[SEMATTRS_HTTP_STATUS_CODE] || 0) <= 599 ||
         undefined
       );
     } else {
@@ -136,9 +136,9 @@ export class EnhancedReadableSpan {
    * @returns {boolean} True if the span represents an error, otherwise false.
    */
   public isError(): true | undefined {
-    if (Number(this.span.attributes[SEMATTRS_HTTP_STATUS_CODE] || 0) >= 500) {
+    if (Number(this.span.attributes[SEMATTRS_HTTP_STATUS_CODE] || 0) >= 400) {
       return (
-        Number(this.span.attributes[SEMATTRS_HTTP_STATUS_CODE] || 0) <= 599 ||
+        Number(this.span.attributes[SEMATTRS_HTTP_STATUS_CODE] || 0) <= 499 ||
         undefined
       );
     } else {

@@ -436,7 +436,7 @@ describe('XraySpanExporter', () => {
             ],
           },
           end_time: 1719764433.3646984,
-          error: true,
+          fault: true,
           http: {
             request: {
               client_ip: '::1',
