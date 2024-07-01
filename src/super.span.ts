@@ -222,11 +222,33 @@ export class EnhancedReadableSpan {
     }
   }
 
-  public getEndTime() {
+  /**
+   * Retrieves the end time of the span in floating point seconds
+   * since the Unix epoch.
+   *
+   * This is the time when the segment was closed,
+   * represented as a floating-point number in seconds since the
+   * Unix epoch. For example, 1480615200.090 or 1.480615200090E9.
+   *
+   * @returns {number} The end time in floating point seconds.
+   * @see {@link https://docs.aws.amazon.com/xray/latest/devguide/aws-xray-interface-api.html#xray-api-segmentdocuments.html}
+   */
+  public getEndTime(): number {
     return hrt(this.span.endTime);
   }
 
-  public getStartTime() {
+  /**
+   * Retrieves the start time of the span in floating point seconds
+   * since the Unix epoch.
+   *
+   * This is the time when the segment was created,
+   * represented as a floating-point number in seconds since the
+   * Unix epoch. For example, 1480615200.010 or 1.480615200010E9.
+   *
+   * @returns {number} The start time in floating point seconds.
+   * @see {@link https://docs.aws.amazon.com/xray/latest/devguide/aws-xray-interface-api.html#xray-api-segmentdocuments.html}
+   */
+  public getStartTime(): number {
     return hrt(this.span.startTime);
   }
 
