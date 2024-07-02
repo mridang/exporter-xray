@@ -51,7 +51,8 @@
 		"@aws-sdk/client-xray": "^3.0.0",
 		"@opentelemetry/core": "^1.25.1",
 		"@opentelemetry/sdk-trace-base": "^1.25.1",
-		"@opentelemetry/semantic-conventions": "^1.25.1"
+		"@opentelemetry/semantic-conventions": "^1.25.1",
+		"error-stack-parser": "^2.1.4"
 	},
 	"devDependencies": {
 		"@opentelemetry/api": "^1.0.0",

@@ -1,4 +1,4 @@
-import { Cause } from './xray.document';
+import { Cause, Stack } from './xray.document';
 import { ReadableSpan } from '@opentelemetry/sdk-trace-base';
 import { randomBytes } from 'node:crypto';
 import { str, undef } from './util';
@@ -8,15 +8,13 @@ import {
   SEMATTRS_EXCEPTION_TYPE,
 } from '@opentelemetry/semantic-conventions';
 import { SpanKind } from '@opentelemetry/api';
+import * as ErrorStackParser from 'error-stack-parser';
 
 export interface CauseParser {
   getCause(span: ReadableSpan): Cause | undefined;
 }
 
 export class DefaultCauseParser implements CauseParser {
-  private readonly regex =
-    /^\s*at\s+(?:(?<label>[^()]+)\s+\((?<path>[^:]+):(?<line>\d+):\d+\)|(?<path2>[^:]+):(?<line2>\d+):\d+)$/;
-
   constructor(
     private readonly idGen: () => string = () => randomBytes(8).toString('hex'),
   ) {
@@ -74,21 +72,24 @@ export class DefaultCauseParser implements CauseParser {
                 remote: [SpanKind.PRODUCER, SpanKind.CLIENT].includes(
                   span.kind,
                 ),
-                stack: str(event.attributes?.[SEMATTRS_EXCEPTION_STACKTRACE])
-                  ?.split('\n')
-                  .map((line) => this.regex.exec(line))
-                  .filter(Boolean)
-                  .map((match) => ({
-                    label: match?.groups?.label || 'anonymous',
-                    path: match?.groups?.path || match?.groups?.path2,
-                    line: match?.groups?.line
-                      ? Number(match.groups.line)
-                      : // @ts-expect-error xf wts
-                        Number(match.groups.line2),
-                  })),
+                stack: this.parse(
+                  event.attributes?.[SEMATTRS_EXCEPTION_STACKTRACE],
+                ),
               })),
           ),
         }
       : undefined;
+  }
+
+  private parse(stack: unknown | undefined): Stack[] {
+    const exception = new Error();
+    exception.stack = str(stack);
+    return ErrorStackParser.parse(exception).map((stack) => {
+      return {
+        label: stack.functionName || 'anonymous',
+        line: stack.lineNumber,
+        path: stack.fileName,
+      };
+    });
   }
 }
