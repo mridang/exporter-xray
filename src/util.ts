@@ -31,13 +31,19 @@ export function ip(ip?: string): string | undefined {
 
 /**
  * Returns the array if it contains elements, otherwise undefined.
- * @param { T[] } arr - The array to check.
- * @returns { T[] | undefined } The array if not empty, otherwise undefined.
+ * @template T
+ * @param {T[]} arr - The array to check.
+ * @returns {T[]|undefined} The array if not empty, otherwise undefined.
  */
 export function undef<T>(arr: T[]): T[] | undefined {
   return arr?.length > 0 ? arr : undefined;
 }
 
+/**
+ * Converts an unknown input to a number if possible, otherwise returns undefined.
+ * @param {unknown} num - The input to convert.
+ * @returns {number|undefined} The number if it is a valid number, otherwise undefined.
+ */
 export function num(num: unknown) {
   return num ? (isNaN(Number(num)) ? undefined : Number(num)) : undefined;
 }
