@@ -167,9 +167,7 @@ describe('xray.exporter test', () => {
               client_ip: '20.248.137.49',
               x_forwarded_for: true,
             },
-            response: {
-              status: null,
-            },
+            response: {},
           },
           id: '911b1e2214de58b8',
           name: 'api.github.com',
@@ -693,9 +691,7 @@ describe('xray.exporter test', () => {
               client_ip: '::1',
               x_forwarded_for: true,
             },
-            response: {
-              status: null,
-            },
+            response: {},
           },
           id: '95299e7fe60cda23',
           name: 'localhost',
@@ -721,9 +717,7 @@ describe('xray.exporter test', () => {
           end_time: 1719893345.1172202,
           http: {
             request: {},
-            response: {
-              status: null,
-            },
+            response: {},
           },
           id: '3d958e9dc4ce623e',
           name: 'your_database@localhost',
