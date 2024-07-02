@@ -1,4 +1,4 @@
-import { Cause, Stack } from './xray.document';
+import { Cause } from './xray.document';
 import { ReadableSpan } from '@opentelemetry/sdk-trace-base';
 import { randomBytes } from 'node:crypto';
 import { str, undef } from './util';
@@ -72,24 +72,18 @@ export class DefaultCauseParser implements CauseParser {
                 remote: [SpanKind.PRODUCER, SpanKind.CLIENT].includes(
                   span.kind,
                 ),
-                stack: this.parse(
-                  event.attributes?.[SEMATTRS_EXCEPTION_STACKTRACE],
-                ),
+                stack: ErrorStackParser.parse({
+                  stack: event.attributes?.[SEMATTRS_EXCEPTION_STACKTRACE],
+                } as Error).map((stack) => {
+                  return {
+                    label: stack.functionName || 'anonymous',
+                    line: stack.lineNumber,
+                    path: stack.fileName,
+                  };
+                }),
               })),
           ),
         }
       : undefined;
-  }
-
-  private parse(stack: unknown | undefined): Stack[] {
-    const exception = new Error();
-    exception.stack = str(stack);
-    return ErrorStackParser.parse(exception).map((stack) => {
-      return {
-        label: stack.functionName || 'anonymous',
-        line: stack.lineNumber,
-        path: stack.fileName,
-      };
-    });
   }
 }
