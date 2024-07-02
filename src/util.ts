@@ -44,6 +44,6 @@ export function undef<T>(arr: T[]): T[] | undefined {
  * @param {unknown} num - The input to convert.
  * @returns {number|undefined} The number if it is a valid number, otherwise undefined.
  */
-export function num(num: unknown) {
+export function num(num: unknown): undefined | number {
   return num ? (isNaN(Number(num)) ? undefined : Number(num)) : undefined;
 }
