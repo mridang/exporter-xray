@@ -11,6 +11,7 @@ import { DefaultNameParser, NameParser } from './name.parser';
 import { SegmentEmitter } from './emitter/segment.emitter';
 import { SDKBasedSegmentEmitter } from './emitter/sdk.emitter';
 import { UDPDaemonSegmentEmitter } from './emitter/udp.emitter';
+import { DefaultOriginParser, OriginParser } from './origin.parser';
 
 export default class XraySpanExporter implements SpanExporter {
   constructor(
@@ -22,6 +23,7 @@ export default class XraySpanExporter implements SpanExporter {
     private readonly causeParser: CauseParser = new DefaultCauseParser(),
     private readonly httpParser: HttpParser = new DefaultHttpParser(),
     private readonly nameParser: NameParser = new DefaultNameParser(),
+    private readonly originParser: OriginParser = new DefaultOriginParser(),
   ) {
     //
   }
@@ -41,7 +43,7 @@ export default class XraySpanExporter implements SpanExporter {
           error: span.isError(),
           throttle: span.isThrottled(),
           cause: span.getCause(this.causeParser),
-          origin: span.getOrigin(),
+          origin: span.getOrigin(this.originParser),
           namespace: span.getNamespace(),
           user: span.getUser(),
           http: span.getHttp(this.httpParser),

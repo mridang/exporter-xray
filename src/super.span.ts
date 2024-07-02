@@ -3,7 +3,6 @@ import {
   CLOUDPLATFORMVALUES_AWS_ECS,
   CLOUDPLATFORMVALUES_AWS_EKS,
   CLOUDPLATFORMVALUES_AWS_ELASTIC_BEANSTALK,
-  CLOUDPROVIDERVALUES_AWS,
   SEMATTRS_DB_CONNECTION_STRING,
   SEMATTRS_DB_NAME,
   SEMATTRS_DB_STATEMENT,
@@ -20,7 +19,6 @@ import {
   SEMRESATTRS_AWS_ECS_TASK_FAMILY,
   SEMRESATTRS_CLOUD_AVAILABILITY_ZONE,
   SEMRESATTRS_CLOUD_PLATFORM,
-  SEMRESATTRS_CLOUD_PROVIDER,
   SEMRESATTRS_CONTAINER_ID,
   SEMRESATTRS_CONTAINER_IMAGE_TAG,
   SEMRESATTRS_CONTAINER_NAME,
@@ -55,6 +53,7 @@ import { IdParser } from './id.parser';
 import { HttpParser } from './http.parser';
 import { CauseParser } from './cause.parser';
 import { NameParser } from './name.parser';
+import { OriginParser } from './origin.parser';
 
 export class EnhancedReadableSpan {
   private readonly DBS = [
@@ -180,46 +179,8 @@ export class EnhancedReadableSpan {
    * @returns {string | undefined} The determined origin, or undefined if no
    * relevant attributes are found.
    */
-  public getOrigin(): string | undefined {
-    if (!this.span.resource?.attributes) {
-      return undefined;
-    } else {
-      if (
-        this.span.resource?.attributes[SEMRESATTRS_CLOUD_PROVIDER] !==
-        CLOUDPROVIDERVALUES_AWS
-      ) {
-        return undefined;
-      } else {
-        switch (this.span.resource?.attributes[SEMRESATTRS_CLOUD_PLATFORM]) {
-          case 'aws_app_runner':
-            return 'AWS::AppRunner::Service';
-          case CLOUDPLATFORMVALUES_AWS_EKS:
-            return 'AWS::EKS::Container';
-          case CLOUDPLATFORMVALUES_AWS_ELASTIC_BEANSTALK:
-            return 'AWS::ElasticBeanstalk::Environment';
-          case CLOUDPLATFORMVALUES_AWS_ECS:
-            if (
-              !this.span.resource?.attributes[SEMRESATTRS_AWS_ECS_LAUNCHTYPE]
-            ) {
-              return 'AWS::ECS::Container';
-            }
-            switch (
-              this.span.resource?.attributes[SEMRESATTRS_AWS_ECS_LAUNCHTYPE]
-            ) {
-              case CLOUDPLATFORMVALUES_AWS_EC2:
-                return 'AWS::ECS::EC2';
-              case 'fargate':
-                return 'AWS::ECS::Fargate';
-              default:
-                return 'AWS::ECS::Container';
-            }
-          case CLOUDPLATFORMVALUES_AWS_EC2:
-            return 'AWS::EC2::Instance';
-          default:
-            return undefined;
-        }
-      }
-    }
+  public getOrigin(originParser: OriginParser): string | undefined {
+    return originParser.getOrigin(this.span);
   }
 
   /**
