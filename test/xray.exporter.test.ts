@@ -25,7 +25,7 @@ jest.mock('@aws-sdk/client-xray', () => {
   };
 });
 
-describe('XraySpanExporter', () => {
+describe('xray.exporter test', () => {
   let exporter: XraySpanExporter;
   let mockXRayClient: XRayClient;
 

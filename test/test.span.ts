@@ -49,8 +49,7 @@ export class WrappedReadableSpan implements ReadableSpan {
   readonly droppedAttributesCount: number;
   readonly droppedEventsCount: number;
   readonly droppedLinksCount: number;
-
-  private _spanContext: SpanContext;
+  private readonly _spanContext: SpanContext;
 
   constructor(private readonly spanData: SpanData) {
     this.name = spanData.name;
