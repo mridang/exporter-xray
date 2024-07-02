@@ -1,8 +1,6 @@
-import { readFileSync } from 'fs';
-import { join } from 'path';
 import XraySpanExporter from '../src/xray.exporter';
 import { ExportResultCode } from '@opentelemetry/core';
-import { SpanData, WrappedReadableSpan } from './test.span';
+import { WrappedReadableSpan } from './test.span';
 import { XRayClient } from '@aws-sdk/client-xray';
 import { DefaultIdParser } from '../src/id.parser';
 import { DefaultCauseParser } from '../src/cause.parser';
@@ -46,14 +44,10 @@ describe('xray.exporter test', () => {
   });
 
   test(`should export the span from`, async () => {
-    const filePath = join(__dirname, 'samples', 'request.axios.json');
-    const rawData = readFileSync(filePath, 'utf-8');
-    const parsedData = JSON.parse(rawData) as SpanData[];
-
     expect(
       await new Promise((resolve) => {
         exporter.export(
-          parsedData.map((span) => new WrappedReadableSpan(span)),
+          WrappedReadableSpan.from('request.axios.json'),
           resolve,
         );
       }),
@@ -278,16 +272,9 @@ describe('xray.exporter test', () => {
   });
 
   test(`should export the span from 500`, async () => {
-    const filePath = join(__dirname, 'samples', 'error.500.json');
-    const rawData = readFileSync(filePath, 'utf-8');
-    const parsedData = JSON.parse(rawData) as SpanData[];
-
     expect(
       await new Promise((resolve) => {
-        exporter.export(
-          parsedData.map((span) => new WrappedReadableSpan(span)),
-          resolve,
-        );
+        exporter.export(WrappedReadableSpan.from('error.500.json'), resolve);
       }),
     ).toEqual({ code: ExportResultCode.SUCCESS });
 
@@ -466,16 +453,9 @@ describe('xray.exporter test', () => {
   });
 
   test(`should export the span from 400`, async () => {
-    const filePath = join(__dirname, 'samples', 'error.400.json');
-    const rawData = readFileSync(filePath, 'utf-8');
-    const parsedData = JSON.parse(rawData) as SpanData[];
-
     expect(
       await new Promise((resolve) => {
-        exporter.export(
-          parsedData.map((span) => new WrappedReadableSpan(span)),
-          resolve,
-        );
+        exporter.export(WrappedReadableSpan.from('error.400.json'), resolve);
       }),
     ).toEqual({ code: ExportResultCode.SUCCESS });
 
@@ -592,14 +572,10 @@ describe('xray.exporter test', () => {
   });
 
   test(`should export the span from mysql`, async () => {
-    const filePath = join(__dirname, 'samples', 'request.mysql.json');
-    const rawData = readFileSync(filePath, 'utf-8');
-    const parsedData = JSON.parse(rawData) as SpanData[];
-
     expect(
       await new Promise((resolve) => {
         exporter.export(
-          parsedData.map((span) => new WrappedReadableSpan(span)),
+          WrappedReadableSpan.from('request.mysql.json'),
           resolve,
         );
       }),

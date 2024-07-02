@@ -14,15 +14,6 @@ describe('cause.parser test', () => {
     causeParser = new DefaultCauseParser();
   });
 
-  const generateStackTrace = (): string => {
-    try {
-      throw new Error('Generated stack trace');
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (e: any) {
-      return e.stack;
-    }
-  };
-
   test('should return undefined if no exception events are present', () => {
     const span: ReadableSpan = {
       events: [],
@@ -41,7 +32,7 @@ describe('cause.parser test', () => {
           attributes: {
             [SEMATTRS_EXCEPTION_TYPE]: 'Error',
             [SEMATTRS_EXCEPTION_MESSAGE]: 'An error occurred',
-            [SEMATTRS_EXCEPTION_STACKTRACE]: generateStackTrace(),
+            [SEMATTRS_EXCEPTION_STACKTRACE]: new Error().stack,
           },
         },
       ],
@@ -75,7 +66,7 @@ describe('cause.parser test', () => {
           attributes: {
             [SEMATTRS_EXCEPTION_TYPE]: 'Error',
             [SEMATTRS_EXCEPTION_MESSAGE]: 'First error',
-            [SEMATTRS_EXCEPTION_STACKTRACE]: generateStackTrace(),
+            [SEMATTRS_EXCEPTION_STACKTRACE]: new Error().stack,
           },
         },
         {
@@ -83,7 +74,7 @@ describe('cause.parser test', () => {
           attributes: {
             [SEMATTRS_EXCEPTION_TYPE]: 'TypeError',
             [SEMATTRS_EXCEPTION_MESSAGE]: 'Second error',
-            [SEMATTRS_EXCEPTION_STACKTRACE]: generateStackTrace(),
+            [SEMATTRS_EXCEPTION_STACKTRACE]: new Error().stack,
           },
         },
       ],

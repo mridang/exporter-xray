@@ -76,7 +76,7 @@ as it uses a TCP-based transport but is easier to set up.
 The **UDP Daemon Emitter** sends trace segments to the X-Ray daemon
 using UDP and is recommended for AWS Lambda environments where the
 daemon is typically running. By default, this emitter emits segments
-over UDP to the daemon running on localhost at port 2000 but you can
+over UDP to the daemon running on localhost at port 2000, but you can
 switch this by using the `AWS_XRAY_DAEMON_ADDRESS` environment variable.
 https://docs.aws.amazon.com/xray/latest/devguide/xray-daemon.html
 
@@ -112,7 +112,7 @@ but there [are some references to it](https://github.com/open-telemetry/opentele
 
 There is no documentation around span links and therefore, while this
 feature has been implemented, it may or may not work. There was code in
-the original collector to manage span links but I don't see any mention
+the original collector to manage span links, but I don't see any mention
 of this any of the AWS SDKs.
 
 log references

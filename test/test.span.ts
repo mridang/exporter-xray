@@ -9,6 +9,8 @@ import {
 } from '@opentelemetry/api';
 import { IResource } from '@opentelemetry/resources';
 import { InstrumentationScope } from '@opentelemetry/core/build/src/common/types';
+import { join } from 'path';
+import { readFileSync } from 'fs';
 
 export interface SpanData {
   traceId: string;
@@ -87,5 +89,13 @@ export class WrappedReadableSpan implements ReadableSpan {
 
   spanContext(): SpanContext {
     return this._spanContext;
+  }
+
+  static from(filename: string): WrappedReadableSpan[] {
+    const filePath = join(__dirname, 'samples', filename);
+    const rawData = readFileSync(filePath, 'utf-8');
+    return (JSON.parse(rawData) as SpanData[]).map(
+      (span) => new WrappedReadableSpan(span),
+    );
   }
 }
