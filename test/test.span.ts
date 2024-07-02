@@ -3,13 +3,12 @@ import {
   Attributes,
   HrTime,
   Link,
-  SpanAttributes,
   SpanContext,
   SpanKind,
   SpanStatus,
 } from '@opentelemetry/api';
 import { IResource } from '@opentelemetry/resources';
-import { InstrumentationLibrary } from '@opentelemetry/core';
+import { InstrumentationScope } from '@opentelemetry/core/build/src/common/types';
 
 export interface SpanData {
   traceId: string;
@@ -26,7 +25,7 @@ export interface SpanData {
   events: TimedEvent[];
   ended: boolean;
   resource: IResource;
-  instrumentationLibrary: InstrumentationLibrary;
+  instrumentationLibrary: InstrumentationScope;
   droppedAttributesCount: number;
   droppedEventsCount: number;
   droppedLinksCount: number;
@@ -39,13 +38,13 @@ export class WrappedReadableSpan implements ReadableSpan {
   readonly startTime: HrTime;
   readonly endTime: HrTime;
   readonly status: SpanStatus;
-  readonly attributes: SpanAttributes;
+  readonly attributes: Attributes;
   readonly links: Link[];
   readonly events: TimedEvent[];
   readonly duration: HrTime;
   readonly ended: boolean;
   readonly resource: IResource;
-  readonly instrumentationLibrary: InstrumentationLibrary;
+  readonly instrumentationLibrary: InstrumentationScope;
   readonly droppedAttributesCount: number;
   readonly droppedEventsCount: number;
   readonly droppedLinksCount: number;
