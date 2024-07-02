@@ -1,6 +1,7 @@
 # OpenTelemetry AWS X-Ray Trace Exporter
 
-A plugin for the Serverless framework to export traces to AWS X-Ray.
+An exporter for OpenTelemetry that allows the user to send the
+collected traces to AWS X-Ray.
 
 This exporter allows the user to send collected traces to AWS X-Ray,
 a service that helps with the monitoring and troubleshooting of
@@ -14,8 +15,10 @@ opportunities for optimization.
 Install using NPM by using the following command:
 
 ```sh
-npm install --save @mridang/exporter-xray @opentelemetry/id-generator-aws-xray @opentelemetry/propagator-aws-xray
+npm install --save @mridang/exporter-xray
 ```
+
+You will need to install those additional packages
 
 ## Usage
 
