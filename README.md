@@ -62,6 +62,27 @@ const exporter = new XraySpanExporter(
 );
 ```
 
+### Emitter Configuration
+
+The exporter supports two approaches for emitting trace segments:
+
+The **SDK-Based Emitter** uses the AWS X-Ray SDK to send trace segments
+and is recommended for environments outside AWS Lambda. This is slower
+as it uses a TCP-based transport but is easier to set up.
+
+The **UDP Daemon Emitter** sends trace segments to the X-Ray daemon
+using UDP and is recommended for AWS Lambda environments where the
+daemon is typically running. By default, this emitter emits segments
+over UDP to the daemon running on localhost at port 2000 but you can
+switch this by using the `AWS_XRAY_DAEMON_ADDRESS` environment variable.
+https://docs.aws.amazon.com/xray/latest/devguide/xray-daemon.html
+
+The exporter defaults to using the `UDPDaemonSegmentEmitter` when
+running on AWS Lambda, and the `SDKBasedSegmentEmitter` otherwise.
+This is determined automatically based on the presence of the
+`AWS_LAMBDA_FUNCTION_NAME` environment variable. No additional setup is
+needed as the daemon is already running on Lambda environments.
+
 ### Viewing your traces
 
 Please visit the AWS X-Ray console to view your traces:

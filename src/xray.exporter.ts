@@ -1,5 +1,4 @@
 import { SpanExporter } from '@opentelemetry/sdk-trace-base/build/src/export/SpanExporter';
-import { PutTraceSegmentsCommand, XRayClient } from '@aws-sdk/client-xray';
 import { XrayTraceDataSegmentDocument } from './xray.document';
 import { ReadableSpan } from '@opentelemetry/sdk-trace-base/build/src/export/ReadableSpan';
 import { EnhancedReadableSpan } from './super.span';
@@ -9,10 +8,16 @@ import { DefaultCauseParser, CauseParser } from './cause.parser';
 import { DefaultHttpParser, HttpParser } from './http.parser';
 import { diag } from '@opentelemetry/api';
 import { DefaultNameParser, NameParser } from './name.parser';
+import { SegmentEmitter } from './emitter/segment.emitter';
+import { SDKBasedSegmentEmitter } from './emitter/sdk.emitter';
+import { UDPDaemonSegmentEmitter } from './emitter/udp.emitter';
 
 export default class XraySpanExporter implements SpanExporter {
   constructor(
-    private readonly xRayClient: XRayClient = new XRayClient(),
+    private readonly segmentEmitter: SegmentEmitter = process.env
+      .AWS_LAMBDA_FUNCTION_NAME
+      ? new UDPDaemonSegmentEmitter()
+      : new SDKBasedSegmentEmitter(),
     private readonly idParser: IdParser = new DefaultIdParser(),
     private readonly causeParser: CauseParser = new DefaultCauseParser(),
     private readonly httpParser: HttpParser = new DefaultHttpParser(),
@@ -50,24 +55,14 @@ export default class XraySpanExporter implements SpanExporter {
         }),
       );
 
-    this.xRayClient
-      .send(
-        new PutTraceSegmentsCommand({
-          TraceSegmentDocuments: trace.map((document) =>
-            JSON.stringify(document),
-          ),
-        }),
-      )
-      .then((result) => {
+    this.segmentEmitter
+      .emit(trace)
+      .then(() => {
         diag.debug(`Sent ${spans.length} spans to X-Ray.`);
-        if (result.UnprocessedTraceSegments?.length) {
-          const upCnt = result.UnprocessedTraceSegments?.length || 0;
-          diag.warn(`${upCnt} couldn't be processed.`);
-        }
         cb({ code: ExportResultCode.SUCCESS });
       })
       .catch((err) => {
-        cb({ code: ExportResultCode.FAILED, error: err as Error });
+        cb({ code: ExportResultCode.FAILED, error: err });
       });
   }
 
@@ -78,7 +73,7 @@ export default class XraySpanExporter implements SpanExporter {
    */
   shutdown(): Promise<void> {
     // No implementation for shutdown logic since there's no cleanup needed.
-    this.xRayClient.destroy();
+    this.segmentEmitter.shutdown();
     return Promise.resolve();
   }
 

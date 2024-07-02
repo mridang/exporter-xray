@@ -8,6 +8,7 @@ import { DefaultIdParser } from '../src/id.parser';
 import { DefaultCauseParser } from '../src/cause.parser';
 import { DefaultHttpParser } from '../src/http.parser';
 import { DefaultNameParser } from '../src/name.parser';
+import { SDKBasedSegmentEmitter } from '../src/emitter/sdk.emitter';
 
 jest.mock('@aws-sdk/client-xray', () => {
   return {
@@ -32,7 +33,7 @@ describe('xray.exporter test', () => {
   beforeAll(() => {
     mockXRayClient = new XRayClient();
     exporter = new XraySpanExporter(
-      mockXRayClient,
+      new SDKBasedSegmentEmitter(mockXRayClient),
       new DefaultIdParser(Number.MAX_VALUE, Number.MAX_VALUE),
       new DefaultCauseParser(() => '0'),
       new DefaultHttpParser(),
