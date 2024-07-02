@@ -53,6 +53,7 @@
 	},
 	"devDependencies": {
 		"@opentelemetry/api": "^1.0.0",
+		"@opentelemetry/id-generator-aws-xray": "^1.2.2",
 		"@opentelemetry/resources": "1.25.1",
 		"@semantic-release/commit-analyzer": "^13.0.0",
 		"@semantic-release/git": "^10.0.1",
