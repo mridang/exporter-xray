@@ -37,3 +37,7 @@ export function ip(ip?: string): string | undefined {
 export function undef<T>(arr: T[]): T[] | undefined {
   return arr?.length > 0 ? arr : undefined;
 }
+
+export function num(num: unknown) {
+  return num ? (isNaN(Number(num)) ? undefined : Number(num)) : undefined;
+}

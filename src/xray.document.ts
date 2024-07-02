@@ -1,5 +1,6 @@
 export interface AWS {
   ecs?: {
+    // https://github.com/aws/aws-xray-sdk-java/blob/63ace4ace34473bf2e071cfbbba79fa92388af61/aws-xray-recorder-sdk-core/src/main/java/com/amazonaws/xray/plugins/ECSPlugin.java#L43
     container?: string; // Renamed to match schema
     container_name?: string; // Not in schema
     container_id?: string; // Not in schema
@@ -11,22 +12,26 @@ export interface AWS {
     launch_type?: string; // Not in schema
   };
   ec2?: {
+    // https://github.com/aws/aws-xray-sdk-java/blob/63ace4ace34473bf2e071cfbbba79fa92388af61/aws-xray-recorder-sdk-core/src/main/java/com/amazonaws/xray/plugins/EC2Plugin.java#L47
     instance_id?: string;
     availability_zone?: string;
     instance_size?: string;
     ami_id?: string;
   };
-  ebs?: {
+  elastic_beanstalk?: {
+    // https://github.com/aws/aws-xray-sdk-java/blob/63ace4ace34473bf2e071cfbbba79fa92388af61/aws-xray-recorder-sdk-core/src/main/java/com/amazonaws/xray/plugins/ElasticBeanstalkPlugin.java#L43
     environment?: string;
     version_label?: string;
     deployment_id?: number;
   };
   eks?: {
+    // https://github.com/aws/aws-xray-sdk-java/blob/63ace4ace34473bf2e071cfbbba79fa92388af61/aws-xray-recorder-sdk-core/src/main/java/com/amazonaws/xray/plugins/EKSPlugin.java#L43
     cluster_name?: string;
     pod?: string;
     container_id?: string;
   };
   xray: {
+    // https://github.com/aws/aws-xray-sdk-node/blob/b39b5e298ae600e8e2975a609059fe67e6fd6cd6/packages/core/lib/aws-xray.js#L382-L386
     sdk?: string;
     sdk_version?: string;
     auto_instrumentation?: boolean;
@@ -59,11 +64,12 @@ export interface Response {
 }
 
 export interface Link {
-  span_id: string;
+  id: string;
   trace_id: string;
   attributes: { [key: string]: unknown | undefined };
 }
 
+// https://github.com/aws/aws-xray-sdk-node/blob/b39b5e298ae600e8e2975a609059fe67e6fd6cd6/packages/core/lib/aws-xray.js#L375-L379
 export interface Service {
   version: string;
   runtime?: string; // Not in schema
@@ -126,7 +132,6 @@ export interface XrayTraceDataSegmentDocument {
   namespace?: 'aws' | 'remote';
   user?: string;
   http?: HTTP;
-  inferred?: boolean; // Not in schema
   cause?: Cause;
   annotations?: { [key: string]: string | number | boolean };
   metadata?: { [key: string]: { [key: string]: unknown } };

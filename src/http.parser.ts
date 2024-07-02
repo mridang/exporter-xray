@@ -19,7 +19,7 @@ import {
   SEMATTRS_MESSAGE_TYPE,
 } from '@opentelemetry/semantic-conventions';
 import { HTTP } from './xray.document';
-import { ip, str } from './util';
+import { ip, num, str } from './util';
 
 export interface HttpParser {
   parseHttp(span: ReadableSpan): HTTP | undefined;
@@ -142,19 +142,22 @@ export class DefaultHttpParser implements HttpParser {
                           attributes[SEMATTRS_NET_PEER_NAME] ||
                           attributes[SEMATTRS_NET_PEER_IP],
                       ) || 'host',
-                    port: str(attributes[SEMATTRS_NET_PEER_PORT]), //TODO: Cleanup default
+                    port: str(attributes[SEMATTRS_NET_PEER_PORT]),
                     path: str(attributes[SEMATTRS_HTTP_TARGET]) || '/',
                   })
               : undefined,
           },
           response: {
-            status: attributes[SEMATTRS_HTTP_STATUS_CODE]
-              ? Number(attributes[SEMATTRS_HTTP_STATUS_CODE])
-              : Number(attributes['http.response.status_code']), //TODO: Create num function
+            status: num(
+              str(attributes[SEMATTRS_HTTP_STATUS_CODE]) ||
+                str(attributes['http.response.status_code']),
+            ),
             content_length:
               attributes[SEMATTRS_MESSAGE_TYPE] === 'RECEIVED'
-                ? Number(
-                    attributes[SEMATTRS_MESSAGING_MESSAGE_PAYLOAD_SIZE_BYTES],
+                ? num(
+                    str(
+                      attributes[SEMATTRS_MESSAGING_MESSAGE_PAYLOAD_SIZE_BYTES],
+                    ),
                   )
                 : undefined,
           },

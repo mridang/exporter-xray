@@ -279,11 +279,17 @@ export class EnhancedReadableSpan {
     }
   }
 
+  /**
+   * Unsure what this function does as this has been blindly ported over.
+   * {@link https://github.com/open-telemetry/opentelemetry-collector-contrib/pull/20313#issuecomment-2201988954}
+   *
+   * @param idParser
+   */
   public getLinks(idParser: IdParser): Link[] | undefined {
     return undef(
       this.span.links?.map((link) => {
         return {
-          span_id: link.context.spanId,
+          id: link.context.spanId,
           trace_id: idParser.parseId(link.context.traceId),
           attributes: Object.fromEntries(
             Object.entries(link.attributes || {})
@@ -367,7 +373,7 @@ export class EnhancedReadableSpan {
               pod: str(this.span.resource.attributes[SEMRESATTRS_K8S_POD_NAME]),
             }
           : undefined,
-      ebs:
+      elastic_beanstalk:
         this.span.resource.attributes[SEMRESATTRS_CLOUD_PLATFORM] ===
           CLOUDPLATFORMVALUES_AWS_ELASTIC_BEANSTALK ||
         this.span.resource.attributes[SEMRESATTRS_SERVICE_INSTANCE_ID] !==

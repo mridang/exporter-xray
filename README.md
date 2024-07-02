@@ -67,6 +67,32 @@ const exporter = new XraySpanExporter(
 Please visit the AWS X-Ray console to view your traces:
 <https://console.aws.amazon.com/xray/home>
 
+## Known Issues
+
+When sending SQL segments there is no support for sending these fields as
+they aren't added:
+
+- `database_version` – The version number of the database engine.
+- `driver_version` – The version number of the database driver
+- `preparation` - A flag indicating whether query or statement
+
+This is because these fields aren't part of the OpenTelemetry Semantic
+Conventions and therefore is never set as a part of the automatic
+instrumentation e.g. [in the MySQL instrumentation](https://github.com/open-telemetry/opentelemetry-js-contrib/tree/0af1b70f7c3c9763c85ac51fa5e334c1e1512020/plugins/node/opentelemetry-instrumentation-mysql).
+
+There doesn't seem to be any support for AWS AppRunner. This means that
+when the origin is reported in Xray, there is no way to denote that the
+instrumentation was running on AppRunner.
+Even [OpenTelemetry internally has no mention of AppRunner](https://github.com/open-telemetry/opentelemetry-js/blob/v1.25.1/packages/opentelemetry-semantic-conventions/src/resource/SemanticResourceAttributes.ts#L1204-L1208)
+but there [are some references to it](https://github.com/open-telemetry/opentelemetry-python/blob/72be755db4dc747cff9e647266edc784ad750efa/opentelemetry-semantic-conventions/src/opentelemetry/semconv/_incubating/attributes/cloud_attributes.py#L86) which means that may be incubating
+
+There is no documentation around span links and therefore, while this
+feature has been implemented, it may or may not work. There was code in
+the original collector to manage span links but I don't see any mention
+of this any of the AWS SDKs.
+
+log references
+
 ## Useful links
 
 - For more information on OpenTelemetry, visit: <https://opentelemetry.io/>
