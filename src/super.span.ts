@@ -3,6 +3,7 @@ import {
   CLOUDPLATFORMVALUES_AWS_ECS,
   CLOUDPLATFORMVALUES_AWS_EKS,
   CLOUDPLATFORMVALUES_AWS_ELASTIC_BEANSTALK,
+  SEMATTRS_AWS_DYNAMODB_TABLE_NAMES,
   SEMATTRS_DB_CONNECTION_STRING,
   SEMATTRS_DB_NAME,
   SEMATTRS_DB_STATEMENT,
@@ -10,6 +11,8 @@ import {
   SEMATTRS_DB_USER,
   SEMATTRS_ENDUSER_ID,
   SEMATTRS_HTTP_STATUS_CODE,
+  SEMATTRS_MESSAGING_MESSAGE_ID,
+  SEMATTRS_MESSAGING_URL,
   SEMATTRS_RPC_METHOD,
   SEMATTRS_RPC_SYSTEM,
   SEMRESATTRS_AWS_ECS_CLUSTER_ARN,
@@ -43,11 +46,17 @@ import { ReadableSpan } from '@opentelemetry/sdk-trace-base';
 import { AWS, Cause, HTTP, Link, Service, SQL } from './xray.document';
 import {
   XSEMATTRS_AWS_ACCOUNT,
+  XSEMATTRS_AWS_BUCKET_KEY,
+  XSEMATTRS_AWS_BUCKET_NAME,
   XSEMATTRS_AWS_OPERATION,
+  XSEMATTRS_AWS_QUEUE_URL,
+  XSEMATTRS_AWS_QUEUE_URL_2,
   XSEMATTRS_AWS_REGION,
   XSEMATTRS_AWS_REQUEST_ID,
-  XSEMATTRS_AWS_REQUEST_ID_2,
+  XSEMATTRS_AWS_XREQUEST_ID,
   XSEMATTRS_AWS_SERVICE,
+  XSEMATTRS_AWS_TABLE_NAME,
+  XSEMATTRS_AWS_TABLE_NAME_2,
 } from './constants';
 import { IdParser } from './id.parser';
 import { HttpParser } from './http.parser';
@@ -302,10 +311,28 @@ export class EnhancedReadableSpan {
       ),
       region: str(this.span.attributes[XSEMATTRS_AWS_REGION]),
       request_id: str(this.span.attributes[XSEMATTRS_AWS_REQUEST_ID]),
-      id_2: str(this.span.attributes[XSEMATTRS_AWS_REQUEST_ID_2]),
-      // 		QueueURL:     awsxray.String(queueURL),
-      // 		TableName:    awsxray.String(tableName),
-      // 		TableNames:   tableNames,
+      id_2: str(this.span.attributes[XSEMATTRS_AWS_XREQUEST_ID]),
+      queue_url: str(
+        this.span.attributes[SEMATTRS_MESSAGING_URL] ||
+          this.span.attributes[XSEMATTRS_AWS_QUEUE_URL] ||
+          this.span.attributes[XSEMATTRS_AWS_QUEUE_URL_2],
+      ),
+      message_id: str(this.span.attributes[SEMATTRS_MESSAGING_MESSAGE_ID]),
+      bucket_name: str(this.span.attributes[XSEMATTRS_AWS_BUCKET_NAME]),
+      key: str(this.span.attributes[XSEMATTRS_AWS_BUCKET_KEY]),
+      table_name: Array.isArray(
+        this.span.attributes[SEMATTRS_AWS_DYNAMODB_TABLE_NAMES],
+      )
+        ? (
+            this.span.attributes[SEMATTRS_AWS_DYNAMODB_TABLE_NAMES] as (
+              | string
+              | undefined
+            )[]
+          ).find((val) => typeof val === 'string')
+        : str(
+            this.span.attributes[XSEMATTRS_AWS_TABLE_NAME] ||
+              this.span.attributes[XSEMATTRS_AWS_TABLE_NAME_2],
+          ),
       xray: {
         sdk:
           str(

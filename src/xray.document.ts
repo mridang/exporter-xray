@@ -46,8 +46,11 @@ export interface AWS {
   request_id?: string;
   id_2?: string; // Not in schema
   bucket_name?: string; // Not in schema
+  key?: string; // Not in schema
   table_name?: string;
   resource_names?: string[]; // Not in schema
+  message_id?: string; // Not in schema
+  queue_url?: string; // Not in schema
 }
 
 export interface Request {

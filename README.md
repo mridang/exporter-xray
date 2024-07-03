@@ -10,6 +10,8 @@ that your application serves and provides tools you can use to view,
 filter, and gain insights into that data to identify issues and
 opportunities for optimization.
 
+### Why?
+
 ## Installation
 
 Install using NPM by using the following command:
@@ -17,8 +19,6 @@ Install using NPM by using the following command:
 ```sh
 npm install --save @mridang/exporter-xray
 ```
-
-You will need to install those additional packages
 
 ## Usage
 
