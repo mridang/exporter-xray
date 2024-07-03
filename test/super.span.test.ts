@@ -1,5 +1,5 @@
 import { ReadableSpan } from '@opentelemetry/sdk-trace-base';
-import { EnhancedReadableSpan } from '../src/super.span';
+import { EnhancedReadableSpan } from '../src';
 
 describe('super.span test', () => {
   describe('isThrottled', () => {

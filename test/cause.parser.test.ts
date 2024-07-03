@@ -4,7 +4,7 @@ import {
   SEMATTRS_EXCEPTION_STACKTRACE,
   SEMATTRS_EXCEPTION_TYPE,
 } from '@opentelemetry/semantic-conventions';
-import { DefaultCauseParser } from '../src/cause.parser';
+import { DefaultCauseParser } from '../src';
 import { SpanKind } from '@opentelemetry/api';
 
 describe('cause.parser test', () => {

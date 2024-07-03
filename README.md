@@ -28,7 +28,7 @@ don't work as expected, you need to begin debugging the collector
 using the sparse logs it spews.
 
 To get around this, this project reimplements the core logic found
-in the "contrib" version of the  OpenTelemetry Collector.
+in the "contrib" version of the OpenTelemetry Collector.
 
 Barring a few odd quirks, this project has been meticulously engineered
 to main compatibility with XRay and ensures feature parity with the

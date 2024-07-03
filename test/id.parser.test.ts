@@ -1,4 +1,4 @@
-import { DefaultIdParser } from '../src/id.parser';
+import { DefaultIdParser } from '../src';
 import { AWSXRayIdGenerator } from '@opentelemetry/id-generator-aws-xray';
 
 describe('id.parser test', () => {
