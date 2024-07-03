@@ -57,6 +57,7 @@ import {
   XSEMATTRS_AWS_SERVICE,
   XSEMATTRS_AWS_TABLE_NAME,
   XSEMATTRS_AWS_TABLE_NAME_2,
+  XSEMATTRS_AWS_REQUEST_ID_2,
 } from './constants';
 import { IdParser } from './id.parser';
 import { HttpParser } from './http.parser';
@@ -310,7 +311,10 @@ export class EnhancedReadableSpan {
           this.span.attributes[SEMATTRS_RPC_METHOD],
       ),
       region: str(this.span.attributes[XSEMATTRS_AWS_REGION]),
-      request_id: str(this.span.attributes[XSEMATTRS_AWS_REQUEST_ID]),
+      request_id: str(
+        this.span.attributes[XSEMATTRS_AWS_REQUEST_ID] ||
+          this.span.attributes[XSEMATTRS_AWS_REQUEST_ID_2],
+      ),
       id_2: str(this.span.attributes[XSEMATTRS_AWS_XREQUEST_ID]),
       queue_url: str(
         this.span.attributes[SEMATTRS_MESSAGING_URL] ||
