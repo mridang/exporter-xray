@@ -12,6 +12,28 @@ opportunities for optimization.
 
 ### Why?
 
+If you'd like to begin sending traces to XRay and use OpenTelemetry,
+you need to use the Lambda layer to send traces to XRay.
+
+https://github.com/open-telemetry/opentelemetry-lambda
+
+This Lambda layer needs to be built and there is no simple way to run
+this locally. Of course, you could also run the OpenTelemetry
+collector locally
+
+https://github.com/open-telemetry/opentelemetry-collector-contrib
+
+As you can see, for simple setups, this becomes complex. When things
+don't work as expected, you need to begin debugging the collector
+using the sparse logs it spews.
+
+To get around this, this project reimplements the core logic found
+in the "contrib" version of the  OpenTelemetry Collector.
+
+Barring a few odd quirks, this project has been meticulously engineered
+to main compatibility with XRay and ensures feature parity with the
+AWS Exporter in the OpenTelemetry Exporter.
+
 ## Installation
 
 Install using NPM by using the following command:
