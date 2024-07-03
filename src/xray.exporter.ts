@@ -1,10 +1,9 @@
-import { SpanExporter } from '@opentelemetry/sdk-trace-base/build/src/export/SpanExporter';
+import { ReadableSpan, SpanExporter } from '@opentelemetry/sdk-trace-base';
 import { XrayTraceDataSegmentDocument } from './xray.document';
-import { ReadableSpan } from '@opentelemetry/sdk-trace-base/build/src/export/ReadableSpan';
 import { EnhancedReadableSpan } from './super.span';
 import { ExportResult, ExportResultCode } from '@opentelemetry/core';
 import { DefaultIdParser, IdParser } from './id.parser';
-import { DefaultCauseParser, CauseParser } from './cause.parser';
+import { CauseParser, DefaultCauseParser } from './cause.parser';
 import { DefaultHttpParser, HttpParser } from './http.parser';
 import { diag } from '@opentelemetry/api';
 import { DefaultNameParser, NameParser } from './name.parser';

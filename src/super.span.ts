@@ -53,11 +53,11 @@ import {
   XSEMATTRS_AWS_QUEUE_URL_2,
   XSEMATTRS_AWS_REGION,
   XSEMATTRS_AWS_REQUEST_ID,
-  XSEMATTRS_AWS_XREQUEST_ID,
+  XSEMATTRS_AWS_REQUEST_ID_2,
   XSEMATTRS_AWS_SERVICE,
   XSEMATTRS_AWS_TABLE_NAME,
   XSEMATTRS_AWS_TABLE_NAME_2,
-  XSEMATTRS_AWS_REQUEST_ID_2,
+  XSEMATTRS_AWS_XREQUEST_ID,
 } from './constants';
 import { IdParser } from './id.parser';
 import { HttpParser } from './http.parser';
@@ -79,6 +79,7 @@ export class EnhancedReadableSpan {
     'teradata',
     'other_sql',
   ];
+
   constructor(private readonly span: ReadableSpan) {
     //
   }
