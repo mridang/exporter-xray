@@ -89,6 +89,7 @@ export default class XraySpanExporter implements SpanExporter {
           cb({ code: ExportResultCode.SUCCESS });
         })
         .catch((err) => {
+          diag.warn(`Encountered an error when sending the spans to X-Ray.`);
           cb({ code: ExportResultCode.FAILED, error: err });
         }),
     );
