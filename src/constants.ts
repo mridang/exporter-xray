@@ -11,7 +11,7 @@
  * the semantic conversions for OpenTelemetry yet.
  * {@link https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/v0.104.0/internal/aws/xray/awsxray.go#L8}
  */
-export declare const XSEMATTRS_AWS_OPERATION = 'aws.operation';
+export const XSEMATTRS_AWS_OPERATION = 'aws.operation';
 
 /**
  * An identifier for the AWS account ID. This doesn't exist in the semantic
@@ -26,7 +26,7 @@ export declare const XSEMATTRS_AWS_OPERATION = 'aws.operation';
  * the semantic conversions for OpenTelemetry yet.
  * {@link https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/v0.104.0/internal/aws/xray/awsxray.go#L9}
  */
-export declare const XSEMATTRS_AWS_ACCOUNT = 'aws.account_id';
+export const XSEMATTRS_AWS_ACCOUNT = 'aws.account_id';
 
 /**
  * An identifier for the AWS region. This doesn't exist in the semantic
@@ -41,7 +41,7 @@ export declare const XSEMATTRS_AWS_ACCOUNT = 'aws.account_id';
  * the semantic conversions for OpenTelemetry yet.
  * {@link https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/v0.104.0/internal/aws/xray/awsxray.go#L10}
  */
-export declare const XSEMATTRS_AWS_REGION = 'aws.region';
+export const XSEMATTRS_AWS_REGION = 'aws.region';
 
 /**
  * An identifier for the AWS request ID. This doesn't exist in the semantic
@@ -56,7 +56,7 @@ export declare const XSEMATTRS_AWS_REGION = 'aws.region';
  * the semantic conversions for OpenTelemetry yet.
  * {@link https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/v0.104.0/internal/aws/xray/awsxray.go#L15}
  */
-export declare const XSEMATTRS_AWS_REQUEST_ID = 'aws.request.id';
+export const XSEMATTRS_AWS_REQUEST_ID = 'aws.request.id';
 
 /**
  * An identifier for the AWS request ID. This doesn't exist in the semantic
@@ -71,12 +71,12 @@ export declare const XSEMATTRS_AWS_REQUEST_ID = 'aws.request.id';
  * the semantic conversions for OpenTelemetry yet.
  * {@link https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/v0.104.0/internal/aws/xray/awsxray.go#L14}
  */
-export declare const XSEMATTRS_AWS_REQUEST_ID_2 = 'aws.requestId';
+export const XSEMATTRS_AWS_REQUEST_ID_2 = 'aws.requestId';
 
 /**
  * An identifier for the AWS request ID (alternate format).
  */
-export declare const XSEMATTRS_AWS_XREQUEST_ID = 'aws.request.extended_id';
+export const XSEMATTRS_AWS_XREQUEST_ID = 'aws.request.extended_id';
 
 /**
  * An identifier for the AWS queue URL. This doesn't exist in the semantic
@@ -91,7 +91,7 @@ export declare const XSEMATTRS_AWS_XREQUEST_ID = 'aws.request.extended_id';
  * ported over for backwards compatibility.
  * {@link https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/v0.104.0/internal/aws/xray/awsxray.go#L15}
  *  */
-export declare const XSEMATTRS_AWS_QUEUE_URL = 'aws.queue_url';
+export const XSEMATTRS_AWS_QUEUE_URL = 'aws.queue_url';
 
 /**
  * An identifier for the AWS queue URL (alternate format). This doesn't exist
@@ -107,7 +107,7 @@ export declare const XSEMATTRS_AWS_QUEUE_URL = 'aws.queue_url';
  * ported over for backwards compatibility.
  * {@link https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/v0.104.0/internal/aws/xray/awsxray.go#L16}
  *  */
-export declare const XSEMATTRS_AWS_QUEUE_URL_2 = 'aws.queue.url';
+export const XSEMATTRS_AWS_QUEUE_URL_2 = 'aws.queue.url';
 
 /**
  * An identifier for the AWS service being used. This doesn't exist in
@@ -122,7 +122,7 @@ export declare const XSEMATTRS_AWS_QUEUE_URL_2 = 'aws.queue.url';
  * the semantic conversions for OpenTelemetry yet.
  * {@link https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/v0.104.0/internal/aws/xray/awsxray.go#L17}
  */
-export declare const XSEMATTRS_AWS_SERVICE = 'aws.service';
+export const XSEMATTRS_AWS_SERVICE = 'aws.service';
 
 /**
  * An identifier for the AWS table name. This doesn't exist in the semantic
@@ -137,7 +137,7 @@ export declare const XSEMATTRS_AWS_SERVICE = 'aws.service';
  * ported over for backwards compatibility.
  * {@link https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/v0.104.0/internal/aws/xray/awsxray.go#L18}
  */
-export declare const XSEMATTRS_AWS_TABLE_NAME = 'aws.table_name';
+export const XSEMATTRS_AWS_TABLE_NAME = 'aws.table_name';
 
 /**
  * An identifier for the AWS table name (alternate format). This doesn't exist in
@@ -152,17 +152,17 @@ export declare const XSEMATTRS_AWS_TABLE_NAME = 'aws.table_name';
  * ported over for backwards compatibility.
  * {@link https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/v0.104.0/internal/aws/xray/awsxray.go#L19}
  */
-export declare const XSEMATTRS_AWS_TABLE_NAME_2 = 'aws.table.name';
+export const XSEMATTRS_AWS_TABLE_NAME_2 = 'aws.table.name';
 
 /**
  * Annotations associated with an X-Ray segment.
  */
-export declare const XSEMATTRS_AWS_XRAY_ANNOTATIONS = 'aws.xray.annotations';
+export const XSEMATTRS_AWS_XRAY_ANNOTATIONS = 'aws.xray.annotations';
 
 /**
  * Prefix for metadata associated with an X-Ray segment.
  */
-export declare const XSEMATTRS_AWS_XRAY_METADATA_PREFIX = 'aws.xray.metadata.';
+export const XSEMATTRS_AWS_XRAY_METADATA_PREFIX = 'aws.xray.metadata.';
 
 /**
  * An identifier for the AWS S3 bucket name. This doesn't exist in the semantic
@@ -172,7 +172,7 @@ export declare const XSEMATTRS_AWS_XRAY_METADATA_PREFIX = 'aws.xray.metadata.';
  * you will see that this attribute is not mentioned.
  * {@link https://github.com/open-telemetry/opentelemetry-js-contrib/tree/instrumentation-aws-sdk-v0.42.0/plugins/node/opentelemetry-instrumentation-aws-sdk}
  */
-export declare const XSEMATTRS_AWS_BUCKET_NAME = 'aws.bucket.name';
+export const XSEMATTRS_AWS_BUCKET_NAME = 'aws.bucket.name';
 
 /**
  * An identifier for the AWS S3 bucket key. This doesn't exist in the semantic
@@ -182,4 +182,4 @@ export declare const XSEMATTRS_AWS_BUCKET_NAME = 'aws.bucket.name';
  * you will see that this attribute is not mentioned.
  * {@link https://github.com/open-telemetry/opentelemetry-js-contrib/tree/instrumentation-aws-sdk-v0.42.0/plugins/node/opentelemetry-instrumentation-aws-sdk}
  */
-export declare const XSEMATTRS_AWS_BUCKET_KEY = 'aws.bucket.key';
+export const XSEMATTRS_AWS_BUCKET_KEY = 'aws.bucket.key';
