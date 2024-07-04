@@ -20,6 +20,7 @@ import {
   SEMRESATTRS_AWS_ECS_LAUNCHTYPE,
   SEMRESATTRS_AWS_ECS_TASK_ARN,
   SEMRESATTRS_AWS_ECS_TASK_FAMILY,
+  SEMRESATTRS_AWS_LOG_GROUP_NAMES,
   SEMRESATTRS_CLOUD_AVAILABILITY_ZONE,
   SEMRESATTRS_CLOUD_PLATFORM,
   SEMRESATTRS_CONTAINER_ID,
@@ -43,7 +44,7 @@ import {
 import { SpanKind } from '@opentelemetry/api';
 import { hrt, str, undef } from './util';
 import { ReadableSpan } from '@opentelemetry/sdk-trace-base';
-import { AWS, Cause, HTTP, Link, Service, SQL } from './xray.document';
+import { AWS, Cause, HTTP, Link, Log, Service, SQL } from './xray.document';
 import {
   XSEMATTRS_AWS_ACCOUNT,
   XSEMATTRS_AWS_BUCKET_KEY,
@@ -338,6 +339,19 @@ export class EnhancedReadableSpan {
             this.span.attributes[XSEMATTRS_AWS_TABLE_NAME] ||
               this.span.attributes[XSEMATTRS_AWS_TABLE_NAME_2],
           ),
+      cloudwatch_logs: (
+        (this.span.resource.attributes[SEMRESATTRS_AWS_LOG_GROUP_NAMES] ||
+          []) as Array<string>
+      ).map((name, index): Log => {
+        return {
+          log_group: name,
+          arn: (
+            this.span.resource.attributes[
+              SEMRESATTRS_AWS_LOG_GROUP_NAMES
+            ] as Array<string>
+          )[index],
+        };
+      }),
       xray: {
         sdk:
           str(

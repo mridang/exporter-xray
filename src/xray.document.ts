@@ -30,6 +30,7 @@ export interface AWS {
     pod?: string;
     container_id?: string;
   };
+  cloudwatch_logs?: Log[];
   xray: {
     // https://github.com/aws/aws-xray-sdk-node/blob/b39b5e298ae600e8e2975a609059fe67e6fd6cd6/packages/core/lib/aws-xray.js#L382-L386
     sdk?: string;
@@ -64,6 +65,11 @@ export interface Request {
 export interface Response {
   status?: number;
   content_length?: number;
+}
+
+export interface Log {
+  log_group: string;
+  arn?: string;
 }
 
 export interface Link {
