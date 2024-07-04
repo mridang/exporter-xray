@@ -72,28 +72,29 @@ could happen if they aren’t used:
 ##### Importance of `AWSXRayPropagator` and `AWSXRayIdGenerator`
 
 1. **Trace Context Propagation**:
-	- **AWSXRayPropagator**: This propagator ensures that trace context is
-	  correctly propagated across different services. It translates the
-	  OpenTelemetry trace context to the format expected by AWS X-Ray. Without
-	  this, your traces would lack the necessary context to be linked correctly
-	  across different services, making it difficult to track a request’s path
-	  through a distributed system [source](https://docs.aws.amazon.com/xray/latest/devguide/xray-services-adot.html)
-	  [source](https://aws.amazon.com/blogs/opensource/migrating-x-ray-tracing-to-aws-distro-for-opentelemetry/).
-	- **AWSXRayIdGenerator**: AWS X-Ray requires a specific format for trace IDs,
-	  which includes a timestamp and a unique identifier. The `AWSXRayIdGenerator`
-	  generates IDs in this format, ensuring compatibility with X-Ray’s
-	  requirements. Using a different ID generator may result in trace IDs that
-	  X-Ray cannot recognize, leading to errors or ignored traces
-	  [source](https://docs.aws.amazon.com/xray/latest/devguide/xray-nodejs.html)
-	  [source](https://aws.amazon.com/blogs/opensource/migrating-x-ray-tracing-to-aws-distro-for-opentelemetry/).
+
+   - **AWSXRayPropagator**: This propagator ensures that trace context is
+     correctly propagated across different services. It translates the
+     OpenTelemetry trace context to the format expected by AWS X-Ray. Without
+     this, your traces would lack the necessary context to be linked correctly
+     across different services, making it difficult to track a request’s path
+     through a distributed system [source](https://docs.aws.amazon.com/xray/latest/devguide/xray-services-adot.html)
+     [source](https://aws.amazon.com/blogs/opensource/migrating-x-ray-tracing-to-aws-distro-for-opentelemetry/).
+   - **AWSXRayIdGenerator**: AWS X-Ray requires a specific format for trace IDs,
+     which includes a timestamp and a unique identifier. The `AWSXRayIdGenerator`
+     generates IDs in this format, ensuring compatibility with X-Ray’s
+     requirements. Using a different ID generator may result in trace IDs that
+     X-Ray cannot recognize, leading to errors or ignored traces
+     [source](https://docs.aws.amazon.com/xray/latest/devguide/xray-nodejs.html)
+     [source](https://aws.amazon.com/blogs/opensource/migrating-x-ray-tracing-to-aws-distro-for-opentelemetry/).
 
 2. **Integration and Compatibility**:
-	- Both components are designed to work seamlessly with AWS X-Ray, ensuring
-	  that the traces collected by OpenTelemetry are correctly understood and
-	  processed by X-Ray. They handle specific details like the structure of trace
-	  IDs and the propagation of context headers, which are essential for
-	  maintaining the integrity of the trace data
-	  [source](https://docs.aws.amazon.com/xray/latest/devguide/xray-nodejs.html).
+   - Both components are designed to work seamlessly with AWS X-Ray, ensuring
+     that the traces collected by OpenTelemetry are correctly understood and
+     processed by X-Ray. They handle specific details like the structure of trace
+     IDs and the propagation of context headers, which are essential for
+     maintaining the integrity of the trace data
+     [source](https://docs.aws.amazon.com/xray/latest/devguide/xray-nodejs.html).
 
 ##### Consequences of Not Using These Components
 

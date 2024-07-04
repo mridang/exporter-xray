@@ -11,6 +11,7 @@ import { SegmentEmitter } from './emitter/segment.emitter';
 import { SDKBasedSegmentEmitter } from './emitter/sdk.emitter';
 import { UDPDaemonSegmentEmitter } from './emitter/udp.emitter';
 import { DefaultOriginParser, OriginParser } from './origin.parser';
+import { emptyDeep } from 'empty-deep';
 
 /**
  * Creates an instance of XraySpanExporter.
@@ -70,7 +71,10 @@ export default class XraySpanExporter implements SpanExporter {
           type: span.getType(),
           links: span.getLinks(this.idParser),
         }),
-      );
+      )
+      .map((trace) => {
+        return emptyDeep(trace) as XrayTraceDataSegmentDocument;
+      });
 
     this.segmentEmitters.forEach((segmentEmitter) =>
       segmentEmitter

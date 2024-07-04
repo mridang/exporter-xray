@@ -52,6 +52,7 @@
 		"@opentelemetry/core": "^1.25.1",
 		"@opentelemetry/sdk-trace-base": "^1.25.1",
 		"@opentelemetry/semantic-conventions": "^1.25.1",
+		"empty-deep": "^1.0.0",
 		"error-stack-parser": "^2.1.4"
 	},
 	"devDependencies": {
