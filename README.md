@@ -61,6 +61,63 @@ const exporter = new XraySpanExporter();
 tracer.addSpanProcessor(new BatchSpanProcessor(exporter));
 ```
 
+---
+
+When writing a custom exporter for OpenTelemetry in Node.js to export spans to
+AWS X-Ray, it is crucial to use the `AWSXRayPropagator` and `AWSXRayIdGenerator`
+from the `@opentelemetry/propagator-aws-xray` and `@opentelemetry/id-generator-aws-xray`
+packages, respectively. Here’s why these components are necessary and what
+could happen if they aren’t used:
+
+##### Importance of `AWSXRayPropagator` and `AWSXRayIdGenerator`
+
+1. **Trace Context Propagation**:
+	- **AWSXRayPropagator**: This propagator ensures that trace context is
+	  correctly propagated across different services. It translates the
+	  OpenTelemetry trace context to the format expected by AWS X-Ray. Without
+	  this, your traces would lack the necessary context to be linked correctly
+	  across different services, making it difficult to track a request’s path
+	  through a distributed system [source](https://docs.aws.amazon.com/xray/latest/devguide/xray-services-adot.html)
+	  [source](https://aws.amazon.com/blogs/opensource/migrating-x-ray-tracing-to-aws-distro-for-opentelemetry/).
+	- **AWSXRayIdGenerator**: AWS X-Ray requires a specific format for trace IDs,
+	  which includes a timestamp and a unique identifier. The `AWSXRayIdGenerator`
+	  generates IDs in this format, ensuring compatibility with X-Ray’s
+	  requirements. Using a different ID generator may result in trace IDs that
+	  X-Ray cannot recognize, leading to errors or ignored traces
+	  [source](https://docs.aws.amazon.com/xray/latest/devguide/xray-nodejs.html)
+	  [source](https://aws.amazon.com/blogs/opensource/migrating-x-ray-tracing-to-aws-distro-for-opentelemetry/).
+
+2. **Integration and Compatibility**:
+	- Both components are designed to work seamlessly with AWS X-Ray, ensuring
+	  that the traces collected by OpenTelemetry are correctly understood and
+	  processed by X-Ray. They handle specific details like the structure of trace
+	  IDs and the propagation of context headers, which are essential for
+	  maintaining the integrity of the trace data
+	  [source](https://docs.aws.amazon.com/xray/latest/devguide/xray-nodejs.html).
+
+##### Consequences of Not Using These Components
+
+- **Loss of Trace Continuity**: If you do not use the `AWSXRayPropagator`, your
+  application might fail to propagate trace context correctly. This can result
+  in incomplete traces, where the links between different spans are broken. This
+  makes it challenging to get a complete view of the application's performance
+  and trace requests across services
+  [source](https://github.com/open-telemetry/opentelemetry-java-contrib/issues/1217)
+  [source](https://docs.aws.amazon.com/xray/latest/devguide/xray-nodejs.html).
+
+- **Trace Rejection**: Without the `AWSXRayIdGenerator`, the trace IDs generated
+  might not meet X-Ray’s format requirements. X-Ray might reject these traces,
+  causing a loss of valuable tracing information. This can lead to gaps in your
+  monitoring and make it harder to diagnose issues within your application
+  [source](https://docs.aws.amazon.com/xray/latest/devguide/xray-nodejs.html).
+
+By ensuring that these components are used, you enable proper trace propagation
+and ID generation, which are critical for accurate and effective monitoring with
+AWS X-Ray. This results in a more robust observability setup, allowing for
+comprehensive tracking and debugging of distributed systems.
+
+---
+
 ### Options
 
 You can inject the `xRayClient` and other dependencies into the
