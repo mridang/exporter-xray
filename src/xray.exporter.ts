@@ -12,6 +12,7 @@ import { SDKBasedSegmentEmitter } from './emitter/sdk.emitter';
 import { UDPDaemonSegmentEmitter } from './emitter/udp.emitter';
 import { DefaultOriginParser, OriginParser } from './origin.parser';
 import { emptyDeep } from 'empty-deep';
+import { DefaultTraceFilter, TraceFilter } from './trace.filter';
 
 /**
  * Creates an instance of XraySpanExporter.
@@ -40,6 +41,7 @@ export default class XraySpanExporter implements SpanExporter {
     private readonly httpParser: HttpParser = new DefaultHttpParser(),
     private readonly nameParser: NameParser = new DefaultNameParser(),
     private readonly originParser: OriginParser = new DefaultOriginParser(),
+    private readonly traceFilter: TraceFilter = new DefaultTraceFilter(),
   ) {
     //
   }
@@ -72,6 +74,9 @@ export default class XraySpanExporter implements SpanExporter {
           links: span.getLinks(this.idParser),
         }),
       )
+      .filter((trace) => {
+        return this.traceFilter.doFilter(trace);
+      })
       .map((trace) => {
         return emptyDeep(trace) as XrayTraceDataSegmentDocument;
       });
