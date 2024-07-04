@@ -12,6 +12,21 @@ import { SDKBasedSegmentEmitter } from './emitter/sdk.emitter';
 import { UDPDaemonSegmentEmitter } from './emitter/udp.emitter';
 import { DefaultOriginParser, OriginParser } from './origin.parser';
 
+/**
+ * Creates an instance of XraySpanExporter.
+ * @param {SegmentEmitter[]} [segmentEmitters] - The emitters used to send
+ * segments to AWS X-Ray.
+ * @param {IdParser} [idParser] - The parser used for converting OpenTelemetry
+ * trace IDs to AWS X-Ray trace IDs.
+ * @param {CauseParser} [causeParser] - The parser used for extracting error
+ * causes from spans.
+ * @param {HttpParser} [httpParser] - The parser used for extracting HTTP
+ * details from spans.
+ * @param {NameParser} [nameParser] - The parser used for determining the name
+ * of the segment.
+ * @param {OriginParser} [originParser] - The parser used for determining the
+ * origin of the segment.
+ */
 export default class XraySpanExporter implements SpanExporter {
   constructor(
     private readonly segmentEmitters: SegmentEmitter[] = [
