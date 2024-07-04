@@ -31,7 +31,7 @@ describe('xray.exporter test', () => {
   beforeAll(() => {
     mockXRayClient = new XRayClient();
     exporter = new XraySpanExporter(
-      new SDKBasedSegmentEmitter(mockXRayClient),
+      [new SDKBasedSegmentEmitter(mockXRayClient)],
       new DefaultIdParser(Number.MAX_VALUE, Number.MAX_VALUE),
       new DefaultCauseParser(() => '0'),
       new DefaultHttpParser(),
