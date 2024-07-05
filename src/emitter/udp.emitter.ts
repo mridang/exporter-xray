@@ -18,7 +18,6 @@ import * as dgram from 'node:dgram';
  * {@link https://docs.aws.amazon.com/xray/latest/devguide/xray-daemon.html AWS X-Ray Daemon documentation}.
  */
 export class UDPDaemonSegmentEmitter implements SegmentEmitter {
-  private readonly socket: dgram.Socket;
   private daemonConfig = {
     udp_ip: '127.0.0.1',
     udp_port: 2000,
@@ -27,8 +26,7 @@ export class UDPDaemonSegmentEmitter implements SegmentEmitter {
   /**
    * Constructs a new UDPDaemonSegmentEmitter.
    */
-  constructor() {
-    this.socket = dgram.createSocket('udp4').unref();
+  constructor(private readonly socket = dgram.createSocket('udp4').unref()) {
     if (process.env.AWS_XRAY_DAEMON_ADDRESS) {
       this.processAddress(process.env.AWS_XRAY_DAEMON_ADDRESS);
     }
