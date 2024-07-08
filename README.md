@@ -162,7 +162,6 @@ https://docs.aws.amazon.com/xray/latest/devguide/xray-daemon.html
 
 <img width="1165" alt="Screenshot 2024-07-06 at 9 17 25" src="https://github.com/mridang/exporter-xray/assets/327432/21067eb5-983d-4512-9184-18aab38e0357">
 
-
 The exporter defaults to using the `UDPDaemonSegmentEmitter` when
 running on AWS Lambda, and the `SDKBasedSegmentEmitter` otherwise.
 This is determined automatically based on the presence of the
