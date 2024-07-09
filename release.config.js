@@ -1,5 +1,3 @@
-import packageJson from "./package.json";
-
 export default {
   branches: ['master'],
   plugins: [
@@ -29,5 +27,5 @@ export default {
       },
     ],
   ],
-  repositoryUrl: packageJson.repository.url,
+  repositoryUrl: 'git+https://github.com/mridang/exporter-xray.git',
 };
