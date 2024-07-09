@@ -164,7 +164,7 @@ describe('xray.exporter test', () => {
             },
           },
           id: '911b1e2214de58b8',
-          name: 'api.github.com',
+          name: 'tcp.connect',
           parent_id: '59a9a738d9b789bb',
           service: {
             name: 'my-express-app',
@@ -219,7 +219,7 @@ describe('xray.exporter test', () => {
             },
           },
           id: '980a464c5de12e44',
-          name: 'api.github.com:443',
+          name: 'GET',
           namespace: 'remote',
           parent_id: '62aa77733a29b899',
           service: {
@@ -255,7 +255,7 @@ describe('xray.exporter test', () => {
             },
           },
           id: '62aa77733a29b899',
-          name: 'my-express-app',
+          name: 'GET /axios',
           parent_id: 'undefined',
           service: {
             name: 'my-express-app',
@@ -436,7 +436,7 @@ describe('xray.exporter test', () => {
             },
           },
           id: '2d584e7814b156b1',
-          name: 'my-express-app',
+          name: 'GET /error500',
           parent_id: 'undefined',
           service: {
             name: 'my-express-app',
@@ -555,7 +555,7 @@ describe('xray.exporter test', () => {
             },
           },
           id: '8ece99b9bf5e9940',
-          name: 'my-express-app',
+          name: 'GET /error400',
           parent_id: 'undefined',
           service: {
             name: 'my-express-app',
@@ -669,7 +669,7 @@ describe('xray.exporter test', () => {
             },
           },
           id: '95299e7fe60cda23',
-          name: 'localhost',
+          name: 'tcp.connect',
           parent_id: '8e06a34295824543',
           service: {
             name: 'my-express-app',
@@ -691,7 +691,7 @@ describe('xray.exporter test', () => {
           },
           end_time: 1719893345.1172202,
           id: '3d958e9dc4ce623e',
-          name: 'your_database@localhost',
+          name: 'SELECT',
           namespace: 'remote',
           parent_id: '8e06a34295824543',
           service: {
@@ -735,7 +735,7 @@ describe('xray.exporter test', () => {
             },
           },
           id: '8e06a34295824543',
-          name: 'my-express-app',
+          name: 'GET /count',
           parent_id: 'undefined',
           service: {
             name: 'my-express-app',

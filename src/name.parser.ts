@@ -19,6 +19,7 @@ export interface NameParser {
 export class DefaultNameParser implements NameParser {
   parseName(span: ReadableSpan): string {
     return (
+      this.getSpanName(span) ||
       this.getLocalServiceName(span) ||
       this.getRemoteServiceName(span) ||
       this.getPeerService(span) ||
@@ -28,7 +29,6 @@ export class DefaultNameParser implements NameParser {
       this.getRpcService(span) ||
       this.getHttpHost(span) ||
       this.getNetPeerName(span) ||
-      this.getSpanName(span) ||
       'span'
     )
       .replace(/[^ 0-9\p{L}N_.:/%&#=+\-@]/gu, '')
