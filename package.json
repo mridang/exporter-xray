@@ -9,8 +9,8 @@
 		"test:debug": "jest --verbose --config=jest.config.js --runInBand --detectOpenHandles",
 		"format": "prettier --write \"**/*.{js,ts,jsx,tsx,json,css,md,html}\"",
 		"format:check": "prettier --check \"**/*.{js,ts,jsx,tsx,json,css,md,html}\"",
-		"lint": "npx eslint --ext .jsx,.js,.tsx,.ts .",
-		"lint:fix": "npx eslint --ext .jsx,.js,.tsx,.ts . --fix"
+		"lint": "npx eslint .",
+		"lint:fix": "npx eslint . --fix"
 	},
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
