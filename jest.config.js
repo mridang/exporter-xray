@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   preset: 'ts-jest/presets/js-with-ts',
   transform: {
     '^.+\\.m?[tj]sx?$': [

@@ -1,0 +1,11 @@
+dist/
+node_modules/
+.eslintrc.js
+.serverless
+.github
+.gitignore
+.idea
+.nvmrc
+.env
+.prettierignore
+.out

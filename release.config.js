@@ -1,4 +1,7 @@
-export default {
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const packageJson = require('./package.json');
+
+module.exports = {
   branches: ['master'],
   plugins: [
     '@semantic-release/commit-analyzer',
@@ -27,5 +30,5 @@ export default {
       },
     ],
   ],
-  repositoryUrl: 'git+https://github.com/mridang/exporter-xray.git',
+  repositoryUrl: packageJson.repository.url,
 };
