@@ -42,6 +42,18 @@ Install using NPM by using the following command:
 npm install --save @mridang/exporter-xray
 ```
 
+> [!TIP]
+> If you're deploying your project to AWS Lambda, you can reduce your bundle
+> size by saving the XRay client as a peer dependency. Since this package
+> relies on the `@aws-sdk/client-xrat` transitive dependency, it would automatically
+> be installed, but, on AWS Lambda, the entirety of the AWS SDK v3 is preinstalled
+> and you do not need to include this transtive dependency. This transitive
+> dependency can be excluded by simply installing it as a peer dependency. 
+> 
+> ```sh
+> npm install --save-peer @aws-sdk/client-xray
+> ```
+
 ## Usage
 
 First, set up the necessary dependencies and instantiate the AWS X-Ray
