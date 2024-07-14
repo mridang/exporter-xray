@@ -48,8 +48,8 @@ npm install --save @mridang/exporter-xray
 > relies on the `@aws-sdk/client-xrat` transitive dependency, it would automatically
 > be installed, but, on AWS Lambda, the entirety of the AWS SDK v3 is preinstalled
 > and you do not need to include this transtive dependency. This transitive
-> dependency can be excluded by simply installing it as a peer dependency. 
-> 
+> dependency can be excluded by simply installing it as a peer dependency.
+>
 > ```sh
 > npm install --save-peer @aws-sdk/client-xray
 > ```
