@@ -81,5 +81,8 @@
 	},
 	"publishConfig": {
 		"access": "public"
-	}
+	},
+	"overrides": {
+		"@smithy/util-utf8": "3.0.0"
+	  }
 }
