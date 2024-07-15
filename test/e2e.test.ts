@@ -29,9 +29,7 @@ describe('sample.application test', () => {
       }
     });
 
-    serverProcess.on('error', (error) => {
-      console.log('duck');
-      console.error(`error: ${error}`);
+    serverProcess.on('error', (error) => {;
       done(error);
     });
   });
