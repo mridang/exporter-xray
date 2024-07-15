@@ -36,7 +36,7 @@ describe('sample.application test', () => {
 
   afterAll((done) => {
     if (serverProcess) {
-      serverProcess.kill();
+      serverProcess.kill('SIGKILL');
     }
     done();
   });
@@ -216,7 +216,6 @@ describe('sample.application test', () => {
   it('should show the correct segments when using DynamoDB', async () => {
     await new Promise((f) => setTimeout(f, 2000));
 
-    console.log('foo');
     const traceId = genTraceId();
     await request('http://localhost:2999/dynamo/add-to-table')
       .get('/')
