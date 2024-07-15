@@ -86,5 +86,5 @@ process.on('SIGINT', () => {
   setTimeout(() => {
     console.error('Forcing server shutdown');
     process.exit(1);
-  }, 500);
+  }, 100);
 });
