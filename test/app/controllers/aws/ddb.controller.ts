@@ -35,18 +35,31 @@ export default function (wrapFn: <T>(client: T) => T) {
         error instanceof Error &&
         error.name === 'ResourceNotFoundException'
       ) {
-        await dynamoClient.send(
-          new CreateTableCommand({
-            TableName: TABLE_NAME,
-            AttributeDefinitions: [{ AttributeName: 'id', AttributeType: 'S' }],
-            KeySchema: [{ AttributeName: 'id', KeyType: 'HASH' }],
-            ProvisionedThroughput: {
-              ReadCapacityUnits: 5,
-              WriteCapacityUnits: 5,
-            },
-          }),
-        );
-        console.log('Table created:', TABLE_NAME);
+        try {
+          await dynamoClient.send(
+            new CreateTableCommand({
+              TableName: TABLE_NAME,
+              AttributeDefinitions: [
+                { AttributeName: 'id', AttributeType: 'S' },
+              ],
+              KeySchema: [{ AttributeName: 'id', KeyType: 'HASH' }],
+              ProvisionedThroughput: {
+                ReadCapacityUnits: 5,
+                WriteCapacityUnits: 5,
+              },
+            }),
+          );
+          console.log('Table created:', TABLE_NAME);
+        } catch (error) {
+          if (
+            error instanceof Error &&
+            error.name === 'ResourceInUseException'
+          ) {
+            console.log('Table already exists');
+          } else {
+            console.error('Error creating table:', error);
+          }
+        }
       } else {
         throw error;
       }
