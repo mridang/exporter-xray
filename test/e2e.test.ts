@@ -1140,7 +1140,7 @@ describe('sample.application test', () => {
         service: {
           version: 'unknown',
           runtime: 'nodejs',
-          runtime_version: '20.15.1',
+          runtime_version: process.version.substring(1),
           name: 'test',
         },
         type: 'subsegment',
@@ -1162,7 +1162,7 @@ describe('sample.application test', () => {
         service: {
           version: 'unknown',
           runtime: 'nodejs',
-          runtime_version: '20.15.1',
+          runtime_version: process.version.substring(1),
           name: 'test',
         },
         type: 'subsegment',
@@ -1184,7 +1184,7 @@ describe('sample.application test', () => {
         service: {
           version: 'unknown',
           runtime: 'nodejs',
-          runtime_version: '20.15.1',
+          runtime_version: process.version.substring(1),
           name: 'test',
         },
         type: 'subsegment',
@@ -1218,7 +1218,7 @@ describe('sample.application test', () => {
         service: {
           version: 'unknown',
           runtime: 'nodejs',
-          runtime_version: '20.15.1',
+          runtime_version: process.version.substring(1),
           name: 'test',
         },
       },
@@ -1256,7 +1256,7 @@ describe('sample.application test', () => {
         service: {
           version: 'unknown',
           runtime: 'nodejs',
-          runtime_version: '20.15.1',
+          runtime_version: process.version.substring(1),
           name: 'test',
         },
         type: 'subsegment',
@@ -1278,7 +1278,7 @@ describe('sample.application test', () => {
         service: {
           version: 'unknown',
           runtime: 'nodejs',
-          runtime_version: '20.15.1',
+          runtime_version: process.version.substring(1),
           name: 'test',
         },
         type: 'subsegment',
@@ -1300,7 +1300,7 @@ describe('sample.application test', () => {
         service: {
           version: 'unknown',
           runtime: 'nodejs',
-          runtime_version: '20.15.1',
+          runtime_version: process.version.substring(1),
           name: 'test',
         },
         type: 'subsegment',
@@ -1335,7 +1335,7 @@ describe('sample.application test', () => {
         service: {
           version: 'unknown',
           runtime: 'nodejs',
-          runtime_version: '20.15.1',
+          runtime_version: process.version.substring(1),
           name: 'test',
         },
       },
@@ -1373,7 +1373,7 @@ describe('sample.application test', () => {
         service: {
           version: 'unknown',
           runtime: 'nodejs',
-          runtime_version: '20.15.1',
+          runtime_version: process.version.substring(1),
           name: 'test',
         },
         type: 'subsegment',
@@ -1395,7 +1395,7 @@ describe('sample.application test', () => {
         service: {
           version: 'unknown',
           runtime: 'nodejs',
-          runtime_version: '20.15.1',
+          runtime_version: process.version.substring(1),
           name: 'test',
         },
         type: 'subsegment',
@@ -1417,7 +1417,7 @@ describe('sample.application test', () => {
         service: {
           version: 'unknown',
           runtime: 'nodejs',
-          runtime_version: '20.15.1',
+          runtime_version: process.version.substring(1),
           name: 'test',
         },
         type: 'subsegment',
@@ -1451,7 +1451,7 @@ describe('sample.application test', () => {
         service: {
           version: 'unknown',
           runtime: 'nodejs',
-          runtime_version: '20.15.1',
+          runtime_version: process.version.substring(1),
           name: 'test',
         },
       },
