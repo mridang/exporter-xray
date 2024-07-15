@@ -41,7 +41,7 @@ describe('sample.application test', () => {
     done();
   });
 
-  it.skip('should show the correct segments when using fetch', async () => {
+  it('should show the correct segments when using fetch', async () => {
     const traceId = genTraceId();
     await request('http://localhost:2999/http/fetch')
       .get('/')
@@ -350,7 +350,7 @@ describe('sample.application test', () => {
     ]);
   });
 
-  it.skip('should show the correct segments when using SQS', async () => {
+  it('should show the correct segments when using SQS', async () => {
     const traceId = genTraceId();
     await request('http://localhost:2999/sqs/add-to-queue')
       .get('/')
