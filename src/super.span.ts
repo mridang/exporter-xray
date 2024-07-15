@@ -41,7 +41,7 @@ import {
   SEMRESATTRS_TELEMETRY_SDK_LANGUAGE,
   SEMRESATTRS_TELEMETRY_SDK_VERSION,
 } from '@opentelemetry/semantic-conventions';
-import { SpanKind } from '@opentelemetry/api';
+import { SpanKind, SpanStatusCode } from '@opentelemetry/api';
 import { hrt, str, undef } from './util';
 import { ReadableSpan } from '@opentelemetry/sdk-trace-base';
 import { AWS, Cause, HTTP, Link, Log, Service, SQL } from './xray.document';
@@ -82,7 +82,7 @@ export class EnhancedReadableSpan {
   ];
 
   constructor(private readonly span: ReadableSpan) {
-    //
+    span.status;
   }
 
   /**
@@ -136,7 +136,7 @@ export class EnhancedReadableSpan {
         undefined
       );
     } else {
-      return undefined;
+      return this.span.status?.code === SpanStatusCode.ERROR ? true : undefined;
     }
   }
 
