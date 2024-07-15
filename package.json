@@ -1,6 +1,6 @@
 {
 	"name": "@mridang/exporter-xray",
-	"version": "1.4.1",
+	"version": "1.4.2",
 	"scripts": {
 		"prepack": "tsc",
 		"build": "tsc",
