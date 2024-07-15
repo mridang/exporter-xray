@@ -29,7 +29,7 @@ describe('sample.application test', () => {
       }
     });
 
-    serverProcess.on('error', (error) => {;
+    serverProcess.on('error', (error) => {
       done(error);
     });
   });
