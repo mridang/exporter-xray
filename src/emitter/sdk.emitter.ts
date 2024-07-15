@@ -13,7 +13,6 @@ export class SDKBasedSegmentEmitter implements SegmentEmitter {
   }
 
   async emit(trace: XrayTraceDataSegmentDocument[]): Promise<void> {
-    trace[0].id;
     const result = await this.xRayClient.send(
       new PutTraceSegmentsCommand({
         TraceSegmentDocuments: trace.map((document) =>

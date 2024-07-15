@@ -11,6 +11,7 @@ module.exports = {
   testEnvironment: 'node',
   testMatch: ['**/*.+(spec|test).[tj]s?(x)'],
   moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx', 'json', 'node'],
+
   testPathIgnorePatterns: ['/node_modules/', '/frontend/', '/dist/'],
   resetModules: false,
   collectCoverage: true,
