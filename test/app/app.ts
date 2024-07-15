@@ -71,6 +71,20 @@ app.post('/crossapp/receive', (req: Request, res: Response) => {
   res.json({ name: 'Service B' });
 });
 
-app.listen(process.env.PORT || 2999, () => {
+const server = app.listen(process.env.PORT || 2999, () => {
   console.log(`Server is running.`);
+});
+
+process.on('SIGINT', () => {
+  console.log('SIGINT signal received: closing HTTP server');
+  
+  server.close(() => {
+    console.log('HTTP server closed');
+    process.exit(0);
+  });
+  
+  setTimeout(() => {
+    console.error('Forcing server shutdown');
+    process.exit(1);
+  }, 500);
 });

@@ -36,6 +36,7 @@ describe('sample.application test', () => {
 
   afterAll((done) => {
     if (serverProcess) {
+      serverProcess.kill();
       console.log('killing it');
       console.log(execSync(`ps -efH`).toString());
       console.log(serverProcess.pid);
