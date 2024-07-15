@@ -55,6 +55,8 @@ export default function (wrapFn: <T>(client: T) => T) {
 
   router.get('/add-to-table', async (req, res) => {
     try {
+      await createTable()
+
       const data = await dynamoClient.send(
         new PutItemCommand({
           TableName: TABLE_NAME,

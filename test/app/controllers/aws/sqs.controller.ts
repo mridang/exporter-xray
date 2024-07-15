@@ -62,6 +62,8 @@ export default function (wrapFn: <T>(client: T) => T) {
 
   router.get('/add-to-queue', async (req, res) => {
     try {
+      await createQueue();
+
       const data = await sqsClient.send(
         new SendMessageCommand({
           MessageBody: crypto.randomUUID(),

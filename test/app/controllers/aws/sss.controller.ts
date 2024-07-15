@@ -42,6 +42,7 @@ export default function (wrapFn: <T>(client: T) => T) {
 
   router.get('/add-to-bucket', async (req, res) => {
     try {
+      await createBucket();
       const data = await s3Client.send(
         new PutObjectCommand({
           Bucket: BUCKET_NAME,

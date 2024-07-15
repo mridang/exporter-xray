@@ -42,6 +42,8 @@ export default function (wrapFn: <T>(client: T) => T) {
 
   router.get('/get-secret', async (req, res) => {
     try {
+      await createSecret();
+
       const data = await secretsManagerClient.send(
         new GetSecretValueCommand({
           SecretId: SECRET_NAME,
