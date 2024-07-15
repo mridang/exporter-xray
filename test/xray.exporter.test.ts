@@ -570,6 +570,19 @@ describe('xray.exporter test', () => {
     });
   });
 
+  test('mooisisi', async () => {
+    expect(
+      await new Promise((resolve) => {
+        exporter.export(WrappedReadableSpan.from('moo.json'), resolve);
+      }),
+    ).toEqual({ code: ExportResultCode.SUCCESS });
+
+    const commandArg = (mockXRayClient.send as jest.Mock).mock.calls[0][0];
+    (commandArg.input.TraceSegmentDocuments as string[])
+      ?.map((json) => JSON.parse(json))
+      .map((ff) => console.log(ff));
+  });
+
   test(`should export the span from mysql`, async () => {
     expect(
       await new Promise((resolve) => {

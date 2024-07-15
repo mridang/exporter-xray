@@ -1,0 +1,65 @@
+[
+	{
+		"resource": {
+			"attributes": {
+				"service.name": "test-logcls",
+				"telemetry.sdk.language": "nodejs",
+				"telemetry.sdk.name": "opentelemetry",
+				"telemetry.sdk.version": "1.25.0",
+				"lib": "@overbit/opentelemetry-nestjs"
+			}
+		},
+		"traceId": "6688d266593d7460d54a4cb7bec48265",
+		"parentId": "beccfc3ed78e734a",
+		"traceState": "undefined",
+		"name": "Controller->AppController.logMe",
+		"id": "ac8dd58ea107cf66",
+		"kind": 1,
+		"timestamp": 1720242790689000,
+		"duration": 19937.125,
+		"attributes": { "controller": "AppController", "method": "logMe" },
+		"status": { "code": 0 },
+		"events": [],
+		"links": []
+	},
+	{
+		"resource": {
+			"attributes": {
+				"service.name": "test-logcls",
+				"telemetry.sdk.language": "nodejs",
+				"telemetry.sdk.name": "opentelemetry",
+				"telemetry.sdk.version": "1.25.0",
+				"lib": "@overbit/opentelemetry-nestjs"
+			}
+		},
+		"traceId": "6688d266593d7460d54a4cb7bec48265",
+		"parentId": "undefined",
+		"traceState": "undefined",
+		"name": "GET /logme",
+		"id": "beccfc3ed78e734a",
+		"kind": 1,
+		"timestamp": 1720242790678000,
+		"duration": 35171.334,
+		"attributes": {
+			"http.url": "http://localhost:3000/logme",
+			"http.host": "localhost:3000",
+			"net.host.name": "localhost",
+			"http.method": "GET",
+			"http.scheme": "http",
+			"http.target": "/logme",
+			"http.user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+			"http.flavor": "1.1",
+			"net.transport": "ip_tcp",
+			"net.host.ip": "::1",
+			"net.host.port": 3000,
+			"net.peer.ip": "::1",
+			"net.peer.port": 50890,
+			"http.status_code": 304,
+			"http.status_text": "NOT MODIFIED"
+		},
+		"status": { "code": 0 },
+		"events": [],
+		"links": []
+	}
+
+]
