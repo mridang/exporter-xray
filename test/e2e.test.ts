@@ -1101,4 +1101,353 @@ describe('sample.application test', () => {
       },
     ]);
   });
+
+  it('should show the correct segments when there are errors', async () => {
+    const traceId = genTraceId();
+    await request('http://localhost:2999/cause/error')
+      .get('/')
+      .set('traceparent', `00-${traceId}-${genSpanId()}-01`)
+      .expect(400);
+
+    await new Promise((f) => setTimeout(f, 1000));
+    const traceFileContent = fs.readFileSync(
+      path.join(tracesDir, `${traceId}.json`),
+      'utf-8',
+    );
+
+    expect(JSON.parse(traceFileContent)).toEqual([
+      {
+        id: expect.stringMatching(/^[a-f0-9]{16}$/),
+        trace_id: traceId,
+        name: 'middleware - query',
+        start_time: expect.any(Number),
+        end_time: expect.any(Number),
+        parent_id: expect.stringMatching(/^[a-f0-9]{16}$/),
+        aws: {
+          xray: {
+            sdk: 'nodejs/1.25.1',
+            sdk_version: '1.25.1',
+            auto_instrumentation: false,
+          },
+        },
+        service: {
+          version: 'unknown',
+          runtime: 'nodejs',
+          runtime_version: '20.15.1',
+          name: 'test',
+        },
+        type: 'subsegment',
+      },
+      {
+        id: expect.stringMatching(/^[a-f0-9]{16}$/),
+        trace_id: traceId,
+        name: 'middleware - expressInit',
+        start_time: expect.any(Number),
+        end_time: expect.any(Number),
+        parent_id: expect.stringMatching(/^[a-f0-9]{16}$/),
+        aws: {
+          xray: {
+            sdk: 'nodejs/1.25.1',
+            sdk_version: '1.25.1',
+            auto_instrumentation: false,
+          },
+        },
+        service: {
+          version: 'unknown',
+          runtime: 'nodejs',
+          runtime_version: '20.15.1',
+          name: 'test',
+        },
+        type: 'subsegment',
+      },
+      {
+        id: expect.stringMatching(/^[a-f0-9]{16}$/),
+        trace_id: traceId,
+        name: 'request handler - /cause/error',
+        start_time: expect.any(Number),
+        end_time: expect.any(Number),
+        parent_id: expect.stringMatching(/^[a-f0-9]{16}$/),
+        aws: {
+          xray: {
+            sdk: 'nodejs/1.25.1',
+            sdk_version: '1.25.1',
+            auto_instrumentation: false,
+          },
+        },
+        service: {
+          version: 'unknown',
+          runtime: 'nodejs',
+          runtime_version: '20.15.1',
+          name: 'test',
+        },
+        type: 'subsegment',
+      },
+      {
+        id: expect.stringMatching(/^[a-f0-9]{16}$/),
+        trace_id: traceId,
+        name: 'GET /cause/error',
+        start_time: expect.any(Number),
+        end_time: expect.any(Number),
+        parent_id: expect.stringMatching(/^[a-f0-9]{16}$/),
+        error: true,
+        http: {
+          request: {
+            method: 'GET',
+            client_ip: '::1',
+            x_forwarded_for: true,
+            url: 'http://localhost:2999/cause/error/',
+          },
+          response: {
+            status: 400,
+          },
+        },
+        aws: {
+          xray: {
+            sdk: 'nodejs/1.25.1',
+            sdk_version: '1.25.1',
+            auto_instrumentation: false,
+          },
+        },
+        service: {
+          version: 'unknown',
+          runtime: 'nodejs',
+          runtime_version: '20.15.1',
+          name: 'test',
+        },
+      },
+    ]);
+  });
+
+  it('should show the correct segments when there are throttles', async () => {
+    const traceId = genTraceId();
+    await request('http://localhost:2999/cause/throttle')
+      .get('/')
+      .set('traceparent', `00-${traceId}-${genSpanId()}-01`)
+      .expect(429);
+
+    await new Promise((f) => setTimeout(f, 1000));
+    const traceFileContent = fs.readFileSync(
+      path.join(tracesDir, `${traceId}.json`),
+      'utf-8',
+    );
+
+    expect(JSON.parse(traceFileContent)).toEqual([
+      {
+        id: expect.stringMatching(/^[a-f0-9]{16}$/),
+        trace_id: traceId,
+        name: 'middleware - query',
+        start_time: expect.any(Number),
+        end_time: expect.any(Number),
+        parent_id: expect.stringMatching(/^[a-f0-9]{16}$/),
+        aws: {
+          xray: {
+            sdk: 'nodejs/1.25.1',
+            sdk_version: '1.25.1',
+            auto_instrumentation: false,
+          },
+        },
+        service: {
+          version: 'unknown',
+          runtime: 'nodejs',
+          runtime_version: '20.15.1',
+          name: 'test',
+        },
+        type: 'subsegment',
+      },
+      {
+        id: expect.stringMatching(/^[a-f0-9]{16}$/),
+        trace_id: traceId,
+        name: 'middleware - expressInit',
+        start_time: expect.any(Number),
+        end_time: expect.any(Number),
+        parent_id: expect.stringMatching(/^[a-f0-9]{16}$/),
+        aws: {
+          xray: {
+            sdk: 'nodejs/1.25.1',
+            sdk_version: '1.25.1',
+            auto_instrumentation: false,
+          },
+        },
+        service: {
+          version: 'unknown',
+          runtime: 'nodejs',
+          runtime_version: '20.15.1',
+          name: 'test',
+        },
+        type: 'subsegment',
+      },
+      {
+        id: expect.stringMatching(/^[a-f0-9]{16}$/),
+        trace_id: traceId,
+        name: 'request handler - /cause/throttle',
+        start_time: expect.any(Number),
+        end_time: expect.any(Number),
+        parent_id: expect.stringMatching(/^[a-f0-9]{16}$/),
+        aws: {
+          xray: {
+            sdk: 'nodejs/1.25.1',
+            sdk_version: '1.25.1',
+            auto_instrumentation: false,
+          },
+        },
+        service: {
+          version: 'unknown',
+          runtime: 'nodejs',
+          runtime_version: '20.15.1',
+          name: 'test',
+        },
+        type: 'subsegment',
+      },
+      {
+        id: expect.stringMatching(/^[a-f0-9]{16}$/),
+        trace_id: traceId,
+        name: 'GET /cause/throttle',
+        start_time: expect.any(Number),
+        end_time: expect.any(Number),
+        parent_id: expect.stringMatching(/^[a-f0-9]{16}$/),
+        error: true,
+        throttle: true,
+        http: {
+          request: {
+            method: 'GET',
+            client_ip: '::1',
+            x_forwarded_for: true,
+            url: 'http://localhost:2999/cause/throttle/',
+          },
+          response: {
+            status: 429,
+          },
+        },
+        aws: {
+          xray: {
+            sdk: 'nodejs/1.25.1',
+            sdk_version: '1.25.1',
+            auto_instrumentation: false,
+          },
+        },
+        service: {
+          version: 'unknown',
+          runtime: 'nodejs',
+          runtime_version: '20.15.1',
+          name: 'test',
+        },
+      },
+    ]);
+  });
+
+  it('should show the correct segments when there are faults', async () => {
+    const traceId = genTraceId();
+    await request('http://localhost:2999/cause/fault')
+      .get('/')
+      .set('traceparent', `00-${traceId}-${genSpanId()}-01`)
+      .expect(500);
+
+    await new Promise((f) => setTimeout(f, 1000));
+    const traceFileContent = fs.readFileSync(
+      path.join(tracesDir, `${traceId}.json`),
+      'utf-8',
+    );
+
+    expect(JSON.parse(traceFileContent)).toEqual([
+      {
+        id: expect.stringMatching(/^[a-f0-9]{16}$/),
+        trace_id: traceId,
+        name: 'middleware - query',
+        start_time: expect.any(Number),
+        end_time: expect.any(Number),
+        parent_id: expect.stringMatching(/^[a-f0-9]{16}$/),
+        aws: {
+          xray: {
+            sdk: 'nodejs/1.25.1',
+            sdk_version: '1.25.1',
+            auto_instrumentation: false,
+          },
+        },
+        service: {
+          version: 'unknown',
+          runtime: 'nodejs',
+          runtime_version: '20.15.1',
+          name: 'test',
+        },
+        type: 'subsegment',
+      },
+      {
+        id: expect.stringMatching(/^[a-f0-9]{16}$/),
+        trace_id: traceId,
+        name: 'middleware - expressInit',
+        start_time: expect.any(Number),
+        end_time: expect.any(Number),
+        parent_id: expect.stringMatching(/^[a-f0-9]{16}$/),
+        aws: {
+          xray: {
+            sdk: 'nodejs/1.25.1',
+            sdk_version: '1.25.1',
+            auto_instrumentation: false,
+          },
+        },
+        service: {
+          version: 'unknown',
+          runtime: 'nodejs',
+          runtime_version: '20.15.1',
+          name: 'test',
+        },
+        type: 'subsegment',
+      },
+      {
+        id: expect.stringMatching(/^[a-f0-9]{16}$/),
+        trace_id: traceId,
+        name: 'request handler - /cause/fault',
+        start_time: expect.any(Number),
+        end_time: expect.any(Number),
+        parent_id: expect.stringMatching(/^[a-f0-9]{16}$/),
+        aws: {
+          xray: {
+            sdk: 'nodejs/1.25.1',
+            sdk_version: '1.25.1',
+            auto_instrumentation: false,
+          },
+        },
+        service: {
+          version: 'unknown',
+          runtime: 'nodejs',
+          runtime_version: '20.15.1',
+          name: 'test',
+        },
+        type: 'subsegment',
+      },
+      {
+        id: expect.stringMatching(/^[a-f0-9]{16}$/),
+        trace_id: traceId,
+        name: 'GET /cause/fault',
+        start_time: expect.any(Number),
+        end_time: expect.any(Number),
+        parent_id: expect.stringMatching(/^[a-f0-9]{16}$/),
+        fault: true,
+        http: {
+          request: {
+            method: 'GET',
+            client_ip: '::1',
+            x_forwarded_for: true,
+            url: 'http://localhost:2999/cause/fault/',
+          },
+          response: {
+            status: 500,
+          },
+        },
+        aws: {
+          xray: {
+            sdk: 'nodejs/1.25.1',
+            sdk_version: '1.25.1',
+            auto_instrumentation: false,
+          },
+        },
+        service: {
+          version: 'unknown',
+          runtime: 'nodejs',
+          runtime_version: '20.15.1',
+          name: 'test',
+        },
+      },
+    ]);
+  });
 });
