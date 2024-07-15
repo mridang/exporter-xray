@@ -71,7 +71,7 @@ export default function (wrapFn: <T>(client: T) => T) {
       res.status(200).json({ message: 'Item added to queue', data });
     } catch (error) {
       if (error instanceof Error) {
-        throw new Error();
+        throw error;
       } else {
         res.status(500);
       }

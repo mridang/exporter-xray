@@ -50,7 +50,7 @@ export default function (wrapFn: <T>(client: T) => T) {
       res.status(200).json({ secret: data.SecretString });
     } catch (error) {
       if (error instanceof Error) {
-        throw new Error();
+        throw error;
       } else {
         res.status(500);
       }
