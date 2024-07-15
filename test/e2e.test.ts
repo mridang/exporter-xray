@@ -1,5 +1,5 @@
 import request from 'supertest';
-import { spawn, ChildProcess } from 'child_process';
+import { spawn, ChildProcess, execSync } from 'child_process';
 import path from 'path';
 import os from 'os';
 import * as fs from 'fs';
@@ -36,7 +36,7 @@ describe('sample.application test', () => {
 
   afterAll((done) => {
     if (serverProcess) {
-      serverProcess.kill('SIGKILL');
+      execSync(`pkill -P ${serverProcess.pid}`);
     }
     done();
   });
