@@ -36,7 +36,9 @@ describe('sample.application test', () => {
 
   afterAll((done) => {
     if (serverProcess) {
-      execSync(`pkill -P ${serverProcess.pid}`);
+      console.log("killing it")
+      console.log(execSync(`ps -efH`))
+      console.log(execSync(`pkill -P ${serverProcess.pid}`).toString());
     }
     done();
   });
