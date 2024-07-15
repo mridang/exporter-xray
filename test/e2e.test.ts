@@ -40,6 +40,7 @@ describe('sample.application test', () => {
       console.log(execSync(`ps -efH`).toString());
       console.log(serverProcess.pid);
       console.log(execSync(`pkill -P ${serverProcess.pid}`).toString());
+      console.log(execSync(`ps -efH`).toString());
     }
     done();
   });
