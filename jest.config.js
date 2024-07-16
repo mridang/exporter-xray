@@ -11,7 +11,6 @@ module.exports = {
   testEnvironment: 'node',
   testMatch: ['**/*.+(spec|test).[tj]s?(x)'],
   moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx', 'json', 'node'],
-
   testPathIgnorePatterns: ['/node_modules/', '/frontend/', '/dist/'],
   resetModules: false,
   collectCoverage: true,
@@ -20,4 +19,6 @@ module.exports = {
   coverageReporters: ['lcov', 'text'],
   coveragePathIgnorePatterns: ['/dist/'],
   testTimeout: 60000,
+  globalSetup: './test/setup.ts',
+  globalTeardown: './test/teardown.ts',
 };
