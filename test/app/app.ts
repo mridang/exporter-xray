@@ -59,14 +59,15 @@ app.get('/cause/throttle', (_req: Request, res: Response) => {
 });
 
 app.get('/crossapp/send', async (_req: Request, res: Response) => {
-  const response = await axios.post('http://localhost:3001/crossapp/receive', {
-    name: 'Service A',
-  });
+  const response = await axios.post(
+    'http://localhost:4888/crossapp/receive',
+    {},
+  );
   res.send(response.data);
 });
 
 app.post('/crossapp/receive', (req: Request, res: Response) => {
-  res.json({ name: 'Service B' });
+  res.json({ ok: true });
 });
 
 const server = app.listen(process.env.PORT || 2999, () => {

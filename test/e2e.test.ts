@@ -52,6 +52,7 @@ describe('sample.application test', () => {
       .set('traceparent', `00-${traceId}-${genSpanId()}-01`)
       .expect(500);
 
+    await new Promise((f) => setTimeout(f, 2000));
     const traceFileContent = fs.readFileSync(
       path.join(tracesDir, `${traceId}.json`),
       'utf-8',
@@ -167,6 +168,7 @@ describe('sample.application test', () => {
       .set('traceparent', `00-${traceId}-${genSpanId()}-01`)
       .expect(200);
 
+    await new Promise((f) => setTimeout(f, 2000));
     const traceFileContent = fs.readFileSync(
       path.join(tracesDir, `${traceId}.json`),
       'utf-8',
