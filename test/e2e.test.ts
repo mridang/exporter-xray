@@ -1,5 +1,5 @@
 import request from 'supertest';
-import { spawn, ChildProcess, execSync } from 'child_process';
+import { spawn, ChildProcess } from 'child_process';
 import path from 'path';
 import os from 'os';
 import * as fs from 'fs';
@@ -36,12 +36,7 @@ describe('sample.application test', () => {
 
   afterAll((done) => {
     if (serverProcess) {
-      console.log(execSync(`ps -efH`).toString());
       serverProcess.kill('SIGINT');
-      serverProcess.kill('SIGKILL');
-      console.log('killing it');
-      console.log(execSync(`ps -efH`).toString());
-      console.log(serverProcess.pid);
     }
     done();
   });

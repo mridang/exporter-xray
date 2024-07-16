@@ -4,7 +4,7 @@
 	"scripts": {
 		"prepack": "tsc",
 		"build": "tsc",
-		"test": "jest --verbose --config=jest.config.js --runInBand",
+		"test": "jest --verbose --config=jest.config.js --runInBand --forceExit",
 		"test:watch": "npm run test -- --watch",
 		"test:debug": "jest --verbose --config=jest.config.js --runInBand --detectOpenHandles",
 		"format": "prettier --write \"**/*.{js,ts,jsx,tsx,json,css,md,html}\"",
