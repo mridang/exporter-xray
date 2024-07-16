@@ -34,11 +34,130 @@ describe('sample.application test', () => {
     });
   });
 
+  beforeEach(async () => {
+    await new Promise((f) => setTimeout(f, 1000));
+  });
+
   afterAll((done) => {
     if (serverProcess) {
       serverProcess.kill('SIGINT');
     }
     done();
+  });
+
+  it('should show the correct segments when it crashes', async () => {
+    const traceId = genTraceId();
+    await request('http://localhost:2999/cause/crash')
+      .get('/')
+      .set('traceparent', `00-${traceId}-${genSpanId()}-01`)
+      .expect(500);
+
+    const traceFileContent = fs.readFileSync(
+      path.join(tracesDir, `${traceId}.json`),
+      'utf-8',
+    );
+
+    expect(JSON.parse(traceFileContent)).toEqual([
+      {
+        id: expect.stringMatching(/^[a-f0-9]{16}$/),
+        trace_id: traceId,
+        name: 'middleware - query',
+        start_time: expect.any(Number),
+        end_time: expect.any(Number),
+        parent_id: expect.stringMatching(/^[a-f0-9]{16}$/),
+        aws: {
+          xray: {
+            sdk: expect.stringMatching(/^nodejs\/\d+\.\d+\.\d+$/),
+            sdk_version: expect.stringMatching(/^\d+\.\d+\.\d+$/),
+            auto_instrumentation: false,
+          },
+        },
+        service: {
+          version: 'unknown',
+          runtime: 'nodejs',
+          runtime_version: process.version.substring(1),
+          name: 'test',
+        },
+        type: 'subsegment',
+      },
+      {
+        id: expect.stringMatching(/^[a-f0-9]{16}$/),
+        trace_id: traceId,
+        name: 'middleware - expressInit',
+        start_time: expect.any(Number),
+        end_time: expect.any(Number),
+        parent_id: expect.stringMatching(/^[a-f0-9]{16}$/),
+        aws: {
+          xray: {
+            sdk: expect.stringMatching(/^nodejs\/\d+\.\d+\.\d+$/),
+            sdk_version: expect.stringMatching(/^\d+\.\d+\.\d+$/),
+            auto_instrumentation: false,
+          },
+        },
+        service: {
+          version: 'unknown',
+          runtime: 'nodejs',
+          runtime_version: process.version.substring(1),
+          name: 'test',
+        },
+        type: 'subsegment',
+      },
+      {
+        id: expect.stringMatching(/^[a-f0-9]{16}$/),
+        trace_id: traceId,
+        name: 'request handler - /cause/crash',
+        start_time: expect.any(Number),
+        end_time: expect.any(Number),
+        parent_id: expect.stringMatching(/^[a-f0-9]{16}$/),
+        aws: {
+          xray: {
+            sdk: expect.stringMatching(/^nodejs\/\d+\.\d+\.\d+$/),
+            sdk_version: expect.stringMatching(/^\d+\.\d+\.\d+$/),
+            auto_instrumentation: false,
+          },
+        },
+        service: {
+          version: 'unknown',
+          runtime: 'nodejs',
+          runtime_version: process.version.substring(1),
+          name: 'test',
+        },
+        type: 'subsegment',
+      },
+      {
+        id: expect.stringMatching(/^[a-f0-9]{16}$/),
+        trace_id: traceId,
+        name: 'GET /cause/crash',
+        start_time: expect.any(Number),
+        end_time: expect.any(Number),
+        parent_id: expect.stringMatching(/^[a-f0-9]{16}$/),
+        fault: true,
+        http: {
+          request: {
+            method: 'GET',
+            client_ip: '::1',
+            x_forwarded_for: true,
+            url: 'http://localhost:2999/cause/crash/',
+          },
+          response: {
+            status: 500,
+          },
+        },
+        aws: {
+          xray: {
+            sdk: expect.stringMatching(/^nodejs\/\d+\.\d+\.\d+$/),
+            sdk_version: expect.stringMatching(/^\d+\.\d+\.\d+$/),
+            auto_instrumentation: false,
+          },
+        },
+        service: {
+          version: 'unknown',
+          runtime: 'nodejs',
+          runtime_version: process.version.substring(1),
+          name: 'test',
+        },
+      },
+    ]);
   });
 
   it('should show the correct segments when using fetch', async () => {
@@ -214,8 +333,6 @@ describe('sample.application test', () => {
   });
 
   it('should show the correct segments when using DynamoDB', async () => {
-    await new Promise((f) => setTimeout(f, 2000));
-
     const traceId = genTraceId();
     await request('http://localhost:2999/dynamo/add-to-table')
       .get('/')
@@ -1127,8 +1244,8 @@ describe('sample.application test', () => {
         parent_id: expect.stringMatching(/^[a-f0-9]{16}$/),
         aws: {
           xray: {
-            sdk: 'nodejs/1.25.1',
-            sdk_version: '1.25.1',
+            sdk: expect.stringMatching(/^nodejs\/\d+\.\d+\.\d+$/),
+            sdk_version: expect.stringMatching(/^\d+\.\d+\.\d+$/),
             auto_instrumentation: false,
           },
         },
@@ -1149,8 +1266,8 @@ describe('sample.application test', () => {
         parent_id: expect.stringMatching(/^[a-f0-9]{16}$/),
         aws: {
           xray: {
-            sdk: 'nodejs/1.25.1',
-            sdk_version: '1.25.1',
+            sdk: expect.stringMatching(/^nodejs\/\d+\.\d+\.\d+$/),
+            sdk_version: expect.stringMatching(/^\d+\.\d+\.\d+$/),
             auto_instrumentation: false,
           },
         },
@@ -1171,8 +1288,8 @@ describe('sample.application test', () => {
         parent_id: expect.stringMatching(/^[a-f0-9]{16}$/),
         aws: {
           xray: {
-            sdk: 'nodejs/1.25.1',
-            sdk_version: '1.25.1',
+            sdk: expect.stringMatching(/^nodejs\/\d+\.\d+\.\d+$/),
+            sdk_version: expect.stringMatching(/^\d+\.\d+\.\d+$/),
             auto_instrumentation: false,
           },
         },
@@ -1205,8 +1322,8 @@ describe('sample.application test', () => {
         },
         aws: {
           xray: {
-            sdk: 'nodejs/1.25.1',
-            sdk_version: '1.25.1',
+            sdk: expect.stringMatching(/^nodejs\/\d+\.\d+\.\d+$/),
+            sdk_version: expect.stringMatching(/^\d+\.\d+\.\d+$/),
             auto_instrumentation: false,
           },
         },
@@ -1243,8 +1360,8 @@ describe('sample.application test', () => {
         parent_id: expect.stringMatching(/^[a-f0-9]{16}$/),
         aws: {
           xray: {
-            sdk: 'nodejs/1.25.1',
-            sdk_version: '1.25.1',
+            sdk: expect.stringMatching(/^nodejs\/\d+\.\d+\.\d+$/),
+            sdk_version: expect.stringMatching(/^\d+\.\d+\.\d+$/),
             auto_instrumentation: false,
           },
         },
@@ -1265,8 +1382,8 @@ describe('sample.application test', () => {
         parent_id: expect.stringMatching(/^[a-f0-9]{16}$/),
         aws: {
           xray: {
-            sdk: 'nodejs/1.25.1',
-            sdk_version: '1.25.1',
+            sdk: expect.stringMatching(/^nodejs\/\d+\.\d+\.\d+$/),
+            sdk_version: expect.stringMatching(/^\d+\.\d+\.\d+$/),
             auto_instrumentation: false,
           },
         },
@@ -1287,8 +1404,8 @@ describe('sample.application test', () => {
         parent_id: expect.stringMatching(/^[a-f0-9]{16}$/),
         aws: {
           xray: {
-            sdk: 'nodejs/1.25.1',
-            sdk_version: '1.25.1',
+            sdk: expect.stringMatching(/^nodejs\/\d+\.\d+\.\d+$/),
+            sdk_version: expect.stringMatching(/^\d+\.\d+\.\d+$/),
             auto_instrumentation: false,
           },
         },
@@ -1322,8 +1439,8 @@ describe('sample.application test', () => {
         },
         aws: {
           xray: {
-            sdk: 'nodejs/1.25.1',
-            sdk_version: '1.25.1',
+            sdk: expect.stringMatching(/^nodejs\/\d+\.\d+\.\d+$/),
+            sdk_version: expect.stringMatching(/^\d+\.\d+\.\d+$/),
             auto_instrumentation: false,
           },
         },
@@ -1360,8 +1477,8 @@ describe('sample.application test', () => {
         parent_id: expect.stringMatching(/^[a-f0-9]{16}$/),
         aws: {
           xray: {
-            sdk: 'nodejs/1.25.1',
-            sdk_version: '1.25.1',
+            sdk: expect.stringMatching(/^nodejs\/\d+\.\d+\.\d+$/),
+            sdk_version: expect.stringMatching(/^\d+\.\d+\.\d+$/),
             auto_instrumentation: false,
           },
         },
@@ -1382,8 +1499,8 @@ describe('sample.application test', () => {
         parent_id: expect.stringMatching(/^[a-f0-9]{16}$/),
         aws: {
           xray: {
-            sdk: 'nodejs/1.25.1',
-            sdk_version: '1.25.1',
+            sdk: expect.stringMatching(/^nodejs\/\d+\.\d+\.\d+$/),
+            sdk_version: expect.stringMatching(/^\d+\.\d+\.\d+$/),
             auto_instrumentation: false,
           },
         },
@@ -1404,8 +1521,8 @@ describe('sample.application test', () => {
         parent_id: expect.stringMatching(/^[a-f0-9]{16}$/),
         aws: {
           xray: {
-            sdk: 'nodejs/1.25.1',
-            sdk_version: '1.25.1',
+            sdk: expect.stringMatching(/^nodejs\/\d+\.\d+\.\d+$/),
+            sdk_version: expect.stringMatching(/^\d+\.\d+\.\d+$/),
             auto_instrumentation: false,
           },
         },
@@ -1438,8 +1555,8 @@ describe('sample.application test', () => {
         },
         aws: {
           xray: {
-            sdk: 'nodejs/1.25.1',
-            sdk_version: '1.25.1',
+            sdk: expect.stringMatching(/^nodejs\/\d+\.\d+\.\d+$/),
+            sdk_version: expect.stringMatching(/^\d+\.\d+\.\d+$/),
             auto_instrumentation: false,
           },
         },

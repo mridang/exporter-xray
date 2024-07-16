@@ -42,11 +42,9 @@ app.get('/', function (req: Request, res: Response) {
   res.send('Hello, world!');
 });
 
-// app.get('/crash', (_req: Request, _res: Response) => {
-//   const span = trace.getSpan(context.active());
-//   span.recordException(new Error('boox'));
-//   throw new Error('boom');
-// });
+app.get('/cause/crash', () => {
+  throw new Error('boom');
+});
 
 app.get('/cause/fault', (_req: Request, res: Response) => {
   res.status(500).send('Internal Server Error');
