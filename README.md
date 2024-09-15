@@ -172,7 +172,7 @@ over UDP to the daemon running on localhost at port 2000, but you can
 switch this by using the `AWS_XRAY_DAEMON_ADDRESS` environment variable.
 https://docs.aws.amazon.com/xray/latest/devguide/xray-daemon.html
 
-<img width="1165" alt="Screenshot 2024-07-06 at 9 17 25" src="https://github.com/mridang/exporter-xray/assets/327432/21067eb5-983d-4512-9184-18aab38e0357">
+<img alt="Architecture Diagram" src="https://github.com/user-attachments/assets/ccea802b-da9e-44cb-beeb-c9db7309c7d8">
 
 The exporter defaults to using the `UDPDaemonSegmentEmitter` when
 running on AWS Lambda, and the `SDKBasedSegmentEmitter` otherwise.
