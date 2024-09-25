@@ -12,7 +12,7 @@ import { InstrumentationScope } from '@opentelemetry/core/build/src/common/types
 import { join } from 'path';
 import { readFileSync } from 'fs';
 
-export interface SpanData {
+interface SpanData {
   traceId: string;
   id: string;
   parentId?: string;
