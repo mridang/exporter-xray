@@ -2,11 +2,13 @@ import XraySpanExporter from '../src/xray.exporter';
 import { ExportResultCode } from '@opentelemetry/core';
 import { WrappedReadableSpan } from './test.span';
 import { XRayClient } from '@aws-sdk/client-xray';
-import { DefaultIdParser } from '../src';
-import { DefaultCauseParser } from '../src';
-import { DefaultHttpParser } from '../src';
-import { DefaultNameParser } from '../src';
-import { SDKBasedSegmentEmitter } from '../src';
+import {
+  DefaultIdParser,
+  DefaultCauseParser,
+  DefaultHttpParser,
+  DefaultNameParser,
+  SDKBasedSegmentEmitter,
+} from '../src';
 
 jest.mock('@aws-sdk/client-xray', () => {
   return {
