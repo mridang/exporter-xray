@@ -1,18 +1,18 @@
-import { ReadableSpan, SpanExporter } from '@opentelemetry/sdk-trace-base';
-import { XrayTraceDataSegmentDocument } from './xray.document';
-import { EnhancedReadableSpan } from './super.span';
-import { ExportResult, ExportResultCode } from '@opentelemetry/core';
-import { DefaultIdParser, IdParser } from './id.parser';
-import { CauseParser, DefaultCauseParser } from './cause.parser';
-import { DefaultHttpParser, HttpParser } from './http.parser';
 import { diag } from '@opentelemetry/api';
-import { DefaultNameParser, NameParser } from './name.parser';
-import { SegmentEmitter } from './emitter/segment.emitter';
-import { SDKBasedSegmentEmitter } from './emitter/sdk.emitter';
-import { UDPDaemonSegmentEmitter } from './emitter/udp.emitter';
-import { DefaultOriginParser, OriginParser } from './origin.parser';
+import { ExportResult, ExportResultCode } from '@opentelemetry/core';
+import { ReadableSpan, SpanExporter } from '@opentelemetry/sdk-trace-base';
 import { emptyDeep } from 'empty-deep';
+import { CauseParser, DefaultCauseParser } from './cause.parser';
+import { SDKBasedSegmentEmitter } from './emitter/sdk.emitter';
+import { SegmentEmitter } from './emitter/segment.emitter';
+import { UDPDaemonSegmentEmitter } from './emitter/udp.emitter';
+import { DefaultHttpParser, HttpParser } from './http.parser';
+import { DefaultIdParser, IdParser } from './id.parser';
+import { DefaultNameParser, NameParser } from './name.parser';
+import { DefaultOriginParser, OriginParser } from './origin.parser';
+import { EnhancedReadableSpan } from './super.span';
 import { DefaultTraceFilter, TraceFilter } from './trace.filter';
+import { XrayTraceDataSegmentDocument } from './xray.document';
 
 /**
  * Creates an instance of XraySpanExporter.
@@ -28,6 +28,10 @@ import { DefaultTraceFilter, TraceFilter } from './trace.filter';
  * of the segment.
  * @param {OriginParser} [originParser] - The parser used for determining the
  * origin of the segment.
+ * @param {TraceFilter} [traceFilter] - The filter used to determine if a trace
+ * should be sent to X-Ray.
+ * @param {string[]} [indexedAttributes] - The attributes to index in the X-Ray
+ * console as annotations.
  */
 export default class XraySpanExporter implements SpanExporter {
   constructor(
@@ -42,6 +46,7 @@ export default class XraySpanExporter implements SpanExporter {
     private readonly nameParser: NameParser = new DefaultNameParser(),
     private readonly originParser: OriginParser = new DefaultOriginParser(),
     private readonly traceFilter: TraceFilter = new DefaultTraceFilter(),
+    private readonly indexedAttributes: string[] = [],
   ) {
     //
   }
@@ -68,7 +73,7 @@ export default class XraySpanExporter implements SpanExporter {
           aws: span.getAWS(),
           service: span.getService(),
           sql: span.getSql(),
-          annotations: span.getAnnotations(),
+          annotations: span.getAnnotations(this.indexedAttributes),
           metadata: span.getMetadata(),
           type: span.getType(),
           links: span.getLinks(this.idParser),

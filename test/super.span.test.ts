@@ -1,4 +1,5 @@
 import { ReadableSpan } from '@opentelemetry/sdk-trace-base';
+import { SEMATTRS_ENDUSER_ID } from '@opentelemetry/semantic-conventions';
 import { EnhancedReadableSpan } from '../src';
 
 describe('super.span test', () => {
@@ -86,6 +87,26 @@ describe('super.span test', () => {
       const enhancedSpan = new EnhancedReadableSpan(span);
 
       expect(enhancedSpan.isError()).toBeUndefined();
+    });
+
+    it('should return user if enduser.id is set', () => {
+      const span: ReadableSpan = {
+        attributes: { [SEMATTRS_ENDUSER_ID]: 'test' },
+      } as unknown as ReadableSpan;
+      const enhancedSpan = new EnhancedReadableSpan(span);
+
+      expect(enhancedSpan.getUser()).toEqual('test');
+    });
+
+    it('should return indexed attributes as annotations', () => {
+      const span: ReadableSpan = {
+        attributes: { [SEMATTRS_ENDUSER_ID]: 'test' },
+      } as unknown as ReadableSpan;
+      const enhancedSpan = new EnhancedReadableSpan(span);
+
+      expect(enhancedSpan.getAnnotations([SEMATTRS_ENDUSER_ID])).toEqual({
+        [SEMATTRS_ENDUSER_ID]: 'test',
+      });
     });
   });
 });
