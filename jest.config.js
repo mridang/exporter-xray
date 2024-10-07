@@ -19,4 +19,6 @@ module.exports = {
   coverageReporters: ['lcov', 'text'],
   coveragePathIgnorePatterns: ['/dist/'],
   testTimeout: 60000,
+  globalSetup: './test/setup.ts',
+  globalTeardown: './test/teardown.ts',
 };

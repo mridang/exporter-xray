@@ -8,7 +8,6 @@ import { DefaultHttpParser, HttpParser } from './http.parser';
 import { diag } from '@opentelemetry/api';
 import { DefaultNameParser, NameParser } from './name.parser';
 import { SegmentEmitter } from './emitter/segment.emitter';
-import { SDKBasedSegmentEmitter } from './emitter/sdk.emitter';
 import { UDPDaemonSegmentEmitter } from './emitter/udp.emitter';
 import { DefaultOriginParser, OriginParser } from './origin.parser';
 import { emptyDeep } from 'empty-deep';
@@ -32,9 +31,7 @@ import { DefaultTraceFilter, TraceFilter } from './trace.filter';
 export default class XraySpanExporter implements SpanExporter {
   constructor(
     private readonly segmentEmitters: SegmentEmitter[] = [
-      process.env.AWS_LAMBDA_FUNCTION_NAME
-        ? new UDPDaemonSegmentEmitter()
-        : new SDKBasedSegmentEmitter(),
+      new UDPDaemonSegmentEmitter(),
     ],
     private readonly idParser: IdParser = new DefaultIdParser(),
     private readonly causeParser: CauseParser = new DefaultCauseParser(),
