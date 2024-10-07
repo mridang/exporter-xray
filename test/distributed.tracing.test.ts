@@ -232,7 +232,7 @@ describe('distributed.tracing test', () => {
           request: {
             method: 'POST',
             client_ip: '::1',
-            user_agent: 'axios/1.7.2',
+            user_agent: 'axios/1.7.7',
             x_forwarded_for: true,
             url: 'http://localhost:4888/crossapp/receive',
           },
