@@ -48,7 +48,6 @@
 	"homepage": "https://github.com/mridang/exporter-xray",
 	"bugs": "https://github.com/mridang/exporter-xray/issues",
 	"dependencies": {
-		"@aws-sdk/client-xray": "^3.0.0",
 		"@opentelemetry/core": "^1.25.1",
 		"@opentelemetry/sdk-trace-base": "^1.25.1",
 		"@opentelemetry/semantic-conventions": "^1.25.1",
@@ -82,7 +81,6 @@
 		"express": "^4.19.2",
 		"jest": "^29.7.0",
 		"mysql2": "^3.10.2",
-		"npm": "^10.4.0",
 		"prettier": "^3.1.1",
 		"semantic-release": "^24.0.0",
 		"supertest": "^7.0.0",

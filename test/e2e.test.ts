@@ -439,6 +439,74 @@ describe('sample.application test', () => {
       {
         id: expect.stringMatching(/^[a-f0-9]{16}$/),
         trace_id: traceId,
+        name: 'DynamoDB.DescribeTable',
+        start_time: expect.any(Number),
+        end_time: expect.any(Number),
+        parent_id: expect.stringMatching(/^[a-f0-9]{16}$/),
+        namespace: 'aws',
+        http: {
+          response: {
+            status: 200,
+          },
+        },
+        aws: {
+          operation: 'DescribeTable',
+          region: 'us-east-1',
+          request_id: expect.stringMatching(
+            /^[\da-f]{8}(-[\da-f]{4}){3}-[\da-f]{12}$/,
+          ),
+          table_name: 'MyTable',
+          xray: {
+            sdk: expect.stringMatching(/^nodejs\/\d+\.\d+\.\d+$/),
+            sdk_version: expect.stringMatching(/^\d+\.\d+\.\d+$/),
+            auto_instrumentation: false,
+          },
+        },
+        service: {
+          version: 'unknown',
+          runtime: 'nodejs',
+          runtime_version: process.version.substring(1),
+          name: 'test',
+        },
+        type: 'subsegment',
+      },
+      {
+        id: expect.stringMatching(/^[a-f0-9]{16}$/),
+        trace_id: traceId,
+        name: 'DynamoDB.PutItem',
+        start_time: expect.any(Number),
+        end_time: expect.any(Number),
+        parent_id: expect.stringMatching(/^[a-f0-9]{16}$/),
+        namespace: 'aws',
+        http: {
+          response: {
+            status: 200,
+          },
+        },
+        aws: {
+          operation: 'PutItem',
+          region: 'us-east-1',
+          request_id: expect.stringMatching(
+            /^[\da-f]{8}(-[\da-f]{4}){3}-[\da-f]{12}$/,
+          ),
+          table_name: 'MyTable',
+          xray: {
+            sdk: expect.stringMatching(/^nodejs\/\d+\.\d+\.\d+$/),
+            sdk_version: expect.stringMatching(/^\d+\.\d+\.\d+$/),
+            auto_instrumentation: false,
+          },
+        },
+        service: {
+          version: 'unknown',
+          runtime: 'nodejs',
+          runtime_version: process.version.substring(1),
+          name: 'test',
+        },
+        type: 'subsegment',
+      },
+      {
+        id: expect.stringMatching(/^[a-f0-9]{16}$/),
+        trace_id: traceId,
         name: 'GET /dynamo/add-to-table',
         start_time: expect.any(Number),
         end_time: expect.any(Number),
@@ -576,6 +644,77 @@ describe('sample.application test', () => {
       {
         id: expect.stringMatching(/^[a-f0-9]{16}$/),
         trace_id: traceId,
+        name: 'SQS.GetQueueUrl',
+        start_time: expect.any(Number),
+        end_time: expect.any(Number),
+        parent_id: expect.stringMatching(/^[a-f0-9]{16}$/),
+        namespace: 'aws',
+        http: {
+          response: {
+            status: 200,
+          },
+        },
+        aws: {
+          operation: 'GetQueueUrl',
+          region: 'us-east-1',
+          request_id: expect.stringMatching(
+            /^[\da-f]{8}(-[\da-f]{4}){3}-[\da-f]{12}$/,
+          ),
+          xray: {
+            sdk: expect.stringMatching(/^nodejs\/\d+\.\d+\.\d+$/),
+            sdk_version: expect.stringMatching(/^\d+\.\d+\.\d+$/),
+            auto_instrumentation: false,
+          },
+        },
+        service: {
+          version: 'unknown',
+          runtime: 'nodejs',
+          runtime_version: process.version.substring(1),
+          name: 'test',
+        },
+        type: 'subsegment',
+      },
+      {
+        id: expect.stringMatching(/^[a-f0-9]{16}$/),
+        trace_id: traceId,
+        name: 'MyQueue send',
+        start_time: expect.any(Number),
+        end_time: expect.any(Number),
+        parent_id: expect.stringMatching(/^[a-f0-9]{16}$/),
+        namespace: 'aws',
+        http: {
+          response: {
+            status: 200,
+          },
+        },
+        aws: {
+          operation: 'SendMessage',
+          region: 'us-east-1',
+          request_id: expect.stringMatching(
+            /^[\da-f]{8}(-[\da-f]{4}){3}-[\da-f]{12}$/,
+          ),
+          queue_url:
+            'http://sqs.us-east-1.localhost.localstack.cloud:4566/000000000000/MyQueue',
+          message_id: expect.stringMatching(
+            /^[\da-f]{8}(-[\da-f]{4}){3}-[\da-f]{12}$/,
+          ),
+          xray: {
+            sdk: expect.stringMatching(/^nodejs\/\d+\.\d+\.\d+$/),
+            sdk_version: expect.stringMatching(/^\d+\.\d+\.\d+$/),
+            auto_instrumentation: false,
+          },
+        },
+        service: {
+          version: 'unknown',
+          runtime: 'nodejs',
+          runtime_version: process.version.substring(1),
+          name: 'test',
+        },
+        type: 'subsegment',
+      },
+      {
+        id: expect.stringMatching(/^[a-f0-9]{16}$/),
+        trace_id: traceId,
         name: 'GET /sqs/add-to-queue',
         start_time: expect.any(Number),
         end_time: expect.any(Number),
@@ -620,6 +759,7 @@ describe('sample.application test', () => {
       path.join(tracesDir, `${traceId}.json`),
       'utf-8',
     );
+    //console.log(JSON.stringify(JSON.parse(traceFileContent), null, 2))
 
     expect(JSON.parse(traceFileContent)).toEqual([
       {
@@ -696,6 +836,119 @@ describe('sample.application test', () => {
         end_time: expect.any(Number),
         parent_id: expect.stringMatching(/^[a-f0-9]{16}$/),
         aws: {
+          xray: {
+            sdk: expect.stringMatching(/^nodejs\/\d+\.\d+\.\d+$/),
+            sdk_version: expect.stringMatching(/^\d+\.\d+\.\d+$/),
+            auto_instrumentation: false,
+          },
+        },
+        service: {
+          version: 'unknown',
+          runtime: 'nodejs',
+          runtime_version: process.version.substring(1),
+          name: 'test',
+        },
+        type: 'subsegment',
+      },
+      {
+        id: expect.stringMatching(/^[a-f0-9]{16}$/),
+        trace_id: traceId,
+        name: 'SecretsManager.CreateSecret',
+        start_time: expect.any(Number),
+        end_time: expect.any(Number),
+        parent_id: expect.stringMatching(/^[a-f0-9]{16}$/),
+        fault: true,
+        error: true,
+        cause: {
+          exceptions: [
+            {
+              id: expect.stringMatching(/^[a-f0-9]{16}$/),
+              type: 'ResourceExistsException',
+              message:
+                'The operation failed because the secret mySecret already exists.',
+              remote: true,
+              stack: [
+                {
+                  label: 'de_ResourceExistsExceptionRes',
+                  line: 1092,
+                  path: '/Users/mridang/Code/mridang/exporter-xray/node_modules/@aws-sdk/client-secrets-manager/dist-cjs/index.js',
+                },
+                {
+                  label: 'de_CommandError',
+                  line: 986,
+                  path: '/Users/mridang/Code/mridang/exporter-xray/node_modules/@aws-sdk/client-secrets-manager/dist-cjs/index.js',
+                },
+                {
+                  label: 'processTicksAndRejections',
+                  line: 95,
+                  path: 'node:internal/process/task_queues',
+                },
+                {
+                  label: 'anonymous',
+                  line: 35,
+                  path: 'async /Users/mridang/Code/mridang/exporter-xray/node_modules/@smithy/middleware-serde/dist-cjs/index.js',
+                },
+                {
+                  label: 'anonymous',
+                  line: 165,
+                  path: 'async /Users/mridang/Code/mridang/exporter-xray/node_modules/@smithy/core/dist-cjs/index.js',
+                },
+                {
+                  label: 'anonymous',
+                  line: 320,
+                  path: 'async /Users/mridang/Code/mridang/exporter-xray/node_modules/@smithy/middleware-retry/dist-cjs/index.js',
+                },
+                {
+                  label: 'anonymous',
+                  line: 34,
+                  path: 'async /Users/mridang/Code/mridang/exporter-xray/node_modules/@aws-sdk/client-secrets-manager/node_modules/@aws-sdk/middleware-logger/dist-cjs/index.js',
+                },
+              ],
+            },
+          ],
+        },
+        namespace: 'aws',
+        http: {
+          response: {
+            status: 400,
+          },
+        },
+        aws: {
+          operation: 'CreateSecret',
+          region: 'us-east-1',
+          xray: {
+            sdk: expect.stringMatching(/^nodejs\/\d+\.\d+\.\d+$/),
+            sdk_version: expect.stringMatching(/^\d+\.\d+\.\d+$/),
+            auto_instrumentation: false,
+          },
+        },
+        service: {
+          version: 'unknown',
+          runtime: 'nodejs',
+          runtime_version: process.version.substring(1),
+          name: 'test',
+        },
+        type: 'subsegment',
+      },
+      {
+        id: expect.stringMatching(/^[a-f0-9]{16}$/),
+        trace_id: traceId,
+        name: 'SecretsManager.GetSecretValue',
+        start_time: expect.any(Number),
+        end_time: expect.any(Number),
+        parent_id: expect.stringMatching(/^[a-f0-9]{16}$/),
+        namespace: 'aws',
+        http: {
+          response: {
+            status: 200,
+          },
+        },
+        aws: {
+          operation: 'GetSecretValue',
+          region: 'us-east-1',
+          request_id: expect.stringMatching(
+            /^[\da-f]{8}(-[\da-f]{4}){3}-[\da-f]{12}$/,
+          ),
           xray: {
             sdk: expect.stringMatching(/^nodejs\/\d+\.\d+\.\d+$/),
             sdk_version: expect.stringMatching(/^\d+\.\d+\.\d+$/),
@@ -833,6 +1086,74 @@ describe('sample.application test', () => {
         end_time: expect.any(Number),
         parent_id: expect.stringMatching(/^[a-f0-9]{16}$/),
         aws: {
+          xray: {
+            sdk: expect.stringMatching(/^nodejs\/\d+\.\d+\.\d+$/),
+            sdk_version: expect.stringMatching(/^\d+\.\d+\.\d+$/),
+            auto_instrumentation: false,
+          },
+        },
+        service: {
+          version: 'unknown',
+          runtime: 'nodejs',
+          runtime_version: process.version.substring(1),
+          name: 'test',
+        },
+        type: 'subsegment',
+      },
+      {
+        id: expect.stringMatching(/^[a-f0-9]{16}$/),
+        trace_id: traceId,
+        name: 'S3.HeadBucket',
+        start_time: expect.any(Number),
+        end_time: expect.any(Number),
+        parent_id: expect.stringMatching(/^[a-f0-9]{16}$/),
+        namespace: 'aws',
+        http: {
+          response: {
+            status: 200,
+          },
+        },
+        aws: {
+          operation: 'HeadBucket',
+          region: 'us-east-1',
+          request_id: expect.stringMatching(
+            /^[\da-f]{8}(-[\da-f]{4}){3}-[\da-f]{12}$/,
+          ),
+          id_2: expect.stringMatching(/^[a-zA-Z0-9+/]+=$/),
+          xray: {
+            sdk: expect.stringMatching(/^nodejs\/\d+\.\d+\.\d+$/),
+            sdk_version: expect.stringMatching(/^\d+\.\d+\.\d+$/),
+            auto_instrumentation: false,
+          },
+        },
+        service: {
+          version: 'unknown',
+          runtime: 'nodejs',
+          runtime_version: process.version.substring(1),
+          name: 'test',
+        },
+        type: 'subsegment',
+      },
+      {
+        id: expect.stringMatching(/^[a-f0-9]{16}$/),
+        trace_id: traceId,
+        name: 'S3.PutObject',
+        start_time: expect.any(Number),
+        end_time: expect.any(Number),
+        parent_id: expect.stringMatching(/^[a-f0-9]{16}$/),
+        namespace: 'aws',
+        http: {
+          response: {
+            status: 200,
+          },
+        },
+        aws: {
+          operation: 'PutObject',
+          region: 'us-east-1',
+          request_id: expect.stringMatching(
+            /^[\da-f]{8}(-[\da-f]{4}){3}-[\da-f]{12}$/,
+          ),
+          id_2: expect.stringMatching(/^[a-zA-Z0-9+/]+=$/),
           xray: {
             sdk: expect.stringMatching(/^nodejs\/\d+\.\d+\.\d+$/),
             sdk_version: expect.stringMatching(/^\d+\.\d+\.\d+$/),
