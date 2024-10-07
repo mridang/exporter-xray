@@ -1,3 +1,5 @@
+import { SpanKind, SpanStatusCode } from '@opentelemetry/api';
+import { ReadableSpan } from '@opentelemetry/sdk-trace-base';
 import {
   CLOUDPLATFORMVALUES_AWS_EC2,
   CLOUDPLATFORMVALUES_AWS_ECS,
@@ -41,10 +43,7 @@ import {
   SEMRESATTRS_TELEMETRY_SDK_LANGUAGE,
   SEMRESATTRS_TELEMETRY_SDK_VERSION,
 } from '@opentelemetry/semantic-conventions';
-import { SpanKind, SpanStatusCode } from '@opentelemetry/api';
-import { hrt, str, undef } from './util';
-import { ReadableSpan } from '@opentelemetry/sdk-trace-base';
-import { AWS, Cause, HTTP, Link, Log, Service, SQL } from './xray.document';
+import { CauseParser } from './cause.parser';
 import {
   XSEMATTRS_AWS_ACCOUNT,
   XSEMATTRS_AWS_BUCKET_KEY,
@@ -60,11 +59,12 @@ import {
   XSEMATTRS_AWS_TABLE_NAME_2,
   XSEMATTRS_AWS_XREQUEST_ID,
 } from './constants';
-import { IdParser } from './id.parser';
 import { HttpParser } from './http.parser';
-import { CauseParser } from './cause.parser';
+import { IdParser } from './id.parser';
 import { NameParser } from './name.parser';
 import { OriginParser } from './origin.parser';
+import { hrt, str, undef } from './util';
+import { AWS, Cause, HTTP, Link, Log, Service, SQL } from './xray.document';
 
 export class EnhancedReadableSpan {
   private readonly DBS = [
@@ -463,8 +463,29 @@ export class EnhancedReadableSpan {
     return idParser.parseId(this.span.spanContext().traceId);
   }
 
-  getAnnotations(): { [key: string]: string | number | boolean } | undefined {
-    return undefined; //TODO: Implement this
+  getAnnotations(
+    indexedAttributes: string[],
+  ): { [key: string]: string | number | boolean } | undefined {
+    const attributes = this.span.attributes;
+    const annotations: { [key: string]: string | number | boolean } = {};
+
+    for (const key of Object.keys(attributes)) {
+      if (
+        attributes[key] === undefined ||
+        attributes[key] === null ||
+        Array.isArray(attributes[key])
+      ) {
+        continue;
+      }
+
+      if (!indexedAttributes.includes(key)) {
+        continue;
+      }
+
+      annotations[key] = attributes[key];
+    }
+
+    return annotations;
   }
 
   getMetadata(): { [key: string]: { [key: string]: unknown } } | undefined {
