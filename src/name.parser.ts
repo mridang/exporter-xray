@@ -87,7 +87,7 @@ export class DefaultNameParser implements NameParser {
           if (parsed.hostname) {
             name += `@${parsed.hostname}`;
           }
-        } catch (e) {
+        } catch {
           // Ignore URL parsing errors
         }
       }

@@ -82,7 +82,7 @@ export class EnhancedReadableSpan {
   ];
 
   constructor(private readonly span: ReadableSpan) {
-    span.status;
+    //
   }
 
   /**

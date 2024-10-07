@@ -85,6 +85,7 @@ export default class XraySpanExporter implements SpanExporter {
       segmentEmitter
         .emit(trace)
         .then(() => {
+          // eslint-disable-next-line testing-library/no-debugging-utils
           diag.debug(`Sent ${spans.length} spans to X-Ray.`);
           cb({ code: ExportResultCode.SUCCESS });
         })

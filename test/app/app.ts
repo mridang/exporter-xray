@@ -1,9 +1,6 @@
 import './otel';
-
-import express from 'express';
 import axios from 'axios';
-import { Request, Response } from 'express';
-
+import express, { Request, Response } from 'express';
 import sqsController from './controllers/aws/sqs.controller';
 import dynamoController from './controllers/aws/ddb.controller';
 import bucketController from './controllers/aws/sss.controller';
