@@ -29,14 +29,13 @@ jobs:
         run: |
           IMAGES_DIR="./docker_images"
           COMBINED_IMAGES_TAR="$IMAGES_DIR/combined_images.tar"
-          
+
           if [ -f "$COMBINED_IMAGES_TAR" ]; then
           docker image load -i "$COMBINED_IMAGES_TAR"
           else
           mkdir -p "$IMAGES_DIR"
-          IMAGES=$(docker compose config --images)
-          docker pull $IMAGES
-          docker image save -o "$COMBINED_IMAGES_TAR" $IMAGES
+          docker compose pull --parallel
+          docker image save $(docker compose config --images) --output="$COMBINED_IMAGES_TAR"
           fi
 
       - name: Setup Node.js
