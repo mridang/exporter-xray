@@ -238,7 +238,7 @@ export class EnhancedReadableSpan {
   }
 
   public getParentId() {
-    return this.span.parentSpanId;
+    return this.span.parentSpanContext?.spanId;
   }
 
   public getType() {
