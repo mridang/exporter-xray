@@ -7,8 +7,8 @@
 		"test": "jest --verbose --config=jest.config.js --runInBand",
 		"test:watch": "npm run test -- --watch",
 		"test:debug": "jest --verbose --config=jest.config.js --runInBand --detectOpenHandles",
-		"format": "prettier --write \"**/*.{js,ts,jsx,tsx,json,css,md,html}\"",
-		"format:check": "prettier --check \"**/*.{js,ts,jsx,tsx,json,css,md,html}\"",
+		"format": "prettier --write .",
+		"format:check": "prettier --check .",
 		"lint": "npx eslint .",
 		"lint:fix": "npx eslint . --fix"
 	},
@@ -39,7 +39,7 @@
 		"@opentelemetry/propagator-aws-xray": "^1.0.0"
 	},
 	"engines": {
-		"node": "20.x"
+		"node": ">=20.0.0"
 	},
 	"repository": {
 		"type": "git",

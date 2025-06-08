@@ -27,22 +27,22 @@ jobs:
 
       - name: Docker pull
         run: |
-            IMAGES_DIR="./docker_images"
-            COMBINED_IMAGES_TAR="$IMAGES_DIR/combined_images.tar"
-            DOCKER_COMPOSE_FILE="docker-compose.yml"
+          IMAGES_DIR="./docker_images"
+          COMBINED_IMAGES_TAR="$IMAGES_DIR/combined_images.tar"
+          DOCKER_COMPOSE_FILE="docker-compose.yml"
 
-            if [ -f "$DOCKER_COMPOSE_FILE" ]; then
-              if [ -f "$COMBINED_IMAGES_TAR" ]; then
-                docker image load -i "$COMBINED_IMAGES_TAR"
-              else
-                mkdir -p "$IMAGES_DIR"
-                IMAGES=$(docker compose config --images)
-                docker compose pull --parallel
-                docker image save $(docker compose config --images) --output="$COMBINED_IMAGES_TAR"
-              fi
+          if [ -f "$DOCKER_COMPOSE_FILE" ]; then
+            if [ -f "$COMBINED_IMAGES_TAR" ]; then
+              docker image load -i "$COMBINED_IMAGES_TAR"
             else
-              echo "No docker-compose.yml file found. Exiting."
+              mkdir -p "$IMAGES_DIR"
+              IMAGES=$(docker compose config --images)
+              docker compose pull --parallel
+              docker image save $(docker compose config --images) --output="$COMBINED_IMAGES_TAR"
             fi
+          else
+            echo "No docker-compose.yml file found. Exiting."
+          fi
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
