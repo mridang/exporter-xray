@@ -30,7 +30,7 @@
 	"files": [
 		"dist"
 	],
-	"license": "ISC",
+	"license": "Apache-2.0",
 	"description": "OpenTelemetry Exporter that allows the user to send the collected traces to AWS X-Ray",
 	"private": false,
 	"peerDependencies": {
