@@ -1,262 +1,262 @@
 [
-	{
-		"resource": {
-			"attributes": {
-				"service.name": "my-express-app",
-				"telemetry.sdk.language": "nodejs",
-				"telemetry.sdk.name": "opentelemetry",
-				"telemetry.sdk.version": "1.25.1",
-				"process.pid": 78063,
-				"process.executable.name": "node",
-				"process.executable.path": "/Users/mridang/.local/share/fnm/node-versions/v20.9.0/installation/bin/node",
-				"process.command_args": [
-					"/Users/mridang/.local/share/fnm/node-versions/v20.9.0/installation/bin/node",
-					"/Users/mridang/Junk/tmp-express-js-xray/app.js"
-				],
-				"process.runtime.version": "20.9.0",
-				"process.runtime.name": "nodejs",
-				"process.runtime.description": "Node.js",
-				"process.command": "/Users/mridang/Junk/tmp-express-js-xray/app.js",
-				"process.owner": "mridang",
-				"host.name": "Mridangs-MacBook-Pro.local",
-				"host.arch": "arm64"
-			}
-		},
-		"traceId": "3c07164ff5c3a4b8ec79f64b420826b7",
-		"parentId": "8e06a34295824543",
-		"traceState": "undefined",
-		"name": "middleware - query",
-		"id": "c466eed4aa0b9e58",
-		"kind": 0,
-		"timestamp": 1719893345084000,
-		"duration": 326.166,
-		"attributes": {
-			"http.route": "/",
-			"express.name": "query",
-			"express.type": "middleware"
-		},
-		"status": { "code": 0 },
-		"events": [],
-		"links": []
-	},
-	{
-		"resource": {
-			"attributes": {
-				"service.name": "my-express-app",
-				"telemetry.sdk.language": "nodejs",
-				"telemetry.sdk.name": "opentelemetry",
-				"telemetry.sdk.version": "1.25.1",
-				"process.pid": 78063,
-				"process.executable.name": "node",
-				"process.executable.path": "/Users/mridang/.local/share/fnm/node-versions/v20.9.0/installation/bin/node",
-				"process.command_args": [
-					"/Users/mridang/.local/share/fnm/node-versions/v20.9.0/installation/bin/node",
-					"/Users/mridang/Junk/tmp-express-js-xray/app.js"
-				],
-				"process.runtime.version": "20.9.0",
-				"process.runtime.name": "nodejs",
-				"process.runtime.description": "Node.js",
-				"process.command": "/Users/mridang/Junk/tmp-express-js-xray/app.js",
-				"process.owner": "mridang",
-				"host.name": "Mridangs-MacBook-Pro.local",
-				"host.arch": "arm64"
-			}
-		},
-		"traceId": "3c07164ff5c3a4b8ec79f64b420826b7",
-		"parentId": "8e06a34295824543",
-		"traceState": "undefined",
-		"name": "middleware - expressInit",
-		"id": "45ef2c573b09e5a9",
-		"kind": 0,
-		"timestamp": 1719893345087000,
-		"duration": 276.542,
-		"attributes": {
-			"http.route": "/",
-			"express.name": "expressInit",
-			"express.type": "middleware"
-		},
-		"status": { "code": 0 },
-		"events": [],
-		"links": []
-	},
-	{
-		"resource": {
-			"attributes": {
-				"service.name": "my-express-app",
-				"telemetry.sdk.language": "nodejs",
-				"telemetry.sdk.name": "opentelemetry",
-				"telemetry.sdk.version": "1.25.1",
-				"process.pid": 78063,
-				"process.executable.name": "node",
-				"process.executable.path": "/Users/mridang/.local/share/fnm/node-versions/v20.9.0/installation/bin/node",
-				"process.command_args": [
-					"/Users/mridang/.local/share/fnm/node-versions/v20.9.0/installation/bin/node",
-					"/Users/mridang/Junk/tmp-express-js-xray/app.js"
-				],
-				"process.runtime.version": "20.9.0",
-				"process.runtime.name": "nodejs",
-				"process.runtime.description": "Node.js",
-				"process.command": "/Users/mridang/Junk/tmp-express-js-xray/app.js",
-				"process.owner": "mridang",
-				"host.name": "Mridangs-MacBook-Pro.local",
-				"host.arch": "arm64"
-			}
-		},
-		"traceId": "3c07164ff5c3a4b8ec79f64b420826b7",
-		"parentId": "8e06a34295824543",
-		"traceState": "undefined",
-		"name": "request handler - /count",
-		"id": "c85b216d62c83923",
-		"kind": 0,
-		"timestamp": 1719893345091000,
-		"duration": 70.708,
-		"attributes": {
-			"http.route": "/count",
-			"express.name": "/count",
-			"express.type": "request_handler"
-		},
-		"status": { "code": 0 },
-		"events": [],
-		"links": []
-	},
-	{
-		"resource": {
-			"attributes": {
-				"service.name": "my-express-app",
-				"telemetry.sdk.language": "nodejs",
-				"telemetry.sdk.name": "opentelemetry",
-				"telemetry.sdk.version": "1.25.1",
-				"process.pid": 78063,
-				"process.executable.name": "node",
-				"process.executable.path": "/Users/mridang/.local/share/fnm/node-versions/v20.9.0/installation/bin/node",
-				"process.command_args": [
-					"/Users/mridang/.local/share/fnm/node-versions/v20.9.0/installation/bin/node",
-					"/Users/mridang/Junk/tmp-express-js-xray/app.js"
-				],
-				"process.runtime.version": "20.9.0",
-				"process.runtime.name": "nodejs",
-				"process.runtime.description": "Node.js",
-				"process.command": "/Users/mridang/Junk/tmp-express-js-xray/app.js",
-				"process.owner": "mridang",
-				"host.name": "Mridangs-MacBook-Pro.local",
-				"host.arch": "arm64"
-			}
-		},
-		"traceId": "3c07164ff5c3a4b8ec79f64b420826b7",
-		"parentId": "8e06a34295824543",
-		"traceState": "undefined",
-		"name": "tcp.connect",
-		"id": "95299e7fe60cda23",
-		"kind": 0,
-		"timestamp": 1719893345096000,
-		"duration": 9609.125,
-		"attributes": {
-			"net.transport": "ip_tcp",
-			"net.peer.name": "localhost",
-			"net.peer.port": 3306,
-			"net.peer.ip": "::1",
-			"net.host.ip": "::1",
-			"net.host.port": 58878
-		},
-		"status": { "code": 0 },
-		"events": [],
-		"links": []
-	},
-	{
-		"resource": {
-			"attributes": {
-				"service.name": "my-express-app",
-				"telemetry.sdk.language": "nodejs",
-				"telemetry.sdk.name": "opentelemetry",
-				"telemetry.sdk.version": "1.25.1",
-				"process.pid": 78063,
-				"process.executable.name": "node",
-				"process.executable.path": "/Users/mridang/.local/share/fnm/node-versions/v20.9.0/installation/bin/node",
-				"process.command_args": [
-					"/Users/mridang/.local/share/fnm/node-versions/v20.9.0/installation/bin/node",
-					"/Users/mridang/Junk/tmp-express-js-xray/app.js"
-				],
-				"process.runtime.version": "20.9.0",
-				"process.runtime.name": "nodejs",
-				"process.runtime.description": "Node.js",
-				"process.command": "/Users/mridang/Junk/tmp-express-js-xray/app.js",
-				"process.owner": "mridang",
-				"host.name": "Mridangs-MacBook-Pro.local",
-				"host.arch": "arm64"
-			}
-		},
-		"traceId": "3c07164ff5c3a4b8ec79f64b420826b7",
-		"parentId": "8e06a34295824543",
-		"traceState": "undefined",
-		"name": "SELECT",
-		"id": "3d958e9dc4ce623e",
-		"kind": 2,
-		"timestamp": 1719893345115000,
-		"duration": 2220.208,
-		"attributes": {
-			"db.system": "mysql",
-			"net.peer.name": "localhost",
-			"net.peer.port": 3306,
-			"db.connection_string": "jdbc:mysql://localhost:3306/your_database",
-			"db.name": "your_database",
-			"db.user": "your_user",
-			"db.statement": "SELECT 1"
-		},
-		"status": { "code": 0 },
-		"events": [],
-		"links": []
-	},
-	{
-		"resource": {
-			"attributes": {
-				"service.name": "my-express-app",
-				"telemetry.sdk.language": "nodejs",
-				"telemetry.sdk.name": "opentelemetry",
-				"telemetry.sdk.version": "1.25.1",
-				"process.pid": 78063,
-				"process.executable.name": "node",
-				"process.executable.path": "/Users/mridang/.local/share/fnm/node-versions/v20.9.0/installation/bin/node",
-				"process.command_args": [
-					"/Users/mridang/.local/share/fnm/node-versions/v20.9.0/installation/bin/node",
-					"/Users/mridang/Junk/tmp-express-js-xray/app.js"
-				],
-				"process.runtime.version": "20.9.0",
-				"process.runtime.name": "nodejs",
-				"process.runtime.description": "Node.js",
-				"process.command": "/Users/mridang/Junk/tmp-express-js-xray/app.js",
-				"process.owner": "mridang",
-				"host.name": "Mridangs-MacBook-Pro.local",
-				"host.arch": "arm64"
-			}
-		},
-		"traceId": "3c07164ff5c3a4b8ec79f64b420826b7",
-		"parentId": "undefined",
-		"traceState": "undefined",
-		"name": "GET /count",
-		"id": "8e06a34295824543",
-		"kind": 1,
-		"timestamp": 1719893345081000,
-		"duration": 39104.291,
-		"attributes": {
-			"http.url": "http://localhost:3000/count",
-			"http.host": "localhost:3000",
-			"net.host.name": "localhost",
-			"http.method": "GET",
-			"http.scheme": "http",
-			"http.target": "/count",
-			"http.user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
-			"http.flavor": "1.1",
-			"net.transport": "ip_tcp",
-			"net.host.ip": "::1",
-			"net.host.port": 3000,
-			"net.peer.ip": "::1",
-			"net.peer.port": 58877,
-			"http.status_code": 304,
-			"http.status_text": "NOT MODIFIED",
-			"http.route": "/count"
-		},
-		"status": { "code": 0 },
-		"events": [],
-		"links": []
-	}
+  {
+    "resource": {
+      "attributes": {
+        "service.name": "my-express-app",
+        "telemetry.sdk.language": "nodejs",
+        "telemetry.sdk.name": "opentelemetry",
+        "telemetry.sdk.version": "1.25.1",
+        "process.pid": 78063,
+        "process.executable.name": "node",
+        "process.executable.path": "/Users/mridang/.local/share/fnm/node-versions/v20.9.0/installation/bin/node",
+        "process.command_args": [
+          "/Users/mridang/.local/share/fnm/node-versions/v20.9.0/installation/bin/node",
+          "/Users/mridang/Junk/tmp-express-js-xray/app.js"
+        ],
+        "process.runtime.version": "20.9.0",
+        "process.runtime.name": "nodejs",
+        "process.runtime.description": "Node.js",
+        "process.command": "/Users/mridang/Junk/tmp-express-js-xray/app.js",
+        "process.owner": "mridang",
+        "host.name": "Mridangs-MacBook-Pro.local",
+        "host.arch": "arm64"
+      }
+    },
+    "traceId": "3c07164ff5c3a4b8ec79f64b420826b7",
+    "parentId": "8e06a34295824543",
+    "traceState": "undefined",
+    "name": "middleware - query",
+    "id": "c466eed4aa0b9e58",
+    "kind": 0,
+    "timestamp": 1719893345084000,
+    "duration": 326.166,
+    "attributes": {
+      "http.route": "/",
+      "express.name": "query",
+      "express.type": "middleware"
+    },
+    "status": { "code": 0 },
+    "events": [],
+    "links": []
+  },
+  {
+    "resource": {
+      "attributes": {
+        "service.name": "my-express-app",
+        "telemetry.sdk.language": "nodejs",
+        "telemetry.sdk.name": "opentelemetry",
+        "telemetry.sdk.version": "1.25.1",
+        "process.pid": 78063,
+        "process.executable.name": "node",
+        "process.executable.path": "/Users/mridang/.local/share/fnm/node-versions/v20.9.0/installation/bin/node",
+        "process.command_args": [
+          "/Users/mridang/.local/share/fnm/node-versions/v20.9.0/installation/bin/node",
+          "/Users/mridang/Junk/tmp-express-js-xray/app.js"
+        ],
+        "process.runtime.version": "20.9.0",
+        "process.runtime.name": "nodejs",
+        "process.runtime.description": "Node.js",
+        "process.command": "/Users/mridang/Junk/tmp-express-js-xray/app.js",
+        "process.owner": "mridang",
+        "host.name": "Mridangs-MacBook-Pro.local",
+        "host.arch": "arm64"
+      }
+    },
+    "traceId": "3c07164ff5c3a4b8ec79f64b420826b7",
+    "parentId": "8e06a34295824543",
+    "traceState": "undefined",
+    "name": "middleware - expressInit",
+    "id": "45ef2c573b09e5a9",
+    "kind": 0,
+    "timestamp": 1719893345087000,
+    "duration": 276.542,
+    "attributes": {
+      "http.route": "/",
+      "express.name": "expressInit",
+      "express.type": "middleware"
+    },
+    "status": { "code": 0 },
+    "events": [],
+    "links": []
+  },
+  {
+    "resource": {
+      "attributes": {
+        "service.name": "my-express-app",
+        "telemetry.sdk.language": "nodejs",
+        "telemetry.sdk.name": "opentelemetry",
+        "telemetry.sdk.version": "1.25.1",
+        "process.pid": 78063,
+        "process.executable.name": "node",
+        "process.executable.path": "/Users/mridang/.local/share/fnm/node-versions/v20.9.0/installation/bin/node",
+        "process.command_args": [
+          "/Users/mridang/.local/share/fnm/node-versions/v20.9.0/installation/bin/node",
+          "/Users/mridang/Junk/tmp-express-js-xray/app.js"
+        ],
+        "process.runtime.version": "20.9.0",
+        "process.runtime.name": "nodejs",
+        "process.runtime.description": "Node.js",
+        "process.command": "/Users/mridang/Junk/tmp-express-js-xray/app.js",
+        "process.owner": "mridang",
+        "host.name": "Mridangs-MacBook-Pro.local",
+        "host.arch": "arm64"
+      }
+    },
+    "traceId": "3c07164ff5c3a4b8ec79f64b420826b7",
+    "parentId": "8e06a34295824543",
+    "traceState": "undefined",
+    "name": "request handler - /count",
+    "id": "c85b216d62c83923",
+    "kind": 0,
+    "timestamp": 1719893345091000,
+    "duration": 70.708,
+    "attributes": {
+      "http.route": "/count",
+      "express.name": "/count",
+      "express.type": "request_handler"
+    },
+    "status": { "code": 0 },
+    "events": [],
+    "links": []
+  },
+  {
+    "resource": {
+      "attributes": {
+        "service.name": "my-express-app",
+        "telemetry.sdk.language": "nodejs",
+        "telemetry.sdk.name": "opentelemetry",
+        "telemetry.sdk.version": "1.25.1",
+        "process.pid": 78063,
+        "process.executable.name": "node",
+        "process.executable.path": "/Users/mridang/.local/share/fnm/node-versions/v20.9.0/installation/bin/node",
+        "process.command_args": [
+          "/Users/mridang/.local/share/fnm/node-versions/v20.9.0/installation/bin/node",
+          "/Users/mridang/Junk/tmp-express-js-xray/app.js"
+        ],
+        "process.runtime.version": "20.9.0",
+        "process.runtime.name": "nodejs",
+        "process.runtime.description": "Node.js",
+        "process.command": "/Users/mridang/Junk/tmp-express-js-xray/app.js",
+        "process.owner": "mridang",
+        "host.name": "Mridangs-MacBook-Pro.local",
+        "host.arch": "arm64"
+      }
+    },
+    "traceId": "3c07164ff5c3a4b8ec79f64b420826b7",
+    "parentId": "8e06a34295824543",
+    "traceState": "undefined",
+    "name": "tcp.connect",
+    "id": "95299e7fe60cda23",
+    "kind": 0,
+    "timestamp": 1719893345096000,
+    "duration": 9609.125,
+    "attributes": {
+      "net.transport": "ip_tcp",
+      "net.peer.name": "localhost",
+      "net.peer.port": 3306,
+      "net.peer.ip": "::1",
+      "net.host.ip": "::1",
+      "net.host.port": 58878
+    },
+    "status": { "code": 0 },
+    "events": [],
+    "links": []
+  },
+  {
+    "resource": {
+      "attributes": {
+        "service.name": "my-express-app",
+        "telemetry.sdk.language": "nodejs",
+        "telemetry.sdk.name": "opentelemetry",
+        "telemetry.sdk.version": "1.25.1",
+        "process.pid": 78063,
+        "process.executable.name": "node",
+        "process.executable.path": "/Users/mridang/.local/share/fnm/node-versions/v20.9.0/installation/bin/node",
+        "process.command_args": [
+          "/Users/mridang/.local/share/fnm/node-versions/v20.9.0/installation/bin/node",
+          "/Users/mridang/Junk/tmp-express-js-xray/app.js"
+        ],
+        "process.runtime.version": "20.9.0",
+        "process.runtime.name": "nodejs",
+        "process.runtime.description": "Node.js",
+        "process.command": "/Users/mridang/Junk/tmp-express-js-xray/app.js",
+        "process.owner": "mridang",
+        "host.name": "Mridangs-MacBook-Pro.local",
+        "host.arch": "arm64"
+      }
+    },
+    "traceId": "3c07164ff5c3a4b8ec79f64b420826b7",
+    "parentId": "8e06a34295824543",
+    "traceState": "undefined",
+    "name": "SELECT",
+    "id": "3d958e9dc4ce623e",
+    "kind": 2,
+    "timestamp": 1719893345115000,
+    "duration": 2220.208,
+    "attributes": {
+      "db.system": "mysql",
+      "net.peer.name": "localhost",
+      "net.peer.port": 3306,
+      "db.connection_string": "jdbc:mysql://localhost:3306/your_database",
+      "db.name": "your_database",
+      "db.user": "your_user",
+      "db.statement": "SELECT 1"
+    },
+    "status": { "code": 0 },
+    "events": [],
+    "links": []
+  },
+  {
+    "resource": {
+      "attributes": {
+        "service.name": "my-express-app",
+        "telemetry.sdk.language": "nodejs",
+        "telemetry.sdk.name": "opentelemetry",
+        "telemetry.sdk.version": "1.25.1",
+        "process.pid": 78063,
+        "process.executable.name": "node",
+        "process.executable.path": "/Users/mridang/.local/share/fnm/node-versions/v20.9.0/installation/bin/node",
+        "process.command_args": [
+          "/Users/mridang/.local/share/fnm/node-versions/v20.9.0/installation/bin/node",
+          "/Users/mridang/Junk/tmp-express-js-xray/app.js"
+        ],
+        "process.runtime.version": "20.9.0",
+        "process.runtime.name": "nodejs",
+        "process.runtime.description": "Node.js",
+        "process.command": "/Users/mridang/Junk/tmp-express-js-xray/app.js",
+        "process.owner": "mridang",
+        "host.name": "Mridangs-MacBook-Pro.local",
+        "host.arch": "arm64"
+      }
+    },
+    "traceId": "3c07164ff5c3a4b8ec79f64b420826b7",
+    "parentId": "undefined",
+    "traceState": "undefined",
+    "name": "GET /count",
+    "id": "8e06a34295824543",
+    "kind": 1,
+    "timestamp": 1719893345081000,
+    "duration": 39104.291,
+    "attributes": {
+      "http.url": "http://localhost:3000/count",
+      "http.host": "localhost:3000",
+      "net.host.name": "localhost",
+      "http.method": "GET",
+      "http.scheme": "http",
+      "http.target": "/count",
+      "http.user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+      "http.flavor": "1.1",
+      "net.transport": "ip_tcp",
+      "net.host.ip": "::1",
+      "net.host.port": 3000,
+      "net.peer.ip": "::1",
+      "net.peer.port": 58877,
+      "http.status_code": 304,
+      "http.status_text": "NOT MODIFIED",
+      "http.route": "/count"
+    },
+    "status": { "code": 0 },
+    "events": [],
+    "links": []
+  }
 ]
