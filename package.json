@@ -50,8 +50,8 @@
   "dependencies": {
     "@aws-sdk/client-xray": "^3.0.0",
     "@jest/globals": "^30.0.3",
-    "@opentelemetry/core": "^1.25.1",
-    "@opentelemetry/sdk-trace-base": "^1.25.1",
+    "@opentelemetry/core": "^2.0.1",
+    "@opentelemetry/sdk-trace-base": "^2.0.1",
     "@opentelemetry/semantic-conventions": "^1.25.1",
     "empty-deep": "^1.0.0",
     "error-stack-parser": "^2.1.4"
@@ -59,8 +59,8 @@
   "devDependencies": {
     "@mridang/eslint-defaults": "^1.0.0",
     "@opentelemetry/api": "^1.0.0",
-    "@opentelemetry/id-generator-aws-xray": "^1.2.2",
-    "@opentelemetry/resources": "1.25.1",
+    "@opentelemetry/id-generator-aws-xray": "^2.0.0",
+    "@opentelemetry/resources": "^2.0.1",
     "@semantic-release/commit-analyzer": "^13.0.0",
     "@semantic-release/git": "^10.0.1",
     "@semantic-release/github": "^10.0.5",

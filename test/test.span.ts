@@ -7,7 +7,7 @@ import {
   SpanKind,
   SpanStatus,
 } from '@opentelemetry/api';
-import { IResource } from '@opentelemetry/resources';
+import { Resource } from '@opentelemetry/resources';
 import { InstrumentationScope } from '@opentelemetry/core/build/src/common/types';
 import { join } from 'path';
 import { readFileSync } from 'fs';
@@ -26,7 +26,7 @@ interface SpanData {
   links: Link[];
   events: TimedEvent[];
   ended: boolean;
-  resource: IResource;
+  resource: Resource;
   instrumentationLibrary: InstrumentationScope;
   droppedAttributesCount: number;
   droppedEventsCount: number;
@@ -36,7 +36,7 @@ interface SpanData {
 export class WrappedReadableSpan implements ReadableSpan {
   readonly name: string;
   readonly kind: SpanKind;
-  readonly parentSpanId?: string;
+  readonly parentSpanContext?: SpanContext | undefined;
   readonly startTime: HrTime;
   readonly endTime: HrTime;
   readonly status: SpanStatus;
@@ -45,17 +45,17 @@ export class WrappedReadableSpan implements ReadableSpan {
   readonly events: TimedEvent[];
   readonly duration: HrTime;
   readonly ended: boolean;
-  readonly resource: IResource;
+  readonly resource: Resource;
   readonly instrumentationLibrary: InstrumentationScope;
   readonly droppedAttributesCount: number;
   readonly droppedEventsCount: number;
   readonly droppedLinksCount: number;
   private readonly _spanContext: SpanContext;
+  readonly instrumentationScope: InstrumentationScope;
 
-  constructor(private readonly spanData: SpanData) {
+  constructor(readonly spanData: SpanData) {
     this.name = spanData.name;
     this.kind = spanData.kind;
-    this.parentSpanId = spanData.parentId;
     this.status = spanData.status;
     this.attributes = spanData.attributes;
     this.links = spanData.links;
@@ -85,6 +85,14 @@ export class WrappedReadableSpan implements ReadableSpan {
       spanId: spanData.id,
       traceFlags: 1,
     };
+    this.parentSpanContext = spanData.parentId
+      ? {
+          spanId: spanData.parentId,
+          traceId: spanData.traceId,
+          traceFlags: 1,
+        }
+      : undefined;
+    this.instrumentationScope = spanData.instrumentationLibrary;
   }
 
   spanContext(): SpanContext {
