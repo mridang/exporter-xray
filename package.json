@@ -35,8 +35,8 @@
   "private": false,
   "peerDependencies": {
     "@opentelemetry/api": "^1.0.0",
-    "@opentelemetry/id-generator-aws-xray": "^1.0.0",
-    "@opentelemetry/propagator-aws-xray": "^1.0.0"
+    "@opentelemetry/id-generator-aws-xray": "^2.0.0",
+    "@opentelemetry/propagator-aws-xray": "^2.0.0"
   },
   "engines": {
     "node": ">=20.0.0"
