@@ -1,3 +1,10 @@
+# THIS IS A FORK OF THE ORIGINAL REPOSITORY.
+The original repo is at https://github.com/mridang/exporter-xray.
+This fork exists only to pull in the otel 2.0 changes in that repo's PR at
+https://github.com/mridang/exporter-xray/pull/36/files.
+Once that repo merges that PR and publishes a new version, we can eliminate this
+repository and use the original one.
+
 # OpenTelemetry AWS X-Ray Trace Exporter
 
 An exporter for OpenTelemetry that allows the user to send the
