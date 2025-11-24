@@ -84,7 +84,6 @@ could happen if they aren’t used:
 ##### Importance of `AWSXRayPropagator` and `AWSXRayIdGenerator`
 
 1. **Trace Context Propagation**:
-
    - **AWSXRayPropagator**: This propagator ensures that trace context is
      correctly propagated across different services. It translates the
      OpenTelemetry trace context to the format expected by AWS X-Ray. Without
@@ -189,7 +188,6 @@ Please visit the AWS X-Ray console to view your traces:
 
 - When sending SQL segments there is no support for sending these fields as
   they aren't added:
-
   - `database_version` – The version number of the database engine.
   - `driver_version` – The version number of the database driver
   - `preparation` - A flag indicating whether query or statement
