@@ -24,7 +24,7 @@ module.exports = {
     [
       'jest-junit',
       {
-        outputDirectory: '.out',
+        outputDirectory: './.out',
         outputName: 'junit.xml',
       },
     ],
