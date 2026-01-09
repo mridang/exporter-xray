@@ -19,4 +19,14 @@ module.exports = {
   coverageReporters: ['lcov', 'text'],
   coveragePathIgnorePatterns: ['/dist/'],
   testTimeout: 60000,
+  reporters: [
+    'default',
+    [
+      'jest-junit',
+      {
+        outputDirectory: './.out',
+        outputName: 'junit.xml',
+      },
+    ],
+  ],
 };
