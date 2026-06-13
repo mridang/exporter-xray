@@ -1,14 +1,14 @@
-import { Cause } from './xray.document';
+import { Cause } from './xray.document.js';
 import { ReadableSpan } from '@opentelemetry/sdk-trace-base';
 import { randomBytes } from 'node:crypto';
-import { str, undef } from './util';
+import { str, undef } from './util.js';
 import {
   SEMATTRS_EXCEPTION_MESSAGE,
   SEMATTRS_EXCEPTION_STACKTRACE,
   SEMATTRS_EXCEPTION_TYPE,
 } from '@opentelemetry/semantic-conventions';
 import { SpanKind } from '@opentelemetry/api';
-import * as ErrorStackParser from 'error-stack-parser';
+import ErrorStackParser from 'error-stack-parser';
 
 export interface CauseParser {
   getCause(span: ReadableSpan): Cause | undefined;

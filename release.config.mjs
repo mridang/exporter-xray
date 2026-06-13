@@ -1,6 +1,10 @@
-const packageJson = require('./package.json');
+import { readFileSync } from 'fs';
 
-module.exports = {
+const packageJson = JSON.parse(
+  readFileSync(new URL('./package.json', import.meta.url), 'utf-8'),
+);
+
+export default {
   branches: ['master'],
   plugins: [
     '@semantic-release/commit-analyzer',

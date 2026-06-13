@@ -18,8 +18,8 @@ import {
   SEMATTRS_NET_PEER_NAME,
   SEMATTRS_NET_PEER_PORT,
 } from '@opentelemetry/semantic-conventions';
-import { HTTP } from './xray.document';
-import { ip, num, str } from './util';
+import { HTTP } from './xray.document.js';
+import { ip, num, str } from './util.js';
 
 export interface HttpParser {
   parseHttp(span: ReadableSpan): HTTP | undefined;
