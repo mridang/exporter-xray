@@ -1,4 +1,4 @@
-import { XrayTraceDataSegmentDocument } from './xray.document';
+import { XrayTraceDataSegmentDocument } from './xray.document.js';
 
 export interface TraceFilter {
   doFilter(span: XrayTraceDataSegmentDocument): boolean;

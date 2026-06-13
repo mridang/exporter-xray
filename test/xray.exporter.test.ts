@@ -1,16 +1,8 @@
-import XraySpanExporter from '../src/xray.exporter';
+import { jest } from '@jest/globals';
 import { ExportResultCode } from '@opentelemetry/core';
 import { WrappedReadableSpan } from './test.span';
-import { XRayClient } from '@aws-sdk/client-xray';
-import {
-  DefaultIdParser,
-  DefaultCauseParser,
-  DefaultHttpParser,
-  DefaultNameParser,
-  SDKBasedSegmentEmitter,
-} from '../src';
 
-jest.mock('@aws-sdk/client-xray', () => {
+jest.unstable_mockModule('@aws-sdk/client-xray', () => {
   return {
     XRayClient: jest.fn().mockImplementation(() => {
       return {
@@ -26,12 +18,27 @@ jest.mock('@aws-sdk/client-xray', () => {
   };
 });
 
+const { XRayClient } = await import('@aws-sdk/client-xray');
+const { default: XraySpanExporter } = await import('../src/xray.exporter');
+const {
+  DefaultIdParser,
+  DefaultCauseParser,
+  DefaultHttpParser,
+  DefaultNameParser,
+  SDKBasedSegmentEmitter,
+} = await import('../src');
+
+type MockXRayClient = InstanceType<typeof XRayClient> & {
+  send: jest.Mock;
+  destroy: jest.Mock;
+};
+
 describe('xray.exporter test', () => {
-  let exporter: XraySpanExporter;
-  let mockXRayClient: XRayClient;
+  let exporter: InstanceType<typeof XraySpanExporter>;
+  let mockXRayClient: MockXRayClient;
 
   beforeAll(() => {
-    mockXRayClient = new XRayClient();
+    mockXRayClient = new XRayClient() as unknown as MockXRayClient;
     exporter = new XraySpanExporter(
       [new SDKBasedSegmentEmitter(mockXRayClient)],
       new DefaultIdParser(Number.MAX_VALUE, Number.MAX_VALUE),

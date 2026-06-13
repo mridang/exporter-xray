@@ -1,14 +1,18 @@
-import * as dgram from 'node:dgram';
-import {
-  UDPDaemonSegmentEmitter,
-  XrayTraceDataSegmentDocument,
-} from '../../src';
+import { jest } from '@jest/globals';
+import type * as dgram from 'node:dgram';
+import type { XrayTraceDataSegmentDocument } from '../../src';
 
-jest.mock('node:dgram');
+let mockSocket: dgram.Socket;
+const createSocketMock = jest.fn(() => mockSocket);
+
+jest.unstable_mockModule('node:dgram', () => ({
+  createSocket: createSocketMock,
+}));
+
+const dgramMocked = await import('node:dgram');
+const { UDPDaemonSegmentEmitter } = await import('../../src');
 
 describe('udp.emitter test', () => {
-  let mockSocket: dgram.Socket;
-
   beforeEach(() => {
     mockSocket = {
       send: jest.fn((_msg, _offset, _length, _port, _address, callback) => {
@@ -18,7 +22,8 @@ describe('udp.emitter test', () => {
       unref: jest.fn(),
     } as unknown as dgram.Socket;
 
-    (dgram.createSocket as jest.Mock).mockReturnValue(mockSocket);
+    createSocketMock.mockClear();
+    createSocketMock.mockReturnValue(mockSocket);
     delete process.env.AWS_XRAY_DAEMON_ADDRESS;
   });
 
@@ -29,7 +34,7 @@ describe('udp.emitter test', () => {
   it('should initialize with default values', () => {
     process.env.AWS_XRAY_DAEMON_ADDRESS = '127.0.0.1:3000';
     new UDPDaemonSegmentEmitter(mockSocket);
-    expect(dgram.createSocket).not.toHaveBeenCalled();
+    expect(dgramMocked.createSocket).not.toHaveBeenCalled();
     expect(mockSocket.unref).not.toHaveBeenCalled();
   });
 
@@ -43,7 +48,7 @@ describe('udp.emitter test', () => {
   it('should process AWS_XRAY_DAEMON_ADDRESS environment variable', () => {
     process.env.AWS_XRAY_DAEMON_ADDRESS = '127.0.0.1:3000';
     new UDPDaemonSegmentEmitter(mockSocket);
-    expect(dgram.createSocket).not.toHaveBeenCalled();
+    expect(dgramMocked.createSocket).not.toHaveBeenCalled();
     expect(mockSocket.unref).not.toHaveBeenCalled();
   });
 

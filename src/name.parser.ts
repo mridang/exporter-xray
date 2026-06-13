@@ -10,7 +10,7 @@ import {
   SEMATTRS_RPC_SYSTEM,
   SEMRESATTRS_SERVICE_NAME,
 } from '@opentelemetry/semantic-conventions';
-import { str } from './util';
+import { str } from './util.js';
 
 export interface NameParser {
   parseName(span: ReadableSpan): string;

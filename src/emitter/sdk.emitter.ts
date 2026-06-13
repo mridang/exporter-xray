@@ -1,6 +1,6 @@
-import { SegmentEmitter } from './segment.emitter';
+import { SegmentEmitter } from './segment.emitter.js';
 import { PutTraceSegmentsCommand, XRayClient } from '@aws-sdk/client-xray';
-import { XrayTraceDataSegmentDocument } from '../xray.document';
+import { XrayTraceDataSegmentDocument } from '../xray.document.js';
 import { diag } from '@opentelemetry/api';
 
 export class SDKBasedSegmentEmitter implements SegmentEmitter {
