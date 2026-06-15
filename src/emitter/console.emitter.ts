@@ -1,5 +1,5 @@
-import { SegmentEmitter } from './segment.emitter';
-import { XrayTraceDataSegmentDocument } from '../xray.document';
+import { SegmentEmitter } from './segment.emitter.js';
+import { XrayTraceDataSegmentDocument } from '../xray.document.js';
 
 // noinspection JSUnusedGlobalSymbols
 export class ConsoleEmitter implements SegmentEmitter {

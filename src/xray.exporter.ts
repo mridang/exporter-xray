@@ -2,17 +2,17 @@ import { diag } from '@opentelemetry/api';
 import { ExportResult, ExportResultCode } from '@opentelemetry/core';
 import { ReadableSpan, SpanExporter } from '@opentelemetry/sdk-trace-base';
 import { emptyDeep } from 'empty-deep';
-import { CauseParser, DefaultCauseParser } from './cause.parser';
-import { SDKBasedSegmentEmitter } from './emitter/sdk.emitter';
-import { SegmentEmitter } from './emitter/segment.emitter';
-import { UDPDaemonSegmentEmitter } from './emitter/udp.emitter';
-import { DefaultHttpParser, HttpParser } from './http.parser';
-import { DefaultIdParser, IdParser } from './id.parser';
-import { DefaultNameParser, NameParser } from './name.parser';
-import { DefaultOriginParser, OriginParser } from './origin.parser';
-import { EnhancedReadableSpan } from './super.span';
-import { DefaultTraceFilter, TraceFilter } from './trace.filter';
-import { XrayTraceDataSegmentDocument } from './xray.document';
+import { CauseParser, DefaultCauseParser } from './cause.parser.js';
+import { SDKBasedSegmentEmitter } from './emitter/sdk.emitter.js';
+import { SegmentEmitter } from './emitter/segment.emitter.js';
+import { UDPDaemonSegmentEmitter } from './emitter/udp.emitter.js';
+import { DefaultHttpParser, HttpParser } from './http.parser.js';
+import { DefaultIdParser, IdParser } from './id.parser.js';
+import { DefaultNameParser, NameParser } from './name.parser.js';
+import { DefaultOriginParser, OriginParser } from './origin.parser.js';
+import { EnhancedReadableSpan } from './super.span.js';
+import { DefaultTraceFilter, TraceFilter } from './trace.filter.js';
+import { XrayTraceDataSegmentDocument } from './xray.document.js';
 
 /**
  * Creates an instance of XraySpanExporter.
@@ -94,7 +94,7 @@ export default class XraySpanExporter implements SpanExporter {
           diag.debug(`Sent ${spans.length} spans to X-Ray.`);
           cb({ code: ExportResultCode.SUCCESS });
         })
-        .catch((err) => {
+        .catch((err: Error) => {
           diag.warn(`Encountered an error when sending the spans to X-Ray.`);
           cb({ code: ExportResultCode.FAILED, error: err });
         }),

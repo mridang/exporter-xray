@@ -43,7 +43,7 @@ import {
   SEMRESATTRS_TELEMETRY_SDK_LANGUAGE,
   SEMRESATTRS_TELEMETRY_SDK_VERSION,
 } from '@opentelemetry/semantic-conventions';
-import { CauseParser } from './cause.parser';
+import { CauseParser } from './cause.parser.js';
 import {
   XSEMATTRS_AWS_ACCOUNT,
   XSEMATTRS_AWS_BUCKET_KEY,
@@ -58,13 +58,13 @@ import {
   XSEMATTRS_AWS_TABLE_NAME,
   XSEMATTRS_AWS_TABLE_NAME_2,
   XSEMATTRS_AWS_XREQUEST_ID,
-} from './constants';
-import { HttpParser } from './http.parser';
-import { IdParser } from './id.parser';
-import { NameParser } from './name.parser';
-import { OriginParser } from './origin.parser';
-import { hrt, str, undef } from './util';
-import { AWS, Cause, HTTP, Link, Log, Service, SQL } from './xray.document';
+} from './constants.js';
+import { HttpParser } from './http.parser.js';
+import { IdParser } from './id.parser.js';
+import { NameParser } from './name.parser.js';
+import { OriginParser } from './origin.parser.js';
+import { hrt, str, undef } from './util.js';
+import { AWS, Cause, HTTP, Link, Log, Service, SQL } from './xray.document.js';
 
 export class EnhancedReadableSpan {
   private readonly DBS = [
