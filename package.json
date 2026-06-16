@@ -58,7 +58,8 @@
     "error-stack-parser": "^2.1.4"
   },
   "devDependencies": {
-    "@mridang/eslint-defaults": "^1.4.0",
+    "@eslint/compat": "^2.1.0",
+    "@mridang/eslint-defaults": "^1.6.3",
     "@opentelemetry/api": "^1.0.0",
     "@opentelemetry/id-generator-aws-xray": "^1.2.2",
     "@opentelemetry/resources": "1.25.1",
@@ -70,10 +71,10 @@
     "@tsconfig/node22": "^22.0.2",
     "@types/jest": "^30.0.0",
     "@types/node": "^22.18.12",
-    "eslint": "^8.57.1",
+    "eslint": "^9.39.4",
     "jest": "^30.0.3",
     "jest-junit": "^16.0.0",
-    "knip": "^5.43.6",
+    "knip": "^6.17.1",
     "prettier": "^3.1.1",
     "semantic-release": "^25.0.1",
     "ts-jest": "^29.4.0",
