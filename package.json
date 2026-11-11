@@ -59,7 +59,7 @@
   },
   "devDependencies": {
     "@eslint/compat": "^2.1.1",
-    "@mridang/eslint-defaults": "file:../../pack/mridang-eslint-defaults-2.0.1.tgz",
+    "@mridang/eslint-defaults": "^2.1.0",
     "@opentelemetry/api": "^1.0.0",
     "@opentelemetry/id-generator-aws-xray": "^1.2.2",
     "@opentelemetry/propagator-aws-xray": "^1.26.2",
