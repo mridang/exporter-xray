@@ -62,6 +62,7 @@
     "@mridang/eslint-defaults": "file:../../pack/mridang-eslint-defaults-2.0.1.tgz",
     "@opentelemetry/api": "^1.0.0",
     "@opentelemetry/id-generator-aws-xray": "^1.2.2",
+    "@opentelemetry/propagator-aws-xray": "^1.26.2",
     "@opentelemetry/resources": "1.25.1",
     "@semantic-release/commit-analyzer": "^13.0.1",
     "@semantic-release/git": "^10.0.1",
@@ -86,5 +87,13 @@
   "overrides": {
     "@eslint/core": "1.2.1",
     "@smithy/util-utf8": "3.0.0"
+  },
+  "sideEffects": true,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
   }
 }

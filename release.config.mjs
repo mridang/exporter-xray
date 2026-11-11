@@ -3,10 +3,9 @@
  * @file
  */
 
-import { readFileSync } from 'node:fs';
+import { readFile } from 'node:fs/promises';
 
-// eslint-disable-next-line n/no-sync -- sync is fine in a release config read once at startup
-const packageJsonText = readFileSync(
+const packageJsonText = await readFile(
   new URL('package.json', import.meta.url),
   'utf8',
 );

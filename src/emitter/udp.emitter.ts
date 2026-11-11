@@ -7,6 +7,21 @@ import { XrayTraceDataSegmentDocument } from '../xray.document.js';
 import { createSocket } from 'node:dgram';
 
 /**
+ * The subset of a UDP socket that the emitter uses.
+ */
+export interface DaemonSocket {
+  send(
+    msg: Buffer,
+    offset: number,
+    length: number,
+    port: number,
+    address: string,
+    callback: (error: Error | null) => void,
+  ): void;
+  close(): void;
+}
+
+/**
  * UDP-based implementation of the SegmentEmitter interface that sends trace
  * data to the X-Ray daemon using UDP. It has been mercilessly cannibalised from
  * {@link https://github.com/aws/aws-xray-sdk-node/blob/aws-xray-sdk-node%403.9.0/packages/core/lib/segment_emitter.js}.
@@ -37,7 +52,9 @@ export class UDPDaemonSegmentEmitter implements SegmentEmitter {
    * emitter.shutdown();
    * ```
    */
-  constructor(private readonly socket = createSocket('udp4').unref()) {
+  constructor(
+    private readonly socket: DaemonSocket = createSocket('udp4').unref(),
+  ) {
     if (process.env.AWS_XRAY_DAEMON_ADDRESS) {
       this.processAddress(process.env.AWS_XRAY_DAEMON_ADDRESS);
     }

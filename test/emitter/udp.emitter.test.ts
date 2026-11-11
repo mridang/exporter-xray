@@ -5,9 +5,10 @@
 
 import { jest } from '@jest/globals';
 import type { Socket } from 'node:dgram';
+import type { DaemonSocket } from '../../src/emitter/udp.emitter';
 import type { XrayTraceDataSegmentDocument } from '../../src';
 
-let mockSocket: Socket;
+let mockSocket: DaemonSocket & Pick<Socket, 'unref'>;
 const createSocketMock = jest.fn(() => mockSocket);
 
 jest.unstable_mockModule('node:dgram', () => ({
@@ -20,12 +21,14 @@ const { UDPDaemonSegmentEmitter } = await import('../../src');
 describe('udp.emitter test', () => {
   beforeEach(() => {
     mockSocket = {
-      send: jest.fn((_msg, _offset, _length, _port, _address, onSent) => {
-        onSent(null); // Simulate successful send
-      }),
-      close: jest.fn(),
-      unref: jest.fn(),
-    } as unknown as Socket;
+      send: jest.fn<DaemonSocket['send']>(
+        (_msg, _offset, _length, _port, _address, onSent) => {
+          onSent(null); // Simulate successful send
+        },
+      ),
+      close: jest.fn<DaemonSocket['close']>(),
+      unref: jest.fn<Socket['unref']>(),
+    };
 
     createSocketMock.mockClear();
     createSocketMock.mockReturnValue(mockSocket);
@@ -80,7 +83,7 @@ describe('udp.emitter test', () => {
       0: message,
       3: port,
       4: address,
-    } = (mockSocket.send as jest.Mock).mock.calls[0];
+    } = jest.mocked(mockSocket.send).mock.calls[0];
     expect(port).toBe(2000);
     expect(address).toBe('127.0.0.1');
     expect(JSON.parse(message.toString().split('\n', 2)[1]).name).toBe(
