@@ -3,7 +3,7 @@ name: Format Code (Prettify)
 on: push
 
 permissions:
-  contents: write
+  contents: read
 
 defaults:
   run:
@@ -29,15 +29,5 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      - name: Run Prettier
-        run: npm run format
-
-      - name: Commit and Push Changes
-        uses: stefanzweifel/git-auto-commit-action@v6
-        with:
-          commit_message: Apply Prettier formatting
-          commit_options: '--no-verify'
-          repository: .
-          commit_user_name: github-actions[bot]
-          commit_user_email: github-actions[bot]@users.noreply.github.com
-          commit_author: GitHub Actions <actions@github.com>
+      - name: Check Prettier formatting
+        run: npm run format:check
