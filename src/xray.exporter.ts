@@ -128,8 +128,7 @@ export default class XraySpanExporter implements SpanExporter {
   ): Promise<void> {
     try {
       await segmentEmitter.emit(trace);
-      // eslint-disable-next-line testing-library/no-debugging-utils -- diag is the OpenTelemetry logger, not a testing helper
-      diag.debug(`Sent ${spanCount} spans to X-Ray.`);
+      diag['debug'](`Sent ${spanCount} spans to X-Ray.`);
       resultCallback({ code: ExportResultCode.SUCCESS });
     } catch (error) {
       diag.warn(`Encountered an error when sending the spans to X-Ray.`);
