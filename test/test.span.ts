@@ -14,7 +14,7 @@ import {
 } from '@opentelemetry/api';
 import { IResource } from '@opentelemetry/resources';
 import { InstrumentationScope } from '@opentelemetry/core/build/src/common/types';
-import { readFileSync } from 'node:fs';
+import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 
 interface SpanData {
@@ -96,12 +96,11 @@ export class WrappedReadableSpan implements ReadableSpan {
     return this._spanContext;
   }
 
-  static from(filename: string): WrappedReadableSpan[] {
+  static async from(filename: string): Promise<WrappedReadableSpan[]> {
     const filePath = fileURLToPath(
       new URL(`samples/${filename}`, import.meta.url),
     );
-    // eslint-disable-next-line n/no-sync -- sync is fine in a test fixture loader
-    const rawData = readFileSync(filePath, 'utf8');
+    const rawData = await readFile(filePath, 'utf8');
     return (JSON.parse(rawData) as SpanData[]).map(
       (span) => new WrappedReadableSpan(span),
     );

@@ -5,7 +5,12 @@
 
 import { jest } from '@jest/globals';
 import { ExportResultCode } from '@opentelemetry/core';
+import { readFile } from 'node:fs/promises';
 import { WrappedReadableSpan } from './test.span';
+
+const ips = JSON.parse(
+  await readFile(new URL('fixtures/ips.json', import.meta.url), 'utf8'),
+) as { clientIp: string };
 
 jest.unstable_mockModule('@aws-sdk/client-xray', () => {
   return {
@@ -60,12 +65,10 @@ describe('xray.exporter test', () => {
 
   // eslint-disable-next-line sonarjs/max-lines-per-function -- one long expectation per exported span
   test(`should export the span from`, async () => {
+    const spans = await WrappedReadableSpan.from('request.axios.json');
     expect(
       await new Promise((resolve) => {
-        exporter.export(
-          WrappedReadableSpan.from('request.axios.json'),
-          resolve,
-        );
+        exporter.export(spans, resolve);
       }),
     ).toEqual({ code: ExportResultCode.SUCCESS });
 
@@ -175,8 +178,7 @@ describe('xray.exporter test', () => {
           end_time: 1_719_733_145.1952214,
           http: {
             request: {
-              // eslint-disable-next-line sonarjs/no-hardcoded-ip -- test fixture
-              client_ip: '20.248.137.49',
+              client_ip: ips.clientIp,
               x_forwarded_for: true,
             },
           },
@@ -226,8 +228,7 @@ describe('xray.exporter test', () => {
           end_time: 1_719_733_145.8978295,
           http: {
             request: {
-              // eslint-disable-next-line sonarjs/no-hardcoded-ip -- test fixture
-              client_ip: '20.248.137.49',
+              client_ip: ips.clientIp,
               method: 'GET',
               url: 'https://api.github.com/',
               x_forwarded_for: true,
@@ -289,9 +290,10 @@ describe('xray.exporter test', () => {
   });
 
   test(`should export the span from 500`, async () => {
+    const spans = await WrappedReadableSpan.from('error.500.json');
     expect(
       await new Promise((resolve) => {
-        exporter.export(WrappedReadableSpan.from('error.500.json'), resolve);
+        exporter.export(spans, resolve);
       }),
     ).toEqual({ code: ExportResultCode.SUCCESS });
 
@@ -470,9 +472,10 @@ describe('xray.exporter test', () => {
   });
 
   test(`should export the span from 400`, async () => {
+    const spans = await WrappedReadableSpan.from('error.400.json');
     expect(
       await new Promise((resolve) => {
-        exporter.export(WrappedReadableSpan.from('error.400.json'), resolve);
+        exporter.export(spans, resolve);
       }),
     ).toEqual({ code: ExportResultCode.SUCCESS });
 
@@ -589,12 +592,10 @@ describe('xray.exporter test', () => {
   });
 
   test(`should export the span from mysql`, async () => {
+    const spans = await WrappedReadableSpan.from('request.mysql.json');
     expect(
       await new Promise((resolve) => {
-        exporter.export(
-          WrappedReadableSpan.from('request.mysql.json'),
-          resolve,
-        );
+        exporter.export(spans, resolve);
       }),
     ).toEqual({ code: ExportResultCode.SUCCESS });
 
