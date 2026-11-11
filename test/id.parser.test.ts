@@ -1,3 +1,8 @@
+/**
+ * Tests for the X-Ray trace ID parser.
+ * @file
+ */
+
 import { DefaultIdParser } from '../src';
 import { AWSXRayIdGenerator } from '@opentelemetry/id-generator-aws-xray';
 

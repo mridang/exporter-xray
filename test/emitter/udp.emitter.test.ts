@@ -1,8 +1,13 @@
+/**
+ * Tests for the UDP daemon segment emitter.
+ * @file
+ */
+
 import { jest } from '@jest/globals';
-import type * as dgram from 'node:dgram';
+import type { Socket } from 'node:dgram';
 import type { XrayTraceDataSegmentDocument } from '../../src';
 
-let mockSocket: dgram.Socket;
+let mockSocket: Socket;
 const createSocketMock = jest.fn(() => mockSocket);
 
 jest.unstable_mockModule('node:dgram', () => ({
@@ -15,12 +20,12 @@ const { UDPDaemonSegmentEmitter } = await import('../../src');
 describe('udp.emitter test', () => {
   beforeEach(() => {
     mockSocket = {
-      send: jest.fn((_msg, _offset, _length, _port, _address, callback) => {
-        callback(null); // Simulate successful send
+      send: jest.fn((_msg, _offset, _length, _port, _address, onSent) => {
+        onSent(null); // Simulate successful send
       }),
       close: jest.fn(),
       unref: jest.fn(),
-    } as unknown as dgram.Socket;
+    } as unknown as Socket;
 
     createSocketMock.mockClear();
     createSocketMock.mockReturnValue(mockSocket);
@@ -33,7 +38,8 @@ describe('udp.emitter test', () => {
 
   it('should initialize with default values', () => {
     process.env.AWS_XRAY_DAEMON_ADDRESS = '127.0.0.1:3000';
-    new UDPDaemonSegmentEmitter(mockSocket);
+    const emitter = new UDPDaemonSegmentEmitter(mockSocket);
+    expect(emitter).toBeInstanceOf(UDPDaemonSegmentEmitter);
     expect(dgramMocked.createSocket).not.toHaveBeenCalled();
     expect(mockSocket.unref).not.toHaveBeenCalled();
   });
@@ -47,7 +53,8 @@ describe('udp.emitter test', () => {
 
   it('should process AWS_XRAY_DAEMON_ADDRESS environment variable', () => {
     process.env.AWS_XRAY_DAEMON_ADDRESS = '127.0.0.1:3000';
-    new UDPDaemonSegmentEmitter(mockSocket);
+    const emitter = new UDPDaemonSegmentEmitter(mockSocket);
+    expect(emitter).toBeInstanceOf(UDPDaemonSegmentEmitter);
     expect(dgramMocked.createSocket).not.toHaveBeenCalled();
     expect(mockSocket.unref).not.toHaveBeenCalled();
   });
@@ -69,8 +76,11 @@ describe('udp.emitter test', () => {
     await emitter.emit(trace);
 
     expect(mockSocket.send).toHaveBeenCalled();
-    const [message, , , port, address] = (mockSocket.send as jest.Mock).mock
-      .calls[0];
+    const {
+      0: message,
+      3: port,
+      4: address,
+    } = (mockSocket.send as jest.Mock).mock.calls[0];
     expect(port).toBe(2000);
     expect(address).toBe('127.0.0.1');
     expect(JSON.parse(message.toString().split('\n', 2)[1]).name).toBe(

@@ -1,6 +1,10 @@
+/**
+ * Sends X-Ray trace segments to the X-Ray daemon over UDP.
+ * @file
+ */
 import { SegmentEmitter } from './segment.emitter.js';
 import { XrayTraceDataSegmentDocument } from '../xray.document.js';
-import * as dgram from 'node:dgram';
+import { createSocket } from 'node:dgram';
 
 /**
  * UDP-based implementation of the SegmentEmitter interface that sends trace
@@ -25,8 +29,15 @@ export class UDPDaemonSegmentEmitter implements SegmentEmitter {
 
   /**
    * Constructs a new UDPDaemonSegmentEmitter.
+   * @param socket - The UDP socket used to send segments to the daemon.
+   * @example
+   * ```ts
+   * const emitter = new UDPDaemonSegmentEmitter();
+   * await emitter.emit(segments);
+   * emitter.shutdown();
+   * ```
    */
-  constructor(private readonly socket = dgram.createSocket('udp4').unref()) {
+  constructor(private readonly socket = createSocket('udp4').unref()) {
     if (process.env.AWS_XRAY_DAEMON_ADDRESS) {
       this.processAddress(process.env.AWS_XRAY_DAEMON_ADDRESS);
     }
@@ -39,6 +50,10 @@ export class UDPDaemonSegmentEmitter implements SegmentEmitter {
   /**
    * Emits the provided trace data segments using UDP.
    * @param trace - The trace data segments to emit.
+   * @example
+   * ```ts
+   * await new UDPDaemonSegmentEmitter().emit([{ id: '1', name: 'svc', start_time: 1 }]);
+   * ```
    */
   async emit(trace: XrayTraceDataSegmentDocument[]): Promise<void> {
     const formatted = trace.map(
@@ -71,6 +86,11 @@ export class UDPDaemonSegmentEmitter implements SegmentEmitter {
    * Processes and sets the daemon address from the provided address string.
    * @param address - The address string to process.
    * @throws Error if the address format is invalid.
+   * @example
+   * ```ts
+   * // Setting AWS_XRAY_DAEMON_ADDRESS to '10.0.0.5:2001' points the emitter at that daemon.
+   * process.env.AWS_XRAY_DAEMON_ADDRESS = '10.0.0.5:2001';
+   * ```
    */
   private processAddress(address: string): void {
     if (!address.includes(':')) {
@@ -90,12 +110,15 @@ export class UDPDaemonSegmentEmitter implements SegmentEmitter {
     } else if (splitAddress.length === 2) {
       const part1 = splitAddress[0].split(':');
       const part2 = splitAddress[1].split(':');
-      const addrMap: { [key: string]: string[] } = {
-        [part1[0]]: part1,
-        [part2[0]]: part2,
-      };
+      const entries: [string, string[]][] = [
+        [part1[0], part1],
+        [part2[0], part2],
+      ];
+      const addrMap: { [key: string]: string[] } = Object.fromEntries(entries);
       this.daemonConfig.udp_ip = addrMap['udp'][1];
       this.daemonConfig.udp_port = Number.parseInt(addrMap['udp'][2]);
+    } else {
+      // Any other format leaves the default daemon address in place.
     }
   }
 }

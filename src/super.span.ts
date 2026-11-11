@@ -1,4 +1,8 @@
-import { SpanKind, SpanStatusCode } from '@opentelemetry/api';
+/**
+ * Exposes OpenTelemetry span data in the shape AWS X-Ray expects.
+ * @file
+ */
+import { AttributeValue, SpanKind, SpanStatusCode } from '@opentelemetry/api';
 import { ReadableSpan } from '@opentelemetry/sdk-trace-base';
 import {
   CLOUDPLATFORMVALUES_AWS_EC2,
@@ -96,6 +100,10 @@ export class EnhancedReadableSpan {
    * namespace is set.
    * @see {@link https://docs.aws.amazon.com/xray/latest/devguide/
    * aws-xray-interface-api.html}
+   * @example
+   * ```ts
+   * new EnhancedReadableSpan(span).getNamespace(); // Returns 'aws' for an AWS SDK span.
+   * ```
    */
   public getNamespace(): 'aws' | 'remote' | undefined {
     if (str(this.span.attributes[SEMATTRS_RPC_SYSTEM]) === 'aws-api') {
@@ -112,6 +120,10 @@ export class EnhancedReadableSpan {
   /**
    * Determines if the span is throttled based on the HTTP status code.
    * @returns True if the span is throttled, otherwise false.
+   * @example
+   * ```ts
+   * new EnhancedReadableSpan(span).isThrottled(); // Returns true for HTTP status 429.
+   * ```
    */
   public isThrottled(): true | undefined {
     return Number(this.span.attributes[SEMATTRS_HTTP_STATUS_CODE]) === 429
@@ -123,6 +135,10 @@ export class EnhancedReadableSpan {
    * Determines if the span represents a fault based on the status code and HTTP
    * status code.
    * @returns True if the span represents a fault, otherwise false.
+   * @example
+   * ```ts
+   * new EnhancedReadableSpan(span).isFault(); // Returns true for a 5xx status or an error status.
+   * ```
    */
   public isFault(): true | undefined {
     if (Number(this.span.attributes[SEMATTRS_HTTP_STATUS_CODE] || 0) >= 500) {
@@ -139,6 +155,10 @@ export class EnhancedReadableSpan {
    * Determines if the span represents an error based on the status code and
    * HTTP status code.
    * @returns True if the span represents an error, otherwise false.
+   * @example
+   * ```ts
+   * new EnhancedReadableSpan(span).isError(); // Returns true for an HTTP status between 400 and 499.
+   * ```
    */
   public isError(): true | undefined {
     return Number(this.span.attributes[SEMATTRS_HTTP_STATUS_CODE] || 0) >= 400
@@ -154,6 +174,10 @@ export class EnhancedReadableSpan {
    * for the service version or container image tag to set the service version.
    * @returns The service data
    * if no relevant attributes are found.
+   * @example
+   * ```ts
+   * new EnhancedReadableSpan(span).getService(); // Returns { name, version, runtime, runtime_version }.
+   * ```
    */
   public getService(): Service {
     return {
@@ -176,8 +200,13 @@ export class EnhancedReadableSpan {
 
   /**
    * Determines the origin of the span based on resource attributes.
+   * @param originParser - The parser used to determine the origin.
    * @returns The determined origin, or undefined if no
    * relevant attributes are found.
+   * @example
+   * ```ts
+   * new EnhancedReadableSpan(span).getOrigin(new DefaultOriginParser()); // Returns 'AWS::EC2::Instance' for an EC2 span.
+   * ```
    */
   public getOrigin(originParser: OriginParser): string | undefined {
     return originParser.getOrigin(this.span);
@@ -192,6 +221,10 @@ export class EnhancedReadableSpan {
    * Unix epoch. For example, 1480615200.090 or 1.480615200090E9.
    * @returns The end time in floating point seconds.
    * @see {@link https://docs.aws.amazon.com/xray/latest/devguide/aws-xray-interface-api.html#xray-api-segmentdocuments.html}
+   * @example
+   * ```ts
+   * new EnhancedReadableSpan(span).getEndTime(); // Returns 1480615200.09 for a span that ended then.
+   * ```
    */
   public getEndTime(): number {
     return hrt(this.span.endTime);
@@ -206,6 +239,10 @@ export class EnhancedReadableSpan {
    * Unix epoch. For example, 1480615200.010 or 1.480615200010E9.
    * @returns The start time in floating point seconds.
    * @see {@link https://docs.aws.amazon.com/xray/latest/devguide/aws-xray-interface-api.html#xray-api-segmentdocuments.html}
+   * @example
+   * ```ts
+   * new EnhancedReadableSpan(span).getStartTime(); // Returns 1480615200.01 for a span that started then.
+   * ```
    */
   public getStartTime(): number {
     return hrt(this.span.startTime);
@@ -235,9 +272,14 @@ export class EnhancedReadableSpan {
   }
 
   /**
-   * Unsure what this function does as this has been blindly ported over.
-   * {@link https://github.com/open-telemetry/opentelemetry-collector-contrib/pull/20313#issuecomment-2201988954}.
-   * @param idParser
+   * Converts the span links into X-Ray links, which were ported over without a full specification.
+   * See the {@link https://github.com/open-telemetry/opentelemetry-collector-contrib/pull/20313#issuecomment-2201988954 OpenTelemetry Collector discussion}.
+   * @param idParser - The parser used to convert the linked trace IDs.
+   * @returns The X-Ray links of the span, or undefined when it has none.
+   * @example
+   * ```ts
+   * new EnhancedReadableSpan(span).getLinks(new DefaultIdParser()); // Returns the links, or undefined.
+   * ```
    */
   public getLinks(idParser: IdParser): Link[] | undefined {
     return undef(
@@ -266,9 +308,14 @@ export class EnhancedReadableSpan {
   }
 
   /**
-   * 	Despite what the X-Ray documents say, having the DB connection string
-   * 	set as the URL value of the segment is not useful. So let's use the
-   * 	current span name instead.
+   * Despite what the X-Ray documents say, having the DB connection string
+   * set as the URL value of the segment is not useful. So let's use the
+   * current span name instead.
+   * @returns The SQL details for a database span, or undefined for other spans.
+   * @example
+   * ```ts
+   * new EnhancedReadableSpan(span).getSql(); // Returns the SQL details, or undefined.
+   * ```
    */
   public getSql(): SQL | undefined {
     return this.DBS.includes(
@@ -448,25 +495,22 @@ export class EnhancedReadableSpan {
     const annotations: { [key: string]: string | number | boolean } = {};
 
     for (const key of Object.keys(attributes)) {
+      const value = attributes[key] as AttributeValue | null | undefined;
       if (
-        attributes[key] === undefined ||
-        attributes[key] === null ||
-        Array.isArray(attributes[key])
+        value !== undefined &&
+        value !== null &&
+        !Array.isArray(value) &&
+        indexedAttributes.includes(key)
       ) {
-        continue;
+        annotations[key] = value;
       }
-
-      if (!indexedAttributes.includes(key)) {
-        continue;
-      }
-
-      annotations[key] = attributes[key];
     }
 
     return annotations;
   }
 
   getMetadata(): { [key: string]: { [key: string]: unknown } } | undefined {
-    return undefined; //TODO: Implement this
+    // Span metadata is not implemented yet, so no metadata is emitted.
+    return undefined;
   }
 }

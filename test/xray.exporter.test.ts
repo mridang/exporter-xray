@@ -1,3 +1,8 @@
+/**
+ * End-to-end tests for the X-Ray span exporter.
+ * @file
+ */
+
 import { jest } from '@jest/globals';
 import { ExportResultCode } from '@opentelemetry/core';
 import { WrappedReadableSpan } from './test.span';
@@ -33,6 +38,7 @@ type MockXRayClient = InstanceType<typeof XRayClient> & {
   destroy: jest.Mock;
 };
 
+// eslint-disable-next-line sonarjs/max-lines-per-function -- large fixture-driven describe block
 describe('xray.exporter test', () => {
   let exporter: InstanceType<typeof XraySpanExporter>;
   let mockXRayClient: MockXRayClient;
@@ -52,6 +58,7 @@ describe('xray.exporter test', () => {
     jest.clearAllMocks();
   });
 
+  // eslint-disable-next-line sonarjs/max-lines-per-function -- one long expectation per exported span
   test(`should export the span from`, async () => {
     expect(
       await new Promise((resolve) => {
@@ -168,6 +175,7 @@ describe('xray.exporter test', () => {
           end_time: 1_719_733_145.1952214,
           http: {
             request: {
+              // eslint-disable-next-line sonarjs/no-hardcoded-ip -- test fixture
               client_ip: '20.248.137.49',
               x_forwarded_for: true,
             },
@@ -218,6 +226,7 @@ describe('xray.exporter test', () => {
           end_time: 1_719_733_145.8978295,
           http: {
             request: {
+              // eslint-disable-next-line sonarjs/no-hardcoded-ip -- test fixture
               client_ip: '20.248.137.49',
               method: 'GET',
               url: 'https://api.github.com/',

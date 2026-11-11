@@ -1,3 +1,8 @@
+/**
+ * Sends X-Ray trace segments through the AWS X-Ray SDK client.
+ * @file
+ */
+
 import { SegmentEmitter } from './segment.emitter.js';
 import { PutTraceSegmentsCommand, XRayClient } from '@aws-sdk/client-xray';
 import { XrayTraceDataSegmentDocument } from '../xray.document.js';

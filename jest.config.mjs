@@ -1,3 +1,8 @@
+/**
+ * Jest configuration for running the TypeScript test suite.
+ * @file
+ */
+
 export default {
   preset: 'ts-jest/presets/default-esm',
   transform: {

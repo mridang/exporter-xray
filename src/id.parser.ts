@@ -1,4 +1,9 @@
 /**
+ * Converts OpenTelemetry trace IDs into the AWS X-Ray trace ID format.
+ * @file
+ */
+
+/**
  * Interface for parsing IDs into a specific format.
  */
 export interface IdParser {
@@ -36,6 +41,13 @@ export class DefaultIdParser implements IdParser {
    * @param id - The trace ID to parse.
    * @returns The trace ID formatted as AWS X-Ray trace ID.
    * @throws Error if the trace ID is invalid or out of allowed age/skew range.
+   * @example
+   * ```ts
+   * const parser = new DefaultIdParser();
+   * const epoch = Math.floor(Date.now() / 1000).toString(16);
+   * parser.parseId(`${epoch}a006649127e371903a2de979`);
+   * // Returns '1-<epoch>-a006649127e371903a2de979'.
+   * ```
    */
   parseId(id: string): string {
     const epochNow = Math.floor(Date.now() / 1000);
@@ -44,7 +56,7 @@ export class DefaultIdParser implements IdParser {
 
     // Validate the epoch time against maximum age and skew limits
     if (
-      isNaN(epoch) ||
+      Number.isNaN(epoch) ||
       epoch < epochNow - this.maxAge ||
       epoch > epochNow + this.maxSkew
     ) {

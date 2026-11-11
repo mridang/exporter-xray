@@ -1,3 +1,7 @@
+/**
+ * Exports OpenTelemetry spans to AWS X-Ray as trace segment documents.
+ * @file
+ */
 import { diag } from '@opentelemetry/api';
 import { ExportResult, ExportResultCode } from '@opentelemetry/core';
 import { ReadableSpan, SpanExporter } from '@opentelemetry/sdk-trace-base';
@@ -51,7 +55,23 @@ export default class XraySpanExporter implements SpanExporter {
     //
   }
 
-  export(spans: ReadableSpan[], cb: (result: ExportResult) => void) {
+  /**
+   * Converts the spans into X-Ray segments and sends them through every emitter.
+   * @param spans - The OpenTelemetry spans to export.
+   * @param resultCallback - Called once per emitter with the outcome of its send.
+   * @example
+   * ```ts
+   * exporter.export(spans, (result) => {
+   *   if (result.code === ExportResultCode.SUCCESS) {
+   *     diag.debug('Spans exported.');
+   *   }
+   * });
+   * ```
+   */
+  export(
+    spans: ReadableSpan[],
+    resultCallback: (result: ExportResult) => void,
+  ) {
     const trace: XrayTraceDataSegmentDocument[] = spans
       .map((span) => new EnhancedReadableSpan(span))
       .map((span): XrayTraceDataSegmentDocument => ({
@@ -85,24 +105,46 @@ export default class XraySpanExporter implements SpanExporter {
       });
 
     this.segmentEmitters.forEach((segmentEmitter) =>
-      segmentEmitter
-        .emit(trace)
-        .then(() => {
-          // eslint-disable-next-line testing-library/no-debugging-utils
-          diag.debug(`Sent ${spans.length} spans to X-Ray.`);
-          cb({ code: ExportResultCode.SUCCESS });
-        })
-        .catch((error: Error) => {
-          diag.warn(`Encountered an error when sending the spans to X-Ray.`);
-          cb({ code: ExportResultCode.FAILED, error: error });
-        }),
+      this.emitTo(segmentEmitter, trace, spans.length, resultCallback),
     );
+  }
+
+  /**
+   * Sends the trace segments through one emitter and reports the outcome.
+   * @param segmentEmitter - The emitter that sends the segments.
+   * @param trace - The segment documents to send.
+   * @param spanCount - The number of spans in the export, used for logging.
+   * @param resultCallback - Called with the success or failure of the send.
+   * @example
+   * ```ts
+   * await this.emitTo(new ConsoleEmitter(), trace, trace.length, (result) => {});
+   * ```
+   */
+  private async emitTo(
+    segmentEmitter: SegmentEmitter,
+    trace: XrayTraceDataSegmentDocument[],
+    spanCount: number,
+    resultCallback: (result: ExportResult) => void,
+  ): Promise<void> {
+    try {
+      await segmentEmitter.emit(trace);
+      // eslint-disable-next-line testing-library/no-debugging-utils -- diag is the OpenTelemetry logger, not a testing helper
+      diag.debug(`Sent ${spanCount} spans to X-Ray.`);
+      resultCallback({ code: ExportResultCode.SUCCESS });
+    } catch (error) {
+      diag.warn(`Encountered an error when sending the spans to X-Ray.`);
+      resultCallback({ code: ExportResultCode.FAILED, error: error as Error });
+    }
   }
 
   /**
    * Shuts down the exporter.
    * This method currently destroys the X-Ray client instance.
    * @returns A promise that resolves immediately.
+   * @example
+   * ```ts
+   * await exporter.shutdown();
+   * ```
    */
   shutdown(): Promise<void> {
     // No implementation for shutdown logic since there's no cleanup needed.
@@ -114,6 +156,10 @@ export default class XraySpanExporter implements SpanExporter {
    * Forces the exporter to flush any pending exports.
    * This method is currently a no-op.
    * @returns A promise that resolves immediately.
+   * @example
+   * ```ts
+   * await exporter.forceFlush();
+   * ```
    */
   forceFlush?(): Promise<void> {
     // No implementation for forceFlush since it's not needed for X-Ray export.

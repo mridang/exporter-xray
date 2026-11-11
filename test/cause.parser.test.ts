@@ -1,3 +1,8 @@
+/**
+ * Tests for the exception cause parser.
+ * @file
+ */
+
 import { ReadableSpan } from '@opentelemetry/sdk-trace-base';
 import {
   SEMATTRS_EXCEPTION_MESSAGE,
@@ -32,7 +37,7 @@ describe('cause.parser test', () => {
           attributes: {
             [SEMATTRS_EXCEPTION_TYPE]: 'Error',
             [SEMATTRS_EXCEPTION_MESSAGE]: 'An error occurred',
-            [SEMATTRS_EXCEPTION_STACKTRACE]: new Error().stack,
+            [SEMATTRS_EXCEPTION_STACKTRACE]: new Error('test exception').stack,
           },
         },
       ],
@@ -66,7 +71,7 @@ describe('cause.parser test', () => {
           attributes: {
             [SEMATTRS_EXCEPTION_TYPE]: 'Error',
             [SEMATTRS_EXCEPTION_MESSAGE]: 'First error',
-            [SEMATTRS_EXCEPTION_STACKTRACE]: new Error().stack,
+            [SEMATTRS_EXCEPTION_STACKTRACE]: new Error('test exception').stack,
           },
         },
         {
@@ -74,7 +79,7 @@ describe('cause.parser test', () => {
           attributes: {
             [SEMATTRS_EXCEPTION_TYPE]: 'TypeError',
             [SEMATTRS_EXCEPTION_MESSAGE]: 'Second error',
-            [SEMATTRS_EXCEPTION_STACKTRACE]: new Error().stack,
+            [SEMATTRS_EXCEPTION_STACKTRACE]: new Error('test exception').stack,
           },
         },
       ],

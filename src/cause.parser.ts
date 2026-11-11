@@ -1,3 +1,7 @@
+/**
+ * Extracts the error cause, including exception details, from OpenTelemetry span events.
+ * @file
+ */
 import { Cause } from './xray.document.js';
 import { ReadableSpan } from '@opentelemetry/sdk-trace-base';
 import { randomBytes } from 'node:crypto';
@@ -30,33 +34,33 @@ export class DefaultCauseParser implements CauseParser {
    *
    * The cause can be either a 16-character exception ID or an object with the
    * following fields:
-   * - working_directory: The full path of the working directory when the
-   *   exception occurred.
-   * - paths: An array of paths to libraries or modules in use when the
-   *   exception occurred.
+   * - working_directory: The full path of the working directory when the exception occurred.
+   * - paths: An array of paths to libraries or modules in use when the exception occurred.
    * - exceptions: An array of exception objects.
    *
    * Each exception object can include the following optional fields:
-   * - id: A 64-bit identifier for the exception, unique among segments in the
-   *   same trace, in 16 hexadecimal digits.
+   * - id: A 64-bit identifier for the exception, unique among segments in the same trace, in 16 hexadecimal digits.
    * - message: The exception message.
    * - type: The exception type.
-   * - remote: A boolean indicating that the exception was caused by an error
-   *   returned by a downstream service.
-   * - truncated: An integer indicating the number of stack frames that are
-   *   omitted from the stack.
-   * - skipped: An integer indicating the number of exceptions that were skipped
-   *   between this exception and its child, i.e., the exception that it caused.
-   * - cause: Exception ID of the exception's parent, i.e., the exception that
-   *   caused this exception.
+   * - remote: A boolean indicating that the exception was caused by an error returned by a downstream service.
+   * - truncated: An integer indicating the number of stack frames that are omitted from the stack.
+   * - skipped: An integer indicating the number of exceptions that were skipped between this exception and its child, i.e., the exception that it caused.
+   * - cause: Exception ID of the exception's parent, i.e., the exception that caused this exception.
    * - stack: An array of stackFrame objects.
    *
    * Each stackFrame object can include the following optional fields:
    * - path: The relative path to the file.
    * - line: The line in the file.
    * - label: The function or method name.
+   * @param span - The span whose events are inspected for exceptions.
    * @returns An object representing the cause of the error, including an array
-   * of parsed exceptions.
+   * of parsed exceptions, or undefined when the span has no exception events.
+   * @example
+   * ```ts
+   * const parser = new DefaultCauseParser();
+   * const cause = parser.getCause(span);
+   * // cause?.exceptions?.[0].type is the exception type of the first event.
+   * ```
    */
   public getCause(span: ReadableSpan): Cause | undefined {
     return span.events.some((event) => event.name === 'exception')

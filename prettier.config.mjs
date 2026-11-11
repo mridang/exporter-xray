@@ -1,3 +1,8 @@
+/**
+ * Prettier formatting rules shared by this package.
+ * @file
+ */
+
 export default {
   semi: true,
   trailingComma: 'all',

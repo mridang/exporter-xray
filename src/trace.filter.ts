@@ -1,3 +1,8 @@
+/**
+ * Decides which X-Ray trace segments should be exported.
+ * @file
+ */
+
 import { XrayTraceDataSegmentDocument } from './xray.document.js';
 
 export interface TraceFilter {
