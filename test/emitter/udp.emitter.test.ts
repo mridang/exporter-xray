@@ -73,7 +73,7 @@ describe('udp.emitter test', () => {
       .calls[0];
     expect(port).toBe(2000);
     expect(address).toBe('127.0.0.1');
-    expect(JSON.parse(message.toString().split('\n')[1]).name).toBe(
+    expect(JSON.parse(message.toString().split('\n', 2)[1]).name).toBe(
       'test-segment',
     );
   });

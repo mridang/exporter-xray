@@ -5,10 +5,10 @@ import * as dgram from 'node:dgram';
 /**
  * UDP-based implementation of the SegmentEmitter interface that sends trace
  * data to the X-Ray daemon using UDP. It has been mercilessly cannibalised from
- * {@link https://github.com/aws/aws-xray-sdk-node/blob/aws-xray-sdk-node%403.9.0/packages/core/lib/segment_emitter.js}
+ * {@link https://github.com/aws/aws-xray-sdk-node/blob/aws-xray-sdk-node%403.9.0/packages/core/lib/segment_emitter.js}.
  *
  * By default, segments are sent to localhost:2000, but you can configure this
- * using the `AWS_XRAY_DAEMON_ADDRESS` environment variable
+ * using the `AWS_XRAY_DAEMON_ADDRESS` environment variable.
  *
  * The X-Ray daemon is a software application that listens for traffic on
  * UDP port 2000 and relays trace data to the X-Ray service. It is always running
@@ -73,7 +73,7 @@ export class UDPDaemonSegmentEmitter implements SegmentEmitter {
    * @throws Error if the address format is invalid.
    */
   private processAddress(address: string): void {
-    if (address.indexOf(':') === -1) {
+    if (!address.includes(':')) {
       throw new Error(
         'Invalid Daemon Address. You must specify an IP and port.',
       );
@@ -86,15 +86,16 @@ export class UDPDaemonSegmentEmitter implements SegmentEmitter {
         throw new Error('Invalid Daemon Address. You must specify an IP.');
       }
       this.daemonConfig.udp_ip = addr[0];
-      this.daemonConfig.udp_port = parseInt(addr[1]);
+      this.daemonConfig.udp_port = Number.parseInt(addr[1]);
     } else if (splitAddress.length === 2) {
       const part1 = splitAddress[0].split(':');
       const part2 = splitAddress[1].split(':');
-      const addrMap: { [key: string]: string[] } = {};
-      addrMap[part1[0]] = part1;
-      addrMap[part2[0]] = part2;
+      const addrMap: { [key: string]: string[] } = {
+        [part1[0]]: part1,
+        [part2[0]]: part2,
+      };
       this.daemonConfig.udp_ip = addrMap['udp'][1];
-      this.daemonConfig.udp_port = parseInt(addrMap['udp'][2]);
+      this.daemonConfig.udp_port = Number.parseInt(addrMap['udp'][2]);
     }
   }
 }

@@ -55,9 +55,8 @@ export class DefaultCauseParser implements CauseParser {
    * - path: The relative path to the file.
    * - line: The line in the file.
    * - label: The function or method name.
-   *
    * @returns An object representing the cause of the error, including an array
-   *   of parsed exceptions.
+   * of parsed exceptions.
    */
   public getCause(span: ReadableSpan): Cause | undefined {
     return span.events.some((event) => event.name === 'exception')

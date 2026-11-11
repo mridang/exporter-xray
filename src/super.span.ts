@@ -92,8 +92,7 @@ export class EnhancedReadableSpan {
    * - If the span is identified as an AWS SDK span, the namespace is "aws".
    * - If the span contains the AWS service attribute, the namespace is "aws".
    * - If the span kind is CLIENT, the namespace is "remote".
-   *
-   * @returns {string | undefined} The determined namespace, or undefined if no
+   * @returns The determined namespace, or undefined if no
    * namespace is set.
    * @see {@link https://docs.aws.amazon.com/xray/latest/devguide/
    * aws-xray-interface-api.html}
@@ -112,22 +111,18 @@ export class EnhancedReadableSpan {
 
   /**
    * Determines if the span is throttled based on the HTTP status code.
-   *
-   * @returns {boolean} True if the span is throttled, otherwise false.
+   * @returns True if the span is throttled, otherwise false.
    */
   public isThrottled(): true | undefined {
-    if (Number(this.span.attributes[SEMATTRS_HTTP_STATUS_CODE]) === 429) {
-      return true;
-    } else {
-      return undefined;
-    }
+    return Number(this.span.attributes[SEMATTRS_HTTP_STATUS_CODE]) === 429
+      ? true
+      : undefined;
   }
 
   /**
    * Determines if the span represents a fault based on the status code and HTTP
    * status code.
-   *
-   * @returns {boolean} True if the span represents a fault, otherwise false.
+   * @returns True if the span represents a fault, otherwise false.
    */
   public isFault(): true | undefined {
     if (Number(this.span.attributes[SEMATTRS_HTTP_STATUS_CODE] || 0) >= 500) {
@@ -143,18 +138,13 @@ export class EnhancedReadableSpan {
   /**
    * Determines if the span represents an error based on the status code and
    * HTTP status code.
-   *
-   * @returns {boolean} True if the span represents an error, otherwise false.
+   * @returns True if the span represents an error, otherwise false.
    */
   public isError(): true | undefined {
-    if (Number(this.span.attributes[SEMATTRS_HTTP_STATUS_CODE] || 0) >= 400) {
-      return (
-        Number(this.span.attributes[SEMATTRS_HTTP_STATUS_CODE] || 0) <= 499 ||
-        undefined
-      );
-    } else {
-      return undefined;
-    }
+    return Number(this.span.attributes[SEMATTRS_HTTP_STATUS_CODE] || 0) >= 400
+      ? Number(this.span.attributes[SEMATTRS_HTTP_STATUS_CODE] || 0) <= 499 ||
+          undefined
+      : undefined;
   }
 
   /**
@@ -162,8 +152,7 @@ export class EnhancedReadableSpan {
    *
    * The service data is derived from the resource attributes. The method looks
    * for the service version or container image tag to set the service version.
-   *
-   * @returns {Service} The service data
+   * @returns The service data
    * if no relevant attributes are found.
    */
   public getService(): Service {
@@ -187,8 +176,7 @@ export class EnhancedReadableSpan {
 
   /**
    * Determines the origin of the span based on resource attributes.
-   *
-   * @returns {string | undefined} The determined origin, or undefined if no
+   * @returns The determined origin, or undefined if no
    * relevant attributes are found.
    */
   public getOrigin(originParser: OriginParser): string | undefined {
@@ -202,8 +190,7 @@ export class EnhancedReadableSpan {
    * This is the time when the segment was closed,
    * represented as a floating-point number in seconds since the
    * Unix epoch. For example, 1480615200.090 or 1.480615200090E9.
-   *
-   * @returns {number} The end time in floating point seconds.
+   * @returns The end time in floating point seconds.
    * @see {@link https://docs.aws.amazon.com/xray/latest/devguide/aws-xray-interface-api.html#xray-api-segmentdocuments.html}
    */
   public getEndTime(): number {
@@ -217,8 +204,7 @@ export class EnhancedReadableSpan {
    * This is the time when the segment was created,
    * represented as a floating-point number in seconds since the
    * Unix epoch. For example, 1480615200.010 or 1.480615200010E9.
-   *
-   * @returns {number} The start time in floating point seconds.
+   * @returns The start time in floating point seconds.
    * @see {@link https://docs.aws.amazon.com/xray/latest/devguide/aws-xray-interface-api.html#xray-api-segmentdocuments.html}
    */
   public getStartTime(): number {
@@ -242,20 +228,15 @@ export class EnhancedReadableSpan {
   }
 
   public getType() {
-    if (
-      this.span.kind !== SpanKind.SERVER &&
+    return this.span.kind !== SpanKind.SERVER &&
       this.getParentId() !== undefined
-    ) {
-      return 'subsegment';
-    } else {
-      return undefined;
-    }
+      ? 'subsegment'
+      : undefined;
   }
 
   /**
    * Unsure what this function does as this has been blindly ported over.
-   * {@link https://github.com/open-telemetry/opentelemetry-collector-contrib/pull/20313#issuecomment-2201988954}
-   *
+   * {@link https://github.com/open-telemetry/opentelemetry-collector-contrib/pull/20313#issuecomment-2201988954}.
    * @param idParser
    */
   public getLinks(idParser: IdParser): Link[] | undefined {
@@ -287,22 +268,20 @@ export class EnhancedReadableSpan {
   /**
    * 	Despite what the X-Ray documents say, having the DB connection string
    * 	set as the URL value of the segment is not useful. So let's use the
-   * 	current span name instead
+   * 	current span name instead.
    */
   public getSql(): SQL | undefined {
-    if (
-      this.DBS.includes(str(this.span.attributes[SEMATTRS_DB_SYSTEM]) || '')
-    ) {
-      return {
-        url: this.span.name,
-        connection_string: `${this.span.attributes[SEMATTRS_DB_CONNECTION_STRING] || 'localhost'}/${this.span.attributes[SEMATTRS_DB_NAME] || ''}`,
-        database_type: str(this.span.attributes[SEMATTRS_DB_SYSTEM]),
-        user: str(this.span.attributes[SEMATTRS_DB_USER]),
-        sanitized_query: str(this.span.attributes[SEMATTRS_DB_STATEMENT]),
-      };
-    } else {
-      return undefined;
-    }
+    return this.DBS.includes(
+      str(this.span.attributes[SEMATTRS_DB_SYSTEM]) || '',
+    )
+      ? {
+          url: this.span.name,
+          connection_string: `${this.span.attributes[SEMATTRS_DB_CONNECTION_STRING] || 'localhost'}/${this.span.attributes[SEMATTRS_DB_NAME] || ''}`,
+          database_type: str(this.span.attributes[SEMATTRS_DB_SYSTEM]),
+          user: str(this.span.attributes[SEMATTRS_DB_USER]),
+          sanitized_query: str(this.span.attributes[SEMATTRS_DB_STATEMENT]),
+        }
+      : undefined;
   }
 
   public getAWS(): AWS {
@@ -331,8 +310,7 @@ export class EnhancedReadableSpan {
       )
         ? (
             this.span.attributes[SEMATTRS_AWS_DYNAMODB_TABLE_NAMES] as (
-              | string
-              | undefined
+              string | undefined
             )[]
           ).find((val) => typeof val === 'string')
         : str(

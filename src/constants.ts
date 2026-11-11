@@ -4,12 +4,12 @@
  *
  * If you look at the attribute list defined by the AWS SDK instrumentation
  * you will see that this attribute is mentioned.
- * {@link https://github.com/open-telemetry/opentelemetry-js-contrib/tree/instrumentation-aws-sdk-v0.42.0/plugins/node/opentelemetry-instrumentation-aws-sdk}
+ * {@link https://github.com/open-telemetry/opentelemetry-js-contrib/tree/instrumentation-aws-sdk-v0.42.0/plugins/node/opentelemetry-instrumentation-aws-sdk}.
  *
  * It is however mentioned into the OpenTelemetry Collector code, presumably
  * because this attribute is used but the attribute has not made its way into
  * the semantic conversions for OpenTelemetry yet.
- * {@link https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/v0.104.0/internal/aws/xray/awsxray.go#L8}
+ * {@link https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/v0.104.0/internal/aws/xray/awsxray.go#L8}.
  */
 export const XSEMATTRS_AWS_OPERATION = 'aws.operation';
 
@@ -19,12 +19,12 @@ export const XSEMATTRS_AWS_OPERATION = 'aws.operation';
  *
  * If you look at the attribute list defined by the AWS SDK instrumentation
  * you will see that this attribute is mentioned.
- * {@link https://github.com/open-telemetry/opentelemetry-js-contrib/tree/instrumentation-aws-sdk-v0.42.0/plugins/node/opentelemetry-instrumentation-aws-sdk}
+ * {@link https://github.com/open-telemetry/opentelemetry-js-contrib/tree/instrumentation-aws-sdk-v0.42.0/plugins/node/opentelemetry-instrumentation-aws-sdk}.
  *
  * It is however mentioned into the OpenTelemetry Collector code, presumably
  * because this attribute is used but the attribute has not made its way into
  * the semantic conversions for OpenTelemetry yet.
- * {@link https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/v0.104.0/internal/aws/xray/awsxray.go#L9}
+ * {@link https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/v0.104.0/internal/aws/xray/awsxray.go#L9}.
  */
 export const XSEMATTRS_AWS_ACCOUNT = 'aws.account_id';
 
@@ -34,12 +34,12 @@ export const XSEMATTRS_AWS_ACCOUNT = 'aws.account_id';
  *
  * If you look at the attribute list defined by the AWS SDK instrumentation
  * you will see that this attribute is mentioned.
- * {@link https://github.com/open-telemetry/opentelemetry-js-contrib/tree/instrumentation-aws-sdk-v0.42.0/plugins/node/opentelemetry-instrumentation-aws-sdk}
+ * {@link https://github.com/open-telemetry/opentelemetry-js-contrib/tree/instrumentation-aws-sdk-v0.42.0/plugins/node/opentelemetry-instrumentation-aws-sdk}.
  *
  * It is however mentioned into the OpenTelemetry Collector code, presumably
  * because this attribute is used but the attribute has not made its way into
  * the semantic conversions for OpenTelemetry yet.
- * {@link https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/v0.104.0/internal/aws/xray/awsxray.go#L10}
+ * {@link https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/v0.104.0/internal/aws/xray/awsxray.go#L10}.
  */
 export const XSEMATTRS_AWS_REGION = 'aws.region';
 
@@ -49,12 +49,12 @@ export const XSEMATTRS_AWS_REGION = 'aws.region';
  *
  * If you look at the attribute list defined by the AWS SDK instrumentation
  * you will see that this attribute is mentioned.
- * {@link https://github.com/open-telemetry/opentelemetry-js-contrib/tree/instrumentation-aws-sdk-v0.42.0/plugins/node/opentelemetry-instrumentation-aws-sdk}
+ * {@link https://github.com/open-telemetry/opentelemetry-js-contrib/tree/instrumentation-aws-sdk-v0.42.0/plugins/node/opentelemetry-instrumentation-aws-sdk}.
  *
  * It is however mentioned into the OpenTelemetry Collector code, presumably
  * because this attribute is used but the attribute has not made its way into
  * the semantic conversions for OpenTelemetry yet.
- * {@link https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/v0.104.0/internal/aws/xray/awsxray.go#L15}
+ * {@link https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/v0.104.0/internal/aws/xray/awsxray.go#L15}.
  */
 export const XSEMATTRS_AWS_REQUEST_ID = 'aws.request.id';
 
@@ -64,12 +64,12 @@ export const XSEMATTRS_AWS_REQUEST_ID = 'aws.request.id';
  *
  * If you look at the attribute list defined by the AWS SDK instrumentation
  * you will see that this attribute is not mentioned.
- * {@link https://github.com/open-telemetry/opentelemetry-js-contrib/tree/instrumentation-aws-sdk-v0.42.0/plugins/node/opentelemetry-instrumentation-aws-sdk}
+ * {@link https://github.com/open-telemetry/opentelemetry-js-contrib/tree/instrumentation-aws-sdk-v0.42.0/plugins/node/opentelemetry-instrumentation-aws-sdk}.
  *
  * It is however mentioned into the OpenTelemetry Collector code, presumably
  * because this attribute is used but the attribute has not made its way into
  * the semantic conversions for OpenTelemetry yet.
- * {@link https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/v0.104.0/internal/aws/xray/awsxray.go#L14}
+ * {@link https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/v0.104.0/internal/aws/xray/awsxray.go#L14}.
  */
 export const XSEMATTRS_AWS_REQUEST_ID_2 = 'aws.requestId';
 
@@ -84,12 +84,12 @@ export const XSEMATTRS_AWS_XREQUEST_ID = 'aws.request.extended_id';
  *
  * If you look at the attribute list defined by the AWS SDK instrumentation
  * you will see that this attribute is not mentioned.
- * {@link https://github.com/open-telemetry/opentelemetry-js-contrib/tree/instrumentation-aws-sdk-v0.42.0/plugins/node/opentelemetry-instrumentation-aws-sdk}
+ * {@link https://github.com/open-telemetry/opentelemetry-js-contrib/tree/instrumentation-aws-sdk-v0.42.0/plugins/node/opentelemetry-instrumentation-aws-sdk}.
  *
  * It is however mentioned into the OpenTelemetry Collector code, presumably
  * because this attribute was used at some point and therefore this has been
  * ported over for backwards compatibility.
- * {@link https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/v0.104.0/internal/aws/xray/awsxray.go#L15}
+ * {@link https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/v0.104.0/internal/aws/xray/awsxray.go#L15}.
  *  */
 export const XSEMATTRS_AWS_QUEUE_URL = 'aws.queue_url';
 
@@ -100,12 +100,12 @@ export const XSEMATTRS_AWS_QUEUE_URL = 'aws.queue_url';
  *
  * If you look at the attribute list defined by the AWS SDK instrumentation
  * you will see that this attribute is not mentioned.
- * {@link https://github.com/open-telemetry/opentelemetry-js-contrib/tree/instrumentation-aws-sdk-v0.42.0/plugins/node/opentelemetry-instrumentation-aws-sdk}
+ * {@link https://github.com/open-telemetry/opentelemetry-js-contrib/tree/instrumentation-aws-sdk-v0.42.0/plugins/node/opentelemetry-instrumentation-aws-sdk}.
  *
  * It is however mentioned into the OpenTelemetry Collector code, presumably
  * because this attribute was used at some point and therefore this has been
  * ported over for backwards compatibility.
- * {@link https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/v0.104.0/internal/aws/xray/awsxray.go#L16}
+ * {@link https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/v0.104.0/internal/aws/xray/awsxray.go#L16}.
  *  */
 export const XSEMATTRS_AWS_QUEUE_URL_2 = 'aws.queue.url';
 
@@ -115,12 +115,12 @@ export const XSEMATTRS_AWS_QUEUE_URL_2 = 'aws.queue.url';
  *
  * If you look at the attribute list defined by the AWS SDK instrumentation
  * you will see that this attribute is mentioned.
- * {@link https://github.com/open-telemetry/opentelemetry-js-contrib/tree/instrumentation-aws-sdk-v0.42.0/plugins/node/opentelemetry-instrumentation-aws-sdk}
+ * {@link https://github.com/open-telemetry/opentelemetry-js-contrib/tree/instrumentation-aws-sdk-v0.42.0/plugins/node/opentelemetry-instrumentation-aws-sdk}.
  *
  * It is however mentioned into the OpenTelemetry Collector code, presumably
  * because this attribute is used but the attribute has not made its way into
  * the semantic conversions for OpenTelemetry yet.
- * {@link https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/v0.104.0/internal/aws/xray/awsxray.go#L17}
+ * {@link https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/v0.104.0/internal/aws/xray/awsxray.go#L17}.
  */
 export const XSEMATTRS_AWS_SERVICE = 'aws.service';
 
@@ -130,12 +130,12 @@ export const XSEMATTRS_AWS_SERVICE = 'aws.service';
  *
  * If you look at the attribute list defined by the AWS SDK instrumentation
  * you will see that this attribute is not mentioned.
- * {@link https://github.com/open-telemetry/opentelemetry-js-contrib/tree/instrumentation-aws-sdk-v0.42.0/plugins/node/opentelemetry-instrumentation-aws-sdk}
+ * {@link https://github.com/open-telemetry/opentelemetry-js-contrib/tree/instrumentation-aws-sdk-v0.42.0/plugins/node/opentelemetry-instrumentation-aws-sdk}.
  *
  * It is however mentioned into the OpenTelemetry Collector code, presumably
  * because this attribute was used at some point and therefore this has been
  * ported over for backwards compatibility.
- * {@link https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/v0.104.0/internal/aws/xray/awsxray.go#L18}
+ * {@link https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/v0.104.0/internal/aws/xray/awsxray.go#L18}.
  */
 export const XSEMATTRS_AWS_TABLE_NAME = 'aws.table_name';
 
@@ -145,12 +145,12 @@ export const XSEMATTRS_AWS_TABLE_NAME = 'aws.table_name';
  *
  * If you look at the attribute list defined by the AWS SDK instrumentation
  * you will see that this attribute is not mentioned.
- * {@link https://github.com/open-telemetry/opentelemetry-js-contrib/tree/instrumentation-aws-sdk-v0.42.0/plugins/node/opentelemetry-instrumentation-aws-sdk}
+ * {@link https://github.com/open-telemetry/opentelemetry-js-contrib/tree/instrumentation-aws-sdk-v0.42.0/plugins/node/opentelemetry-instrumentation-aws-sdk}.
  *
  * It is however mentioned into the OpenTelemetry Collector code, presumably
  * because this attribute was used at some point and therefore this has been
  * ported over for backwards compatibility.
- * {@link https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/v0.104.0/internal/aws/xray/awsxray.go#L19}
+ * {@link https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/v0.104.0/internal/aws/xray/awsxray.go#L19}.
  */
 export const XSEMATTRS_AWS_TABLE_NAME_2 = 'aws.table.name';
 
@@ -170,7 +170,7 @@ export const XSEMATTRS_AWS_XRAY_METADATA_PREFIX = 'aws.xray.metadata.';
  *
  * If you look at the attribute list defined by the AWS SDK instrumentation
  * you will see that this attribute is not mentioned.
- * {@link https://github.com/open-telemetry/opentelemetry-js-contrib/tree/instrumentation-aws-sdk-v0.42.0/plugins/node/opentelemetry-instrumentation-aws-sdk}
+ * {@link https://github.com/open-telemetry/opentelemetry-js-contrib/tree/instrumentation-aws-sdk-v0.42.0/plugins/node/opentelemetry-instrumentation-aws-sdk}.
  */
 export const XSEMATTRS_AWS_BUCKET_NAME = 'aws.bucket.name';
 
@@ -180,6 +180,6 @@ export const XSEMATTRS_AWS_BUCKET_NAME = 'aws.bucket.name';
  *
  * If you look at the attribute list defined by the AWS SDK instrumentation
  * you will see that this attribute is not mentioned.
- * {@link https://github.com/open-telemetry/opentelemetry-js-contrib/tree/instrumentation-aws-sdk-v0.42.0/plugins/node/opentelemetry-instrumentation-aws-sdk}
+ * {@link https://github.com/open-telemetry/opentelemetry-js-contrib/tree/instrumentation-aws-sdk-v0.42.0/plugins/node/opentelemetry-instrumentation-aws-sdk}.
  */
 export const XSEMATTRS_AWS_BUCKET_KEY = 'aws.bucket.key';

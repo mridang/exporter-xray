@@ -9,12 +9,11 @@ import {
 } from '@opentelemetry/api';
 import { IResource } from '@opentelemetry/resources';
 import { InstrumentationScope } from '@opentelemetry/core/build/src/common/types';
-import { join, dirname } from 'path';
-import { readFileSync } from 'fs';
-import { fileURLToPath } from 'url';
+import { join } from 'node:path';
+import { readFileSync } from 'node:fs';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const __filename = import.meta.filename;
+const __dirname = import.meta.dirname;
 
 interface SpanData {
   traceId: string;

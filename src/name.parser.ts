@@ -31,7 +31,7 @@ export class DefaultNameParser implements NameParser {
       this.getNetPeerName(span) ||
       'span'
     )
-      .replace(/[^ 0-9\p{L}N_.:/%&#=+\-@]/gu, '')
+      .replaceAll(/[^ 0-9\p{L}N_.:/%&#=+\-@]/gu, '')
       .slice(0, 200);
   }
 

@@ -17,45 +17,53 @@ export interface OriginParser {
 export class DefaultOriginParser implements OriginParser {
   /**
    * Determines the origin of the span based on resource attributes.
-   *
-   * @returns {string | undefined} The determined origin, or undefined if no
+   * @returns The determined origin, or undefined if no
    * relevant attributes are found.
    */
   public getOrigin(span: ReadableSpan): string | undefined {
-    if (!span.resource?.attributes) {
-      return undefined;
-    } else {
+    if (span.resource?.attributes) {
       if (
-        span.resource?.attributes[SEMRESATTRS_CLOUD_PROVIDER] !==
+        span.resource?.attributes[SEMRESATTRS_CLOUD_PROVIDER] ===
         CLOUDPROVIDERVALUES_AWS
       ) {
-        return undefined;
-      } else {
         switch (span.resource?.attributes[SEMRESATTRS_CLOUD_PLATFORM]) {
-          case 'aws_app_runner':
+          case 'aws_app_runner': {
             return 'AWS::AppRunner::Service';
-          case CLOUDPLATFORMVALUES_AWS_EKS:
+          }
+          case CLOUDPLATFORMVALUES_AWS_EKS: {
             return 'AWS::EKS::Container';
-          case CLOUDPLATFORMVALUES_AWS_ELASTIC_BEANSTALK:
+          }
+          case CLOUDPLATFORMVALUES_AWS_ELASTIC_BEANSTALK: {
             return 'AWS::ElasticBeanstalk::Environment';
-          case CLOUDPLATFORMVALUES_AWS_ECS:
+          }
+          case CLOUDPLATFORMVALUES_AWS_ECS: {
             if (!span.resource?.attributes[SEMRESATTRS_AWS_ECS_LAUNCHTYPE]) {
               return 'AWS::ECS::Container';
             }
             switch (span.resource?.attributes[SEMRESATTRS_AWS_ECS_LAUNCHTYPE]) {
-              case CLOUDPLATFORMVALUES_AWS_EC2:
+              case CLOUDPLATFORMVALUES_AWS_EC2: {
                 return 'AWS::ECS::EC2';
-              case 'fargate':
+              }
+              case 'fargate': {
                 return 'AWS::ECS::Fargate';
-              default:
+              }
+              default: {
                 return 'AWS::ECS::Container';
+              }
             }
-          case CLOUDPLATFORMVALUES_AWS_EC2:
+          }
+          case CLOUDPLATFORMVALUES_AWS_EC2: {
             return 'AWS::EC2::Instance';
-          default:
+          }
+          default: {
             return undefined;
+          }
         }
+      } else {
+        return undefined;
       }
+    } else {
+      return undefined;
     }
   }
 }
