@@ -10,8 +10,10 @@
     "experimentalDecorators": true,
     "esModuleInterop": true,
     "outDir": "dist",
+    "rootDir": "./src",
     "typeRoots": ["./node_modules/@types", "./types"],
-    "declaration": true
+    "declaration": true,
+    "isolatedModules": true
   },
   "include": ["src/**/*", "types/**/*"],
   "exclude": ["node_modules", "**/*.spec.ts", "dist", "test"]
