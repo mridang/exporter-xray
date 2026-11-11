@@ -1,4 +1,8 @@
-import { SpanKind } from '@opentelemetry/api';
+/**
+ * Extracts HTTP request and response details from OpenTelemetry spans.
+ * @file
+ */
+import { Attributes, SpanKind } from '@opentelemetry/api';
 import { ReadableSpan } from '@opentelemetry/sdk-trace-base';
 import {
   SEMATTRS_HTTP_CLIENT_IP,
@@ -21,28 +25,69 @@ import {
 import { HTTP } from './xray.document.js';
 import { ip, num, str } from './util.js';
 
+/**
+ * Returns the first truthy attribute value among the given keys.
+ * @param attributes - The span attributes to read from.
+ * @param keys - The attribute keys to try, in order of preference.
+ * @returns The first truthy attribute value, or undefined when none is set.
+ * @example
+ * ```ts
+ * firstAttribute({ a: '', b: 'x' }, ['a', 'b']); // Returns 'x'.
+ * ```
+ */
+function firstAttribute(attributes: Attributes, keys: string[]): unknown {
+  return keys.map((key) => attributes[key]).find(Boolean);
+}
+
 export interface HttpParser {
   parseHttp(span: ReadableSpan): HTTP | undefined;
 }
 
 /**
- * TODO: also parse the content length from the events
+ * Parses the HTTP request and response details of a span.
  *
- * {@link https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/6dd3baea75a38706ff2611659d3ae8ad92720df1/exporter/awsxrayexporter/internal/translator/http.go}
+ * The content length is not parsed from the span events yet.
+ *
+ * {@link https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/6dd3baea75a38706ff2611659d3ae8ad92720df1/exporter/awsxrayexporter/internal/translator/http.go OpenTelemetry Collector HTTP translator}.
  */
 export class DefaultHttpParser implements HttpParser {
+  /**
+   * Builds an absolute URL string from its parts.
+   * @param url - The scheme, host, optional port and path of the URL.
+   * @param url.scheme - The URL scheme, such as 'https'.
+   * @param url.host - The host name or address.
+   * @param [url.port] - The optional port number.
+   * @param url.path - The path and query of the URL.
+   * @returns The absolute URL as a string.
+   * @example
+   * ```ts
+   * new DefaultHttpParser().toURL({ scheme: 'https', host: 'example.com', path: '/a' });
+   * // Returns 'https://example.com/a'.
+   * ```
+   */
   toURL(url: {
     scheme: string;
     host: string;
     port?: string;
     path: string;
   }): string {
-    return new URL(
-      `${url.scheme}://${url.host}${url.port ? `:${url.port}` : ''}${url.path}`,
-    ).toString();
+    const port = url.port ? `:${url.port}` : '';
+    return new URL(`${url.scheme}://${url.host}${port}${url.path}`).toString();
   }
 
-  parseHttp({ attributes, kind }: ReadableSpan): HTTP | undefined {
+  /**
+   * Parses the HTTP details of a span from its attributes.
+   * @param span - The span whose attributes and kind are inspected.
+   * @returns The HTTP request and response details, or undefined when the span
+   * carries no HTTP attributes.
+   * @example
+   * ```ts
+   * const http = new DefaultHttpParser().parseHttp(span);
+   * // http?.request?.method holds the HTTP method when present.
+   * ```
+   */
+  parseHttp(span: ReadableSpan): HTTP | undefined {
+    const { attributes, kind } = span;
     return [
       SEMATTRS_HTTP_METHOD,
       'http.request.method',
@@ -90,62 +135,7 @@ export class DefaultHttpParser implements HttpParser {
               attributes[SEMATTRS_NET_PEER_IP]
                 ? true
                 : undefined,
-            url: [
-              SEMATTRS_HTTP_URL,
-              'url.full',
-              SEMATTRS_HTTP_HOST,
-              SEMATTRS_HTTP_SERVER_NAME,
-              SEMATTRS_NET_HOST_NAME,
-              'host.name',
-              'server.address',
-            ].some((attr) => attributes[attr] !== undefined)
-              ? kind === SpanKind.SERVER
-                ? str(
-                    attributes[SEMATTRS_HTTP_URL] || attributes['url.full'],
-                  ) ||
-                  this.toURL({
-                    scheme:
-                      str(
-                        attributes[SEMATTRS_HTTP_SCHEME] ||
-                          attributes['url.scheme'],
-                      ) || 'http',
-                    host:
-                      str(
-                        attributes[SEMATTRS_HTTP_HOST] ||
-                          attributes[SEMATTRS_HTTP_SERVER_NAME] ||
-                          attributes[SEMATTRS_NET_HOST_NAME] ||
-                          attributes['host.name'] ||
-                          attributes['server.address'],
-                      ) || 'host',
-                    port: str(
-                      attributes[SEMATTRS_NET_HOST_PORT] ||
-                        attributes['server.port'],
-                    ),
-                    path:
-                      str(
-                        attributes[SEMATTRS_HTTP_TARGET] ||
-                          attributes['url.path'],
-                      ) || '/',
-                  })
-                : str(
-                    attributes[SEMATTRS_HTTP_URL] || attributes['url.full'],
-                  ) ||
-                  this.toURL({
-                    scheme:
-                      str(
-                        attributes[SEMATTRS_HTTP_SCHEME] ||
-                          attributes['url.scheme'],
-                      ) || 'http',
-                    host:
-                      str(
-                        attributes[SEMATTRS_HTTP_HOST] ||
-                          attributes[SEMATTRS_NET_PEER_NAME] ||
-                          attributes[SEMATTRS_NET_PEER_IP],
-                      ) || 'host',
-                    port: str(attributes[SEMATTRS_NET_PEER_PORT]),
-                    path: str(attributes[SEMATTRS_HTTP_TARGET]) || '/',
-                  })
-              : undefined,
+            url: this.parseUrl(attributes, kind),
           },
           response: {
             status: num(
@@ -163,5 +153,100 @@ export class DefaultHttpParser implements HttpParser {
           },
         }
       : undefined;
+  }
+
+  /**
+   * Derives the request URL from the URL-related attributes of a span.
+   * @param attributes - The span attributes to read the URL from.
+   * @param kind - The kind of the span, which selects how the URL is built.
+   * @returns The request URL, or undefined when no URL attribute is present.
+   * @example
+   * ```ts
+   * new DefaultHttpParser().parseUrl(span.attributes, SpanKind.SERVER);
+   * // Returns the full URL, or undefined when the span has no URL attributes.
+   * ```
+   */
+  private parseUrl(attributes: Attributes, kind: SpanKind): string | undefined {
+    const hasUrlAttribute = [
+      SEMATTRS_HTTP_URL,
+      'url.full',
+      SEMATTRS_HTTP_HOST,
+      SEMATTRS_HTTP_SERVER_NAME,
+      SEMATTRS_NET_HOST_NAME,
+      'host.name',
+      'server.address',
+    ].some((attr) => attributes[attr] !== undefined);
+    if (!hasUrlAttribute) {
+      return undefined;
+    }
+    return kind === SpanKind.SERVER
+      ? this.parseServerUrl(attributes)
+      : this.parseClientUrl(attributes);
+  }
+
+  /**
+   * Builds the URL of a server span, preferring the full URL attribute.
+   * @param attributes - The span attributes to read the URL from.
+   * @returns The request URL of the server span.
+   * @example
+   * ```ts
+   * new DefaultHttpParser().parseServerUrl({ 'url.full': 'https://example.com/a' });
+   * // Returns 'https://example.com/a'.
+   * ```
+   */
+  private parseServerUrl(attributes: Attributes): string {
+    return (
+      str(attributes[SEMATTRS_HTTP_URL] || attributes['url.full']) ||
+      this.toURL({
+        scheme:
+          str(attributes[SEMATTRS_HTTP_SCHEME] || attributes['url.scheme']) ||
+          'http',
+        host:
+          str(
+            firstAttribute(attributes, [
+              SEMATTRS_HTTP_HOST,
+              SEMATTRS_HTTP_SERVER_NAME,
+              SEMATTRS_NET_HOST_NAME,
+              'host.name',
+              'server.address',
+            ]),
+          ) || 'host',
+        port: str(
+          attributes[SEMATTRS_NET_HOST_PORT] || attributes['server.port'],
+        ),
+        path:
+          str(attributes[SEMATTRS_HTTP_TARGET] || attributes['url.path']) ||
+          '/',
+      })
+    );
+  }
+
+  /**
+   * Builds the URL of a client span, falling back to the peer details.
+   * @param attributes - The span attributes to read the URL from.
+   * @returns The request URL of the client span.
+   * @example
+   * ```ts
+   * new DefaultHttpParser().parseClientUrl({ 'http.target': '/a', 'net.peer.name': 'api.example.com' });
+   * // Returns the URL built from the target and peer name, using the default scheme.
+   * ```
+   */
+  private parseClientUrl(attributes: Attributes): string {
+    return (
+      str(attributes[SEMATTRS_HTTP_URL] || attributes['url.full']) ||
+      this.toURL({
+        scheme:
+          str(attributes[SEMATTRS_HTTP_SCHEME] || attributes['url.scheme']) ||
+          'http',
+        host:
+          str(
+            attributes[SEMATTRS_HTTP_HOST] ||
+              attributes[SEMATTRS_NET_PEER_NAME] ||
+              attributes[SEMATTRS_NET_PEER_IP],
+          ) || 'host',
+        port: str(attributes[SEMATTRS_NET_PEER_PORT]),
+        path: str(attributes[SEMATTRS_HTTP_TARGET]) || '/',
+      })
+    );
   }
 }

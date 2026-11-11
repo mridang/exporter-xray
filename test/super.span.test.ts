@@ -1,3 +1,8 @@
+/**
+ * Tests for the enhanced readable span wrapper.
+ * @file
+ */
+
 import { ReadableSpan } from '@opentelemetry/sdk-trace-base';
 import { SEMATTRS_ENDUSER_ID } from '@opentelemetry/semantic-conventions';
 import { EnhancedReadableSpan } from '../src';

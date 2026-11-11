@@ -1,3 +1,7 @@
+/**
+ * Exports OpenTelemetry spans to AWS X-Ray as trace segment documents.
+ * @file
+ */
 import { diag } from '@opentelemetry/api';
 import { ExportResult, ExportResultCode } from '@opentelemetry/core';
 import { ReadableSpan, SpanExporter } from '@opentelemetry/sdk-trace-base';
@@ -16,21 +20,21 @@ import { XrayTraceDataSegmentDocument } from './xray.document.js';
 
 /**
  * Creates an instance of XraySpanExporter.
- * @param {SegmentEmitter[]} [segmentEmitters] - The emitters used to send
+ * @param [segmentEmitters] - The emitters used to send
  * segments to AWS X-Ray.
- * @param {IdParser} [idParser] - The parser used for converting OpenTelemetry
+ * @param [idParser] - The parser used for converting OpenTelemetry
  * trace IDs to AWS X-Ray trace IDs.
- * @param {CauseParser} [causeParser] - The parser used for extracting error
+ * @param [causeParser] - The parser used for extracting error
  * causes from spans.
- * @param {HttpParser} [httpParser] - The parser used for extracting HTTP
+ * @param [httpParser] - The parser used for extracting HTTP
  * details from spans.
- * @param {NameParser} [nameParser] - The parser used for determining the name
+ * @param [nameParser] - The parser used for determining the name
  * of the segment.
- * @param {OriginParser} [originParser] - The parser used for determining the
+ * @param [originParser] - The parser used for determining the
  * origin of the segment.
- * @param {TraceFilter} [traceFilter] - The filter used to determine if a trace
+ * @param [traceFilter] - The filter used to determine if a trace
  * should be sent to X-Ray.
- * @param {string[]} [indexedAttributes] - The attributes to index in the X-Ray
+ * @param [indexedAttributes] - The attributes to index in the X-Ray
  * console as annotations.
  */
 export default class XraySpanExporter implements SpanExporter {
@@ -51,34 +55,48 @@ export default class XraySpanExporter implements SpanExporter {
     //
   }
 
-  export(spans: ReadableSpan[], cb: (result: ExportResult) => void) {
+  /**
+   * Converts the spans into X-Ray segments and sends them through every emitter.
+   * @param spans - The OpenTelemetry spans to export.
+   * @param resultCallback - Called once per emitter with the outcome of its send.
+   * @example
+   * ```ts
+   * exporter.export(spans, (result) => {
+   *   if (result.code === ExportResultCode.SUCCESS) {
+   *     diag.debug('Spans exported.');
+   *   }
+   * });
+   * ```
+   */
+  export(
+    spans: ReadableSpan[],
+    resultCallback: (result: ExportResult) => void,
+  ) {
     const trace: XrayTraceDataSegmentDocument[] = spans
       .map((span) => new EnhancedReadableSpan(span))
-      .map(
-        (span): XrayTraceDataSegmentDocument => ({
-          id: span.getSpanId(),
-          trace_id: span.getTraceId(this.idParser),
-          name: span.getName(this.nameParser),
-          start_time: span.getStartTime(),
-          end_time: span.getEndTime(),
-          parent_id: span.getParentId(),
-          fault: span.isFault(),
-          error: span.isError(),
-          throttle: span.isThrottled(),
-          cause: span.getCause(this.causeParser),
-          origin: span.getOrigin(this.originParser),
-          namespace: span.getNamespace(),
-          user: span.getUser(),
-          http: span.getHttp(this.httpParser),
-          aws: span.getAWS(),
-          service: span.getService(),
-          sql: span.getSql(),
-          annotations: span.getAnnotations(this.indexedAttributes),
-          metadata: span.getMetadata(),
-          type: span.getType(),
-          links: span.getLinks(this.idParser),
-        }),
-      )
+      .map((span): XrayTraceDataSegmentDocument => ({
+        id: span.getSpanId(),
+        trace_id: span.getTraceId(this.idParser),
+        name: span.getName(this.nameParser),
+        start_time: span.getStartTime(),
+        end_time: span.getEndTime(),
+        parent_id: span.getParentId(),
+        fault: span.isFault(),
+        error: span.isError(),
+        throttle: span.isThrottled(),
+        cause: span.getCause(this.causeParser),
+        origin: span.getOrigin(this.originParser),
+        namespace: span.getNamespace(),
+        user: span.getUser(),
+        http: span.getHttp(this.httpParser),
+        aws: span.getAWS(),
+        service: span.getService(),
+        sql: span.getSql(),
+        annotations: span.getAnnotations(this.indexedAttributes),
+        metadata: span.getMetadata(),
+        type: span.getType(),
+        links: span.getLinks(this.idParser),
+      }))
       .filter((trace) => {
         return this.traceFilter.doFilter(trace);
       })
@@ -87,24 +105,45 @@ export default class XraySpanExporter implements SpanExporter {
       });
 
     this.segmentEmitters.forEach((segmentEmitter) =>
-      segmentEmitter
-        .emit(trace)
-        .then(() => {
-          // eslint-disable-next-line testing-library/no-debugging-utils
-          diag.debug(`Sent ${spans.length} spans to X-Ray.`);
-          cb({ code: ExportResultCode.SUCCESS });
-        })
-        .catch((err: Error) => {
-          diag.warn(`Encountered an error when sending the spans to X-Ray.`);
-          cb({ code: ExportResultCode.FAILED, error: err });
-        }),
+      this.emitTo(segmentEmitter, trace, spans.length, resultCallback),
     );
+  }
+
+  /**
+   * Sends the trace segments through one emitter and reports the outcome.
+   * @param segmentEmitter - The emitter that sends the segments.
+   * @param trace - The segment documents to send.
+   * @param spanCount - The number of spans in the export, used for logging.
+   * @param resultCallback - Called with the success or failure of the send.
+   * @example
+   * ```ts
+   * await this.emitTo(new ConsoleEmitter(), trace, trace.length, (result) => {});
+   * ```
+   */
+  private async emitTo(
+    segmentEmitter: SegmentEmitter,
+    trace: XrayTraceDataSegmentDocument[],
+    spanCount: number,
+    resultCallback: (result: ExportResult) => void,
+  ): Promise<void> {
+    try {
+      await segmentEmitter.emit(trace);
+      diag['debug'](`Sent ${spanCount} spans to X-Ray.`);
+      resultCallback({ code: ExportResultCode.SUCCESS });
+    } catch (error) {
+      diag.warn(`Encountered an error when sending the spans to X-Ray.`);
+      resultCallback({ code: ExportResultCode.FAILED, error: error as Error });
+    }
   }
 
   /**
    * Shuts down the exporter.
    * This method currently destroys the X-Ray client instance.
    * @returns A promise that resolves immediately.
+   * @example
+   * ```ts
+   * await exporter.shutdown();
+   * ```
    */
   shutdown(): Promise<void> {
     // No implementation for shutdown logic since there's no cleanup needed.
@@ -116,6 +155,10 @@ export default class XraySpanExporter implements SpanExporter {
    * Forces the exporter to flush any pending exports.
    * This method is currently a no-op.
    * @returns A promise that resolves immediately.
+   * @example
+   * ```ts
+   * await exporter.forceFlush();
+   * ```
    */
   forceFlush?(): Promise<void> {
     // No implementation for forceFlush since it's not needed for X-Ray export.

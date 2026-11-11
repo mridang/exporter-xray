@@ -1,38 +1,69 @@
+/**
+ * Type definitions for the AWS X-Ray trace segment documents this exporter sends.
+ * @file
+ */
+
+/**
+ * AWS-specific details of a segment, such as the ECS, EC2 and EKS plugin data.
+ */
 export interface AWS {
+  /**
+   * The ECS plugin data, see the {@link https://github.com/aws/aws-xray-sdk-java/blob/63ace4ace34473bf2e071cfbbba79fa92388af61/aws-xray-recorder-sdk-core/src/main/java/com/amazonaws/xray/plugins/ECSPlugin.java#L43 X-Ray Java ECS plugin}.
+   */
   ecs?: {
-    // https://github.com/aws/aws-xray-sdk-java/blob/63ace4ace34473bf2e071cfbbba79fa92388af61/aws-xray-recorder-sdk-core/src/main/java/com/amazonaws/xray/plugins/ECSPlugin.java#L43
-    container?: string; // Renamed to match schema
-    container_name?: string; // Not in schema
-    container_id?: string; // Not in schema
-    availability_zone?: string; // Not in schema
-    container_arn?: string; // Not in schema
-    cluster_arn?: string; // Not in schema
-    task_arn?: string; // Not in schema
-    task_family?: string; // Not in schema
-    launch_type?: string; // Not in schema
+    /** Renamed to match the schema. */
+    container?: string;
+    /** Not in the X-Ray segment schema. */
+    container_name?: string;
+    /** Not in the X-Ray segment schema. */
+    container_id?: string;
+    /** Not in the X-Ray segment schema. */
+    availability_zone?: string;
+    /** Not in the X-Ray segment schema. */
+    container_arn?: string;
+    /** Not in the X-Ray segment schema. */
+    cluster_arn?: string;
+    /** Not in the X-Ray segment schema. */
+    task_arn?: string;
+    /** Not in the X-Ray segment schema. */
+    task_family?: string;
+    /** Not in the X-Ray segment schema. */
+    launch_type?: string;
   };
+
+  /**
+   * The EC2 plugin data, see the {@link https://github.com/aws/aws-xray-sdk-java/blob/63ace4ace34473bf2e071cfbbba79fa92388af61/aws-xray-recorder-sdk-core/src/main/java/com/amazonaws/xray/plugins/EC2Plugin.java#L47 X-Ray Java EC2 plugin}.
+   */
   ec2?: {
-    // https://github.com/aws/aws-xray-sdk-java/blob/63ace4ace34473bf2e071cfbbba79fa92388af61/aws-xray-recorder-sdk-core/src/main/java/com/amazonaws/xray/plugins/EC2Plugin.java#L47
     instance_id?: string;
     availability_zone?: string;
     instance_size?: string;
     ami_id?: string;
   };
+
+  /**
+   * The Elastic Beanstalk plugin data, see the {@link https://github.com/aws/aws-xray-sdk-java/blob/63ace4ace34473bf2e071cfbbba79fa92388af61/aws-xray-recorder-sdk-core/src/main/java/com/amazonaws/xray/plugins/ElasticBeanstalkPlugin.java#L43 X-Ray Java Elastic Beanstalk plugin}.
+   */
   elastic_beanstalk?: {
-    // https://github.com/aws/aws-xray-sdk-java/blob/63ace4ace34473bf2e071cfbbba79fa92388af61/aws-xray-recorder-sdk-core/src/main/java/com/amazonaws/xray/plugins/ElasticBeanstalkPlugin.java#L43
     environment?: string;
     version_label?: string;
     deployment_id?: number;
   };
+
+  /**
+   * The EKS plugin data, see the {@link https://github.com/aws/aws-xray-sdk-java/blob/63ace4ace34473bf2e071cfbbba79fa92388af61/aws-xray-recorder-sdk-core/src/main/java/com/amazonaws/xray/plugins/EKSPlugin.java#L43 X-Ray Java EKS plugin}.
+   */
   eks?: {
-    // https://github.com/aws/aws-xray-sdk-java/blob/63ace4ace34473bf2e071cfbbba79fa92388af61/aws-xray-recorder-sdk-core/src/main/java/com/amazonaws/xray/plugins/EKSPlugin.java#L43
     cluster_name?: string;
     pod?: string;
     container_id?: string;
   };
   cloudwatch_logs?: Log[];
+
+  /**
+   * The X-Ray SDK details, see the {@link https://github.com/aws/aws-xray-sdk-node/blob/b39b5e298ae600e8e2975a609059fe67e6fd6cd6/packages/core/lib/aws-xray.js#L382-L386 X-Ray Node SDK}.
+   */
   xray: {
-    // https://github.com/aws/aws-xray-sdk-node/blob/b39b5e298ae600e8e2975a609059fe67e6fd6cd6/packages/core/lib/aws-xray.js#L382-L386
     sdk?: string;
     sdk_version?: string;
     auto_instrumentation?: boolean;
@@ -41,19 +72,30 @@ export interface AWS {
     sdk?: string;
   };
   account_id?: string;
-  retries?: number; // Not in schema
-  region?: string; // Not in schema
+  /** Not in the X-Ray segment schema. */
+  retries?: number;
+  /** Not in the X-Ray segment schema. */
+  region?: string;
   operation?: string;
   request_id?: string;
-  id_2?: string; // Not in schema
-  bucket_name?: string; // Not in schema
-  key?: string; // Not in schema
+  /** Not in the X-Ray segment schema. */
+  id_2?: string;
+  /** Not in the X-Ray segment schema. */
+  bucket_name?: string;
+  /** Not in the X-Ray segment schema. */
+  key?: string;
   table_name?: string;
-  resource_names?: string[]; // Not in schema
-  message_id?: string; // Not in schema
-  queue_url?: string; // Not in schema
+  /** Not in the X-Ray segment schema. */
+  resource_names?: string[];
+  /** Not in the X-Ray segment schema. */
+  message_id?: string;
+  /** Not in the X-Ray segment schema. */
+  queue_url?: string;
 }
 
+/**
+ * HTTP request details of a segment.
+ */
 export interface Request {
   url?: string;
   method?: string;
@@ -62,40 +104,63 @@ export interface Request {
   x_forwarded_for?: boolean;
 }
 
+/**
+ * HTTP response details of a segment.
+ */
 export interface Response {
   status?: number;
   content_length?: number;
 }
 
+/**
+ * A CloudWatch Logs group associated with a segment.
+ */
 export interface Log {
   log_group: string;
   arn?: string;
 }
 
+/**
+ * A link from a segment to another trace.
+ */
 export interface Link {
   id: string;
   trace_id: string;
   attributes: { [key: string]: unknown | undefined };
 }
 
-// https://github.com/aws/aws-xray-sdk-node/blob/b39b5e298ae600e8e2975a609059fe67e6fd6cd6/packages/core/lib/aws-xray.js#L375-L379
+/**
+ * Service details of a segment, see the {@link https://github.com/aws/aws-xray-sdk-node/blob/b39b5e298ae600e8e2975a609059fe67e6fd6cd6/packages/core/lib/aws-xray.js#L375-L379 X-Ray Node SDK}.
+ */
 export interface Service {
   version: string;
-  runtime?: string; // Not in schema
-  runtime_version?: string; // Not in schema
-  name?: string; // Not in schema
+  /** Not in the X-Ray segment schema. */
+  runtime?: string;
+  /** Not in the X-Ray segment schema. */
+  runtime_version?: string;
+  /** Not in the X-Ray segment schema. */
+  name?: string;
 }
 
+/**
+ * HTTP details of a segment.
+ */
 export interface HTTP {
   request?: Request;
   response?: Response;
 }
 
+/**
+ * The error cause of a segment.
+ */
 export interface Cause {
   working_directory?: string;
   exceptions?: Exception[];
 }
 
+/**
+ * An exception recorded as part of a segment's error cause.
+ */
 export interface Exception {
   id: string;
   message?: string;
@@ -107,16 +172,24 @@ export interface Exception {
   stack?: Stack[];
 }
 
+/**
+ * A single stack frame of an exception.
+ */
 export interface Stack {
   path?: string;
   line?: number;
   label?: string;
 }
 
+/**
+ * SQL details of a database segment.
+ */
 export interface SQL {
-  connection_string?: string; // Not in schema
+  /** Not in the X-Ray segment schema. */
+  connection_string?: string;
   url?: string;
-  sanitized_query?: string; // Not in schema
+  /** Not in the X-Ray segment schema. */
+  sanitized_query?: string;
   database_type?: string;
   database_version?: string;
   driver_version?: string;
@@ -124,6 +197,9 @@ export interface SQL {
   preparation?: 'call' | 'statement' | 'unknown';
 }
 
+/**
+ * A trace segment or subsegment document, as sent to AWS X-Ray.
+ */
 export interface XrayTraceDataSegmentDocument {
   id: string;
   name: string;
@@ -147,5 +223,6 @@ export interface XrayTraceDataSegmentDocument {
   sql?: SQL;
   service?: Service;
   type?: 'subsegment';
-  links?: Link[]; // Not in schema
+  /** Not in the X-Ray segment schema. */
+  links?: Link[];
 }

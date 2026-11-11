@@ -1,3 +1,8 @@
+/**
+ * Tests for the AWS origin parser.
+ * @file
+ */
+
 import {
   SEMRESATTRS_CLOUD_PROVIDER,
   SEMRESATTRS_CLOUD_PLATFORM,

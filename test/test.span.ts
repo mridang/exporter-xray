@@ -1,3 +1,8 @@
+/**
+ * Helper that wraps recorded span fixtures as readable spans.
+ * @file
+ */
+
 import { ReadableSpan, TimedEvent } from '@opentelemetry/sdk-trace-base';
 import {
   Attributes,
@@ -9,12 +14,8 @@ import {
 } from '@opentelemetry/api';
 import { IResource } from '@opentelemetry/resources';
 import { InstrumentationScope } from '@opentelemetry/core/build/src/common/types';
-import { join, dirname } from 'path';
-import { readFileSync } from 'fs';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+import { readFile } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
 
 interface SpanData {
   traceId: string;
@@ -95,9 +96,11 @@ export class WrappedReadableSpan implements ReadableSpan {
     return this._spanContext;
   }
 
-  static from(filename: string): WrappedReadableSpan[] {
-    const filePath = join(__dirname, 'samples', filename);
-    const rawData = readFileSync(filePath, 'utf-8');
+  static async from(filename: string): Promise<WrappedReadableSpan[]> {
+    const filePath = fileURLToPath(
+      new URL(`samples/${filename}`, import.meta.url),
+    );
+    const rawData = await readFile(filePath, 'utf8');
     return (JSON.parse(rawData) as SpanData[]).map(
       (span) => new WrappedReadableSpan(span),
     );

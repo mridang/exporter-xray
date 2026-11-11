@@ -1,8 +1,15 @@
-import { readFileSync } from 'fs';
+/**
+ * Semantic-release configuration that publishes this package.
+ * @file
+ */
 
-const packageJson = JSON.parse(
-  readFileSync(new URL('./package.json', import.meta.url), 'utf-8'),
+import { readFile } from 'node:fs/promises';
+
+const packageJsonText = await readFile(
+  new URL('package.json', import.meta.url),
+  'utf8',
 );
+const packageJson = JSON.parse(packageJsonText);
 
 export default {
   plugins: [

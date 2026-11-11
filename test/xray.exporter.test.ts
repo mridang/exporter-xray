@@ -1,6 +1,16 @@
+/**
+ * End-to-end tests for the X-Ray span exporter.
+ * @file
+ */
+
 import { jest } from '@jest/globals';
 import { ExportResultCode } from '@opentelemetry/core';
+import { readFile } from 'node:fs/promises';
 import { WrappedReadableSpan } from './test.span';
+
+const ips = JSON.parse(
+  await readFile(new URL('fixtures/ips.json', import.meta.url), 'utf8'),
+) as { clientIp: string };
 
 jest.unstable_mockModule('@aws-sdk/client-xray', () => {
   return {
@@ -33,6 +43,7 @@ type MockXRayClient = InstanceType<typeof XRayClient> & {
   destroy: jest.Mock;
 };
 
+// eslint-disable-next-line sonarjs/max-lines-per-function -- large fixture-driven describe block
 describe('xray.exporter test', () => {
   let exporter: InstanceType<typeof XraySpanExporter>;
   let mockXRayClient: MockXRayClient;
@@ -52,13 +63,12 @@ describe('xray.exporter test', () => {
     jest.clearAllMocks();
   });
 
+  // eslint-disable-next-line sonarjs/max-lines-per-function -- one long expectation per exported span
   test(`should export the span from`, async () => {
+    const spans = await WrappedReadableSpan.from('request.axios.json');
     expect(
       await new Promise((resolve) => {
-        exporter.export(
-          WrappedReadableSpan.from('request.axios.json'),
-          resolve,
-        );
+        exporter.export(spans, resolve);
       }),
     ).toEqual({ code: ExportResultCode.SUCCESS });
 
@@ -77,7 +87,7 @@ describe('xray.exporter test', () => {
               sdk_version: '1.25.1',
             },
           },
-          end_time: 1719733144.7892985,
+          end_time: 1_719_733_144.7892985,
           id: 'c4c9aaec061808db',
           name: 'middleware - query',
           parent_id: '62aa77733a29b899',
@@ -87,7 +97,7 @@ describe('xray.exporter test', () => {
             runtime_version: '20.9.0',
             version: 'unknown',
           },
-          start_time: 1719733144.789,
+          start_time: 1_719_733_144.789,
           trace_id: '1-371072df-6c811ec31d82d28caf5cddbc',
           type: 'subsegment',
         },
@@ -99,7 +109,7 @@ describe('xray.exporter test', () => {
               sdk_version: '1.25.1',
             },
           },
-          end_time: 1719733144.7903323,
+          end_time: 1_719_733_144.7903323,
           id: '5e3863393e4458cc',
           name: 'middleware - expressInit',
           parent_id: '62aa77733a29b899',
@@ -109,7 +119,7 @@ describe('xray.exporter test', () => {
             runtime_version: '20.9.0',
             version: 'unknown',
           },
-          start_time: 1719733144.79,
+          start_time: 1_719_733_144.79,
           trace_id: '1-371072df-6c811ec31d82d28caf5cddbc',
           type: 'subsegment',
         },
@@ -121,7 +131,7 @@ describe('xray.exporter test', () => {
               sdk_version: '1.25.1',
             },
           },
-          end_time: 1719733144.792175,
+          end_time: 1_719_733_144.792175,
           id: '3810ceb0646ec0c4',
           name: 'request handler - /axios',
           parent_id: '62aa77733a29b899',
@@ -131,7 +141,7 @@ describe('xray.exporter test', () => {
             runtime_version: '20.9.0',
             version: 'unknown',
           },
-          start_time: 1719733144.792,
+          start_time: 1_719_733_144.792,
           trace_id: '1-371072df-6c811ec31d82d28caf5cddbc',
           type: 'subsegment',
         },
@@ -143,7 +153,7 @@ describe('xray.exporter test', () => {
               sdk_version: '1.25.1',
             },
           },
-          end_time: 1719733144.7980335,
+          end_time: 1_719_733_144.7980335,
           id: '5983fc0be789dfb4',
           name: 'fs realpathSync',
           parent_id: '62aa77733a29b899',
@@ -153,7 +163,7 @@ describe('xray.exporter test', () => {
             runtime_version: '20.9.0',
             version: 'unknown',
           },
-          start_time: 1719733144.798,
+          start_time: 1_719_733_144.798,
           trace_id: '1-371072df-6c811ec31d82d28caf5cddbc',
           type: 'subsegment',
         },
@@ -165,10 +175,10 @@ describe('xray.exporter test', () => {
               sdk_version: '1.25.1',
             },
           },
-          end_time: 1719733145.1952214,
+          end_time: 1_719_733_145.1952214,
           http: {
             request: {
-              client_ip: '20.248.137.49',
+              client_ip: ips.clientIp,
               x_forwarded_for: true,
             },
           },
@@ -181,7 +191,7 @@ describe('xray.exporter test', () => {
             runtime_version: '20.9.0',
             version: 'unknown',
           },
-          start_time: 1719733144.827,
+          start_time: 1_719_733_144.827,
           trace_id: '1-371072df-6c811ec31d82d28caf5cddbc',
           type: 'subsegment',
         },
@@ -193,7 +203,7 @@ describe('xray.exporter test', () => {
               sdk_version: '1.25.1',
             },
           },
-          end_time: 1719733145.407536,
+          end_time: 1_719_733_145.407536,
           id: '59a9a738d9b789bb',
           name: 'tls.connect',
           parent_id: '980a464c5de12e44',
@@ -203,7 +213,7 @@ describe('xray.exporter test', () => {
             runtime_version: '20.9.0',
             version: 'unknown',
           },
-          start_time: 1719733144.827,
+          start_time: 1_719_733_144.827,
           trace_id: '1-371072df-6c811ec31d82d28caf5cddbc',
           type: 'subsegment',
         },
@@ -215,10 +225,10 @@ describe('xray.exporter test', () => {
               sdk_version: '1.25.1',
             },
           },
-          end_time: 1719733145.8978295,
+          end_time: 1_719_733_145.8978295,
           http: {
             request: {
-              client_ip: '20.248.137.49',
+              client_ip: ips.clientIp,
               method: 'GET',
               url: 'https://api.github.com/',
               x_forwarded_for: true,
@@ -237,7 +247,7 @@ describe('xray.exporter test', () => {
             runtime_version: '20.9.0',
             version: 'unknown',
           },
-          start_time: 1719733144.799,
+          start_time: 1_719_733_144.799,
           trace_id: '1-371072df-6c811ec31d82d28caf5cddbc',
           type: 'subsegment',
         },
@@ -249,7 +259,7 @@ describe('xray.exporter test', () => {
               sdk_version: '1.25.1',
             },
           },
-          end_time: 1719733145.9074056,
+          end_time: 1_719_733_145.9074056,
           http: {
             request: {
               client_ip: '::1',
@@ -272,7 +282,7 @@ describe('xray.exporter test', () => {
             runtime_version: '20.9.0',
             version: 'unknown',
           },
-          start_time: 1719733144.787,
+          start_time: 1_719_733_144.787,
           trace_id: '1-371072df-6c811ec31d82d28caf5cddbc',
         },
       ],
@@ -280,9 +290,10 @@ describe('xray.exporter test', () => {
   });
 
   test(`should export the span from 500`, async () => {
+    const spans = await WrappedReadableSpan.from('error.500.json');
     expect(
       await new Promise((resolve) => {
-        exporter.export(WrappedReadableSpan.from('error.500.json'), resolve);
+        exporter.export(spans, resolve);
       }),
     ).toEqual({ code: ExportResultCode.SUCCESS });
 
@@ -301,7 +312,7 @@ describe('xray.exporter test', () => {
               sdk_version: '1.25.1',
             },
           },
-          end_time: 1719764433.357114,
+          end_time: 1_719_764_433.357114,
           id: 'ddb35325923b5aa8',
           name: 'middleware - query',
           parent_id: '2d584e7814b156b1',
@@ -311,7 +322,7 @@ describe('xray.exporter test', () => {
             runtime_version: '20.9.0',
             version: 'unknown',
           },
-          start_time: 1719764433.357,
+          start_time: 1_719_764_433.357,
           trace_id: '1-1d7e1449-38d0f46254a972e21bcec6ef',
           type: 'subsegment',
         },
@@ -323,7 +334,7 @@ describe('xray.exporter test', () => {
               sdk_version: '1.25.1',
             },
           },
-          end_time: 1719764433.358084,
+          end_time: 1_719_764_433.358084,
           id: '1f6eb2a12f2a2144',
           name: 'middleware - expressInit',
           parent_id: '2d584e7814b156b1',
@@ -333,7 +344,7 @@ describe('xray.exporter test', () => {
             runtime_version: '20.9.0',
             version: 'unknown',
           },
-          start_time: 1719764433.358,
+          start_time: 1_719_764_433.358,
           trace_id: '1-1d7e1449-38d0f46254a972e21bcec6ef',
           type: 'subsegment',
         },
@@ -345,7 +356,7 @@ describe('xray.exporter test', () => {
               sdk_version: '1.25.1',
             },
           },
-          end_time: 1719764433.3610158,
+          end_time: 1_719_764_433.3610158,
           id: 'c39d2fe791f604fa',
           name: 'request handler - /error500',
           parent_id: '2d584e7814b156b1',
@@ -355,7 +366,7 @@ describe('xray.exporter test', () => {
             runtime_version: '20.9.0',
             version: 'unknown',
           },
-          start_time: 1719764433.361,
+          start_time: 1_719_764_433.361,
           trace_id: '1-1d7e1449-38d0f46254a972e21bcec6ef',
           type: 'subsegment',
         },
@@ -429,7 +440,7 @@ describe('xray.exporter test', () => {
               },
             ],
           },
-          end_time: 1719764433.3646984,
+          end_time: 1_719_764_433.3646984,
           fault: true,
           http: {
             request: {
@@ -453,7 +464,7 @@ describe('xray.exporter test', () => {
             runtime_version: '20.9.0',
             version: 'unknown',
           },
-          start_time: 1719764433.356,
+          start_time: 1_719_764_433.356,
           trace_id: '1-1d7e1449-38d0f46254a972e21bcec6ef',
         },
       ],
@@ -461,9 +472,10 @@ describe('xray.exporter test', () => {
   });
 
   test(`should export the span from 400`, async () => {
+    const spans = await WrappedReadableSpan.from('error.400.json');
     expect(
       await new Promise((resolve) => {
-        exporter.export(WrappedReadableSpan.from('error.400.json'), resolve);
+        exporter.export(spans, resolve);
       }),
     ).toEqual({ code: ExportResultCode.SUCCESS });
 
@@ -482,7 +494,7 @@ describe('xray.exporter test', () => {
               sdk_version: '1.25.1',
             },
           },
-          end_time: 1719764505.780089,
+          end_time: 1_719_764_505.780089,
           id: '2512e85d39a63929',
           name: 'middleware - query',
           parent_id: '8ece99b9bf5e9940',
@@ -492,7 +504,7 @@ describe('xray.exporter test', () => {
             runtime_version: '20.9.0',
             version: 'unknown',
           },
-          start_time: 1719764505.78,
+          start_time: 1_719_764_505.78,
           trace_id: '1-659f1ca8-f58c205e8386cc27886c69fc',
           type: 'subsegment',
         },
@@ -504,7 +516,7 @@ describe('xray.exporter test', () => {
               sdk_version: '1.25.1',
             },
           },
-          end_time: 1719764505.7810695,
+          end_time: 1_719_764_505.7810695,
           id: '2119767beef9ebec',
           name: 'middleware - expressInit',
           parent_id: '8ece99b9bf5e9940',
@@ -514,7 +526,7 @@ describe('xray.exporter test', () => {
             runtime_version: '20.9.0',
             version: 'unknown',
           },
-          start_time: 1719764505.781,
+          start_time: 1_719_764_505.781,
           trace_id: '1-659f1ca8-f58c205e8386cc27886c69fc',
           type: 'subsegment',
         },
@@ -526,7 +538,7 @@ describe('xray.exporter test', () => {
               sdk_version: '1.25.1',
             },
           },
-          end_time: 1719764505.7830122,
+          end_time: 1_719_764_505.7830122,
           id: '04c6519652781f70',
           name: 'request handler - /error400',
           parent_id: '8ece99b9bf5e9940',
@@ -536,7 +548,7 @@ describe('xray.exporter test', () => {
             runtime_version: '20.9.0',
             version: 'unknown',
           },
-          start_time: 1719764505.783,
+          start_time: 1_719_764_505.783,
           trace_id: '1-659f1ca8-f58c205e8386cc27886c69fc',
           type: 'subsegment',
         },
@@ -548,7 +560,7 @@ describe('xray.exporter test', () => {
               sdk_version: '1.25.1',
             },
           },
-          end_time: 1719764505.786133,
+          end_time: 1_719_764_505.786133,
           error: true,
           http: {
             request: {
@@ -572,7 +584,7 @@ describe('xray.exporter test', () => {
             runtime_version: '20.9.0',
             version: 'unknown',
           },
-          start_time: 1719764505.78,
+          start_time: 1_719_764_505.78,
           trace_id: '1-659f1ca8-f58c205e8386cc27886c69fc',
         },
       ],
@@ -580,12 +592,10 @@ describe('xray.exporter test', () => {
   });
 
   test(`should export the span from mysql`, async () => {
+    const spans = await WrappedReadableSpan.from('request.mysql.json');
     expect(
       await new Promise((resolve) => {
-        exporter.export(
-          WrappedReadableSpan.from('request.mysql.json'),
-          resolve,
-        );
+        exporter.export(spans, resolve);
       }),
     ).toEqual({ code: ExportResultCode.SUCCESS });
 
@@ -604,7 +614,7 @@ describe('xray.exporter test', () => {
               sdk_version: '1.25.1',
             },
           },
-          end_time: 1719893345.0843263,
+          end_time: 1_719_893_345.0843263,
           id: 'c466eed4aa0b9e58',
           name: 'middleware - query',
           parent_id: '8e06a34295824543',
@@ -614,7 +624,7 @@ describe('xray.exporter test', () => {
             runtime_version: '20.9.0',
             version: 'unknown',
           },
-          start_time: 1719893345.084,
+          start_time: 1_719_893_345.084,
           trace_id: '1-3c07164f-f5c3a4b8ec79f64b420826b7',
           type: 'subsegment',
         },
@@ -626,7 +636,7 @@ describe('xray.exporter test', () => {
               sdk_version: '1.25.1',
             },
           },
-          end_time: 1719893345.0872765,
+          end_time: 1_719_893_345.0872765,
           id: '45ef2c573b09e5a9',
           name: 'middleware - expressInit',
           parent_id: '8e06a34295824543',
@@ -636,7 +646,7 @@ describe('xray.exporter test', () => {
             runtime_version: '20.9.0',
             version: 'unknown',
           },
-          start_time: 1719893345.087,
+          start_time: 1_719_893_345.087,
           trace_id: '1-3c07164f-f5c3a4b8ec79f64b420826b7',
           type: 'subsegment',
         },
@@ -648,7 +658,7 @@ describe('xray.exporter test', () => {
               sdk_version: '1.25.1',
             },
           },
-          end_time: 1719893345.0910707,
+          end_time: 1_719_893_345.0910707,
           id: 'c85b216d62c83923',
           name: 'request handler - /count',
           parent_id: '8e06a34295824543',
@@ -658,7 +668,7 @@ describe('xray.exporter test', () => {
             runtime_version: '20.9.0',
             version: 'unknown',
           },
-          start_time: 1719893345.091,
+          start_time: 1_719_893_345.091,
           trace_id: '1-3c07164f-f5c3a4b8ec79f64b420826b7',
           type: 'subsegment',
         },
@@ -670,7 +680,7 @@ describe('xray.exporter test', () => {
               sdk_version: '1.25.1',
             },
           },
-          end_time: 1719893345.1056092,
+          end_time: 1_719_893_345.1056092,
           http: {
             request: {
               client_ip: '::1',
@@ -686,7 +696,7 @@ describe('xray.exporter test', () => {
             runtime_version: '20.9.0',
             version: 'unknown',
           },
-          start_time: 1719893345.096,
+          start_time: 1_719_893_345.096,
           trace_id: '1-3c07164f-f5c3a4b8ec79f64b420826b7',
           type: 'subsegment',
         },
@@ -698,7 +708,7 @@ describe('xray.exporter test', () => {
               sdk_version: '1.25.1',
             },
           },
-          end_time: 1719893345.1172202,
+          end_time: 1_719_893_345.1172202,
           id: '3d958e9dc4ce623e',
           name: 'SELECT',
           namespace: 'remote',
@@ -717,7 +727,7 @@ describe('xray.exporter test', () => {
             url: 'SELECT',
             user: 'your_user',
           },
-          start_time: 1719893345.115,
+          start_time: 1_719_893_345.115,
           trace_id: '1-3c07164f-f5c3a4b8ec79f64b420826b7',
           type: 'subsegment',
         },
@@ -729,7 +739,7 @@ describe('xray.exporter test', () => {
               sdk_version: '1.25.1',
             },
           },
-          end_time: 1719893345.1201043,
+          end_time: 1_719_893_345.1201043,
           http: {
             request: {
               client_ip: '::1',
@@ -752,7 +762,7 @@ describe('xray.exporter test', () => {
             runtime_version: '20.9.0',
             version: 'unknown',
           },
-          start_time: 1719893345.081,
+          start_time: 1_719_893_345.081,
           trace_id: '1-3c07164f-f5c3a4b8ec79f64b420826b7',
         },
       ],

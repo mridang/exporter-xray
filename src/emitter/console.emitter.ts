@@ -1,3 +1,8 @@
+/**
+ * Writes X-Ray trace segments to the console as formatted JSON.
+ * @file
+ */
+
 import { SegmentEmitter } from './segment.emitter.js';
 import { XrayTraceDataSegmentDocument } from '../xray.document.js';
 
