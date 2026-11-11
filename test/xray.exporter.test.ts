@@ -16,9 +16,11 @@ jest.unstable_mockModule('@aws-sdk/client-xray', () => {
   return {
     XRayClient: jest.fn().mockImplementation(() => {
       return {
-        send: jest.fn().mockResolvedValue({
-          UnprocessedTraceSegments: [],
-        }),
+        send: jest
+          .fn<() => Promise<{ UnprocessedTraceSegments: string[] }>>()
+          .mockResolvedValue({
+            UnprocessedTraceSegments: [],
+          }),
         destroy: jest.fn(),
       };
     }),
@@ -38,8 +40,12 @@ const {
   SDKBasedSegmentEmitter,
 } = await import('../src');
 
+type SentCommand = { input: { TraceSegmentDocuments?: string[] } };
+
 type MockXRayClient = InstanceType<typeof XRayClient> & {
-  send: jest.Mock;
+  send: jest.Mock<
+    (command: SentCommand) => Promise<{ UnprocessedTraceSegments: string[] }>
+  >;
   destroy: jest.Mock;
 };
 
@@ -72,10 +78,10 @@ describe('xray.exporter test', () => {
       }),
     ).toEqual({ code: ExportResultCode.SUCCESS });
 
-    const commandArg = (mockXRayClient.send as jest.Mock).mock.calls[0][0];
+    const commandArg = mockXRayClient.send.mock.calls[0][0];
     expect({
-      documents: (commandArg.input.TraceSegmentDocuments as string[])?.map(
-        (json) => JSON.parse(json),
+      documents: commandArg.input.TraceSegmentDocuments?.map((json) =>
+        JSON.parse(json),
       ),
     }).toEqual({
       documents: [
@@ -297,10 +303,10 @@ describe('xray.exporter test', () => {
       }),
     ).toEqual({ code: ExportResultCode.SUCCESS });
 
-    const commandArg = (mockXRayClient.send as jest.Mock).mock.calls[0][0];
+    const commandArg = mockXRayClient.send.mock.calls[0][0];
     expect({
-      documents: (commandArg.input.TraceSegmentDocuments as string[])?.map(
-        (json) => JSON.parse(json),
+      documents: commandArg.input.TraceSegmentDocuments?.map((json) =>
+        JSON.parse(json),
       ),
     }).toEqual({
       documents: [
@@ -479,10 +485,10 @@ describe('xray.exporter test', () => {
       }),
     ).toEqual({ code: ExportResultCode.SUCCESS });
 
-    const commandArg = (mockXRayClient.send as jest.Mock).mock.calls[0][0];
+    const commandArg = mockXRayClient.send.mock.calls[0][0];
     expect({
-      documents: (commandArg.input.TraceSegmentDocuments as string[])?.map(
-        (json) => JSON.parse(json),
+      documents: commandArg.input.TraceSegmentDocuments?.map((json) =>
+        JSON.parse(json),
       ),
     }).toEqual({
       documents: [
@@ -599,10 +605,10 @@ describe('xray.exporter test', () => {
       }),
     ).toEqual({ code: ExportResultCode.SUCCESS });
 
-    const commandArg = (mockXRayClient.send as jest.Mock).mock.calls[0][0];
+    const commandArg = mockXRayClient.send.mock.calls[0][0];
     expect({
-      documents: (commandArg.input.TraceSegmentDocuments as string[])?.map(
-        (json) => JSON.parse(json),
+      documents: commandArg.input.TraceSegmentDocuments?.map((json) =>
+        JSON.parse(json),
       ),
     }).toEqual({
       documents: [
