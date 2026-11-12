@@ -1,6 +1,6 @@
 name: Format Code (Prettify)
 
-on: push
+on: pull_request
 
 permissions:
   contents: read
