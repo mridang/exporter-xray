@@ -12,6 +12,7 @@
     "outDir": "dist",
     "rootDir": "./src",
     "typeRoots": ["./node_modules/@types", "./types"],
+    "types": ["node"],
     "declaration": true,
     "isolatedModules": true
   },
