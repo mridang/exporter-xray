@@ -11,6 +11,7 @@ import {
   SpanContext,
   SpanKind,
   SpanStatus,
+  TraceFlags,
 } from '@opentelemetry/api';
 import { IResource } from '@opentelemetry/resources';
 import { InstrumentationScope } from '@opentelemetry/core/build/src/common/types';
@@ -41,7 +42,7 @@ interface SpanData {
 export class WrappedReadableSpan implements ReadableSpan {
   readonly name: string;
   readonly kind: SpanKind;
-  readonly parentSpanId?: string;
+  readonly parentSpanContext?: SpanContext;
   readonly startTime: HrTime;
   readonly endTime: HrTime;
   readonly status: SpanStatus;
@@ -60,7 +61,14 @@ export class WrappedReadableSpan implements ReadableSpan {
   constructor(private readonly spanData: SpanData) {
     this.name = spanData.name;
     this.kind = spanData.kind;
-    this.parentSpanId = spanData.parentId;
+    this.parentSpanContext =
+      spanData.parentId === undefined
+        ? undefined
+        : {
+            traceId: spanData.traceId,
+            spanId: spanData.parentId,
+            traceFlags: TraceFlags.SAMPLED,
+          };
     this.status = spanData.status;
     this.attributes = spanData.attributes;
     this.links = spanData.links;
