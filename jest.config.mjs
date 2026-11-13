@@ -1,8 +1,3 @@
-/**
- * Jest configuration for running the TypeScript test suite.
- * @file
- */
-
 export default {
   preset: 'ts-jest/presets/default-esm',
   transform: {
@@ -10,7 +5,7 @@ export default {
       'ts-jest',
       {
         useESM: true,
-        tsconfig: 'tsconfig.jest.json',
+        tsconfig: '<rootDir>/tsconfig.jest.json',
       },
     ],
   },
@@ -30,7 +25,7 @@ export default {
     '/node_modules/',
     '/frontend/',
     '/dist/',
-    '/packages/',
+    '<rootDir>/packages/',
   ],
   resetModules: false,
   globalSetup: './test/setup.ts',
@@ -44,6 +39,8 @@ export default {
   extensionsToTreatAsEsm: ['.ts', '.tsx', '.mts'],
   moduleNameMapper: {
     '^(\\.{1,2}/.*)\\.js$': '$1',
+    // The app's `@/` alias for src/, so components and pages can be tested.
+    '^@/(.*)$': '<rootDir>/src/$1',
   },
   reporters: [
     'default',
