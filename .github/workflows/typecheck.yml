@@ -1,0 +1,34 @@
+name: Typecheck Code (TSC)
+
+on: pull_request
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: ./
+
+jobs:
+  check-types:
+    name: Check types
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Runner Common Setup
+        uses: mridang/action-runner-common@v1
+
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          cache: 'npm'
+          node-version-file: '.nvmrc'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run type check
+        run: npm run typecheck
