@@ -11,7 +11,8 @@
     "prepack": "tsc",
     "test": "jest --verbose --config=jest.config.mjs",
     "test:debug": "jest --verbose --config=jest.config.mjs --detectOpenHandles",
-    "test:watch": "npm run test -- --watch"
+    "test:watch": "npm run test -- --watch",
+    "typecheck": "tsc --noEmit"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
