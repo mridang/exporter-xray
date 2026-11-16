@@ -3,7 +3,7 @@
  * @file
  */
 
-import { XrayTraceDataSegmentDocument } from './xray.document.js';
+import type { XrayTraceDataSegmentDocument } from './xray.document.js';
 
 export interface TraceFilter {
   doFilter(span: XrayTraceDataSegmentDocument): boolean;

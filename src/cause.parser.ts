@@ -2,8 +2,8 @@
  * Extracts the error cause, including exception details, from OpenTelemetry span events.
  * @file
  */
-import { Cause } from './xray.document.js';
-import { ReadableSpan } from '@opentelemetry/sdk-trace-base';
+import type { Cause } from './xray.document.js';
+import type { ReadableSpan } from '@opentelemetry/sdk-trace-base';
 import { randomBytes } from 'node:crypto';
 import { toText, undef } from './utility.js';
 import {

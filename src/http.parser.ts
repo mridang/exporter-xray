@@ -2,8 +2,9 @@
  * Extracts HTTP request and response details from OpenTelemetry spans.
  * @file
  */
-import { Attributes, SpanKind } from '@opentelemetry/api';
-import { ReadableSpan } from '@opentelemetry/sdk-trace-base';
+import type { Attributes } from '@opentelemetry/api';
+import { SpanKind } from '@opentelemetry/api';
+import type { ReadableSpan } from '@opentelemetry/sdk-trace-base';
 import {
   SEMATTRS_HTTP_CLIENT_IP,
   SEMATTRS_HTTP_HOST,
@@ -22,7 +23,7 @@ import {
   SEMATTRS_NET_PEER_NAME,
   SEMATTRS_NET_PEER_PORT,
 } from '@opentelemetry/semantic-conventions';
-import { HTTP } from './xray.document.js';
+import type { HTTP } from './xray.document.js';
 import { ip, toNumber, toText } from './utility.js';
 
 /**

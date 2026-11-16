@@ -2,8 +2,8 @@
  * Sends X-Ray trace segments to the X-Ray daemon over UDP.
  * @file
  */
-import { SegmentEmitter } from './segment.emitter.js';
-import { XrayTraceDataSegmentDocument } from '../xray.document.js';
+import type { SegmentEmitter } from './segment.emitter.js';
+import type { XrayTraceDataSegmentDocument } from '../xray.document.js';
 import { createSocket } from 'node:dgram';
 
 /**
@@ -37,7 +37,7 @@ export interface DaemonSocket {
  * {@link https://docs.aws.amazon.com/xray/latest/devguide/xray-daemon.html AWS X-Ray Daemon documentation}.
  */
 export class UDPDaemonSegmentEmitter implements SegmentEmitter {
-  private daemonConfig = {
+  private readonly daemonConfig = {
     udp_ip: '127.0.0.1',
     udp_port: 2000,
   };
@@ -132,8 +132,8 @@ export class UDPDaemonSegmentEmitter implements SegmentEmitter {
         [part2[0], part2],
       ];
       const addrMap: { [key: string]: string[] } = Object.fromEntries(entries);
-      this.daemonConfig.udp_ip = addrMap['udp'][1];
-      this.daemonConfig.udp_port = Number.parseInt(addrMap['udp'][2]);
+      this.daemonConfig.udp_ip = addrMap.udp[1];
+      this.daemonConfig.udp_port = Number.parseInt(addrMap.udp[2]);
     } else {
       // Any other format leaves the default daemon address in place.
     }

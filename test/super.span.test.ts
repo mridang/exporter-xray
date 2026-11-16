@@ -3,9 +3,9 @@
  * @file
  */
 
-import { ReadableSpan } from '@opentelemetry/sdk-trace-base';
+import type { ReadableSpan } from '@opentelemetry/sdk-trace-base';
 import { SEMATTRS_ENDUSER_ID } from '@opentelemetry/semantic-conventions';
-import { EnhancedReadableSpan } from '../src';
+import { EnhancedReadableSpan } from '../src/index.js';
 
 describe('super.span test', () => {
   describe('isThrottled', () => {

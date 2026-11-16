@@ -3,13 +3,13 @@
  * @file
  */
 
-import { ReadableSpan } from '@opentelemetry/sdk-trace-base';
+import type { ReadableSpan } from '@opentelemetry/sdk-trace-base';
 import {
   SEMATTRS_EXCEPTION_MESSAGE,
   SEMATTRS_EXCEPTION_STACKTRACE,
   SEMATTRS_EXCEPTION_TYPE,
 } from '@opentelemetry/semantic-conventions';
-import { DefaultCauseParser } from '../src';
+import { DefaultCauseParser } from '../src/index.js';
 
 /** Matches a 16-character lowercase hexadecimal identifier. */
 const HEX_ID_PATTERN = /^[0-9a-f]{16}$/;
@@ -50,17 +50,17 @@ describe('cause.parser test', () => {
     expect(causeParser.getCause(span)).toEqual({
       exceptions: [
         {
-          id: expect.stringMatching(HEX_ID_PATTERN),
+          id: expect.stringMatching(HEX_ID_PATTERN) as unknown,
           type: 'Error',
           message: 'An error occurred',
           remote: true,
           stack: expect.arrayContaining([
             expect.objectContaining({
-              label: expect.any(String),
-              path: expect.any(String),
-              line: expect.any(Number),
+              label: expect.any(String) as unknown,
+              path: expect.any(String) as unknown,
+              line: expect.any(Number) as unknown,
             }),
-          ]),
+          ]) as unknown,
         },
       ],
     });
@@ -92,24 +92,24 @@ describe('cause.parser test', () => {
     expect(causeParser.getCause(span)).toEqual({
       exceptions: [
         {
-          id: expect.stringMatching(HEX_ID_PATTERN),
+          id: expect.stringMatching(HEX_ID_PATTERN) as unknown,
           type: 'Error',
           message: 'First error',
           remote: true,
-          stack: expect.any(Array),
+          stack: expect.any(Array) as unknown,
         },
         {
-          id: expect.stringMatching(HEX_ID_PATTERN),
+          id: expect.stringMatching(HEX_ID_PATTERN) as unknown,
           type: 'TypeError',
           message: 'Second error',
           remote: true,
           stack: expect.arrayContaining([
             expect.objectContaining({
-              label: expect.any(String),
-              path: expect.any(String),
-              line: expect.any(Number),
+              label: expect.any(String) as unknown,
+              path: expect.any(String) as unknown,
+              line: expect.any(Number) as unknown,
             }),
-          ]),
+          ]) as unknown,
         },
       ],
     });

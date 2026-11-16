@@ -29,6 +29,7 @@ export function hrt(timestamp: [number, number]): number {
  * ```
  */
 export function toText(aValue: unknown): string | undefined {
+  // eslint-disable-next-line @typescript-eslint/no-base-to-string -- toText is exported as str and takes unknown, but its callers pass attribute values, which are primitives or arrays with their own string form
   return aValue ? aValue?.toString() : undefined;
 }
 

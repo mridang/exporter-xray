@@ -6,7 +6,7 @@
 import { jest } from '@jest/globals';
 import { ExportResultCode } from '@opentelemetry/core';
 import { readFile } from 'node:fs/promises';
-import { WrappedReadableSpan } from './test.span';
+import { WrappedReadableSpan } from './test.span.js';
 
 const ips = JSON.parse(
   await readFile(new URL('fixtures/ips.json', import.meta.url), 'utf8'),
@@ -31,14 +31,14 @@ jest.unstable_mockModule('@aws-sdk/client-xray', () => {
 });
 
 const { XRayClient } = await import('@aws-sdk/client-xray');
-const { default: XraySpanExporter } = await import('../src/xray.exporter');
+const { default: XraySpanExporter } = await import('../src/xray.exporter.js');
 const {
   DefaultIdParser,
   DefaultCauseParser,
   DefaultHttpParser,
   DefaultNameParser,
   SDKBasedSegmentEmitter,
-} = await import('../src');
+} = await import('../src/index.js');
 
 type SentCommand = { input: { TraceSegmentDocuments?: string[] } };
 
@@ -80,7 +80,7 @@ describe('xray.exporter test', () => {
 
     const commandArg = mockXRayClient.send.mock.calls[0][0];
     expect({
-      documents: commandArg.input.TraceSegmentDocuments?.map((json) =>
+      documents: commandArg.input.TraceSegmentDocuments?.map((json): unknown =>
         JSON.parse(json),
       ),
     }).toEqual({
@@ -305,7 +305,7 @@ describe('xray.exporter test', () => {
 
     const commandArg = mockXRayClient.send.mock.calls[0][0];
     expect({
-      documents: commandArg.input.TraceSegmentDocuments?.map((json) =>
+      documents: commandArg.input.TraceSegmentDocuments?.map((json): unknown =>
         JSON.parse(json),
       ),
     }).toEqual({
@@ -487,7 +487,7 @@ describe('xray.exporter test', () => {
 
     const commandArg = mockXRayClient.send.mock.calls[0][0];
     expect({
-      documents: commandArg.input.TraceSegmentDocuments?.map((json) =>
+      documents: commandArg.input.TraceSegmentDocuments?.map((json): unknown =>
         JSON.parse(json),
       ),
     }).toEqual({
@@ -607,7 +607,7 @@ describe('xray.exporter test', () => {
 
     const commandArg = mockXRayClient.send.mock.calls[0][0];
     expect({
-      documents: commandArg.input.TraceSegmentDocuments?.map((json) =>
+      documents: commandArg.input.TraceSegmentDocuments?.map((json): unknown =>
         JSON.parse(json),
       ),
     }).toEqual({

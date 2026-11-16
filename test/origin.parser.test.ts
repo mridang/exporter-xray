@@ -13,8 +13,8 @@ import {
   CLOUDPLATFORMVALUES_AWS_ECS,
   CLOUDPLATFORMVALUES_AWS_EC2,
 } from '@opentelemetry/semantic-conventions';
-import { DefaultOriginParser } from '../src';
-import { ReadableSpan } from '@opentelemetry/sdk-trace-base';
+import { DefaultOriginParser } from '../src/index.js';
+import type { ReadableSpan } from '@opentelemetry/sdk-trace-base';
 
 describe('origin.parser test', () => {
   let parser: DefaultOriginParser;

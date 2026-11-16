@@ -9,6 +9,7 @@
     "sourceMap": true,
     "declaration": false,
     "noEmit": true,
+    "types": ["jest", "node"],
     "rootDir": "."
   },
   "include": ["**/*"],

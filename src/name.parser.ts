@@ -2,8 +2,9 @@
  * Derives the AWS X-Ray segment name from the attributes of an OpenTelemetry span.
  * @file
  */
-import { ReadableSpan } from '@opentelemetry/sdk-trace-base';
-import { Attributes, SpanKind } from '@opentelemetry/api';
+import type { ReadableSpan } from '@opentelemetry/sdk-trace-base';
+import type { Attributes } from '@opentelemetry/api';
+import { SpanKind } from '@opentelemetry/api';
 import {
   SEMATTRS_DB_CONNECTION_STRING,
   SEMATTRS_DB_NAME,

@@ -3,7 +3,7 @@
  * @file
  */
 
-import { XrayTraceDataSegmentDocument } from '../xray.document.js';
+import type { XrayTraceDataSegmentDocument } from '../xray.document.js';
 
 export interface SegmentEmitter {
   emit(trace: XrayTraceDataSegmentDocument[]): Promise<void>;

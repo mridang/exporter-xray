@@ -5,30 +5,29 @@
 
 import { jest } from '@jest/globals';
 import type { Socket } from 'node:dgram';
-import type { DaemonSocket } from '../../src/emitter/udp.emitter';
-import type { XrayTraceDataSegmentDocument } from '../../src';
+import type { DaemonSocket } from '../../src/emitter/udp.emitter.js';
+import type { XrayTraceDataSegmentDocument } from '../../src/index.js';
 
 let mockSocket: DaemonSocket & Pick<Socket, 'unref'>;
 const createSocketMock = jest.fn(() => mockSocket);
+const mockSend = jest.fn<DaemonSocket['send']>(
+  (_msg, _offset, _length, _port, _address, onSent) => {
+    onSent(null); // Simulate successful send
+  },
+);
+const mockClose = jest.fn<DaemonSocket['close']>();
+const mockUnref = jest.fn<Socket['unref']>();
 
 jest.unstable_mockModule('node:dgram', () => ({
   createSocket: createSocketMock,
 }));
 
 const dgramMocked = await import('node:dgram');
-const { UDPDaemonSegmentEmitter } = await import('../../src');
+const { UDPDaemonSegmentEmitter } = await import('../../src/index.js');
 
 describe('udp.emitter test', () => {
   beforeEach(() => {
-    mockSocket = {
-      send: jest.fn<DaemonSocket['send']>(
-        (_msg, _offset, _length, _port, _address, onSent) => {
-          onSent(null); // Simulate successful send
-        },
-      ),
-      close: jest.fn<DaemonSocket['close']>(),
-      unref: jest.fn<Socket['unref']>(),
-    };
+    mockSocket = { send: mockSend, close: mockClose, unref: mockUnref };
 
     createSocketMock.mockClear();
     createSocketMock.mockReturnValue(mockSocket);
@@ -44,7 +43,7 @@ describe('udp.emitter test', () => {
     const emitter = new UDPDaemonSegmentEmitter(mockSocket);
     expect(emitter).toBeInstanceOf(UDPDaemonSegmentEmitter);
     expect(dgramMocked.createSocket).not.toHaveBeenCalled();
-    expect(mockSocket.unref).not.toHaveBeenCalled();
+    expect(mockUnref).not.toHaveBeenCalled();
   });
 
   it('should throw an error for invalid daemon address', () => {
@@ -59,15 +58,15 @@ describe('udp.emitter test', () => {
     const emitter = new UDPDaemonSegmentEmitter(mockSocket);
     expect(emitter).toBeInstanceOf(UDPDaemonSegmentEmitter);
     expect(dgramMocked.createSocket).not.toHaveBeenCalled();
-    expect(mockSocket.unref).not.toHaveBeenCalled();
+    expect(mockUnref).not.toHaveBeenCalled();
   });
 
   it('should close the socket on shutdown', () => {
     process.env.AWS_XRAY_DAEMON_ADDRESS = '127.0.0.1:3000';
     const emitter = new UDPDaemonSegmentEmitter(mockSocket);
     emitter.shutdown();
-    expect(mockSocket.unref).not.toHaveBeenCalled();
-    expect(mockSocket.close).toHaveBeenCalled();
+    expect(mockUnref).not.toHaveBeenCalled();
+    expect(mockClose).toHaveBeenCalled();
   });
 
   it('should emit trace data segments via UDP', async () => {
@@ -78,16 +77,13 @@ describe('udp.emitter test', () => {
 
     await emitter.emit(trace);
 
-    expect(mockSocket.send).toHaveBeenCalled();
-    const {
-      0: message,
-      3: port,
-      4: address,
-    } = jest.mocked(mockSocket.send).mock.calls[0];
+    expect(mockSend).toHaveBeenCalled();
+    const { 0: message, 3: port, 4: address } = mockSend.mock.calls[0];
     expect(port).toBe(2000);
     expect(address).toBe('127.0.0.1');
-    expect(JSON.parse(message.toString().split('\n', 2)[1]).name).toBe(
-      'test-segment',
-    );
+    expect(
+      (JSON.parse(message.toString().split('\n', 2)[1]) as { name: string })
+        .name,
+    ).toBe('test-segment');
   });
 });

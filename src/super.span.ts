@@ -2,8 +2,9 @@
  * Exposes OpenTelemetry span data in the shape AWS X-Ray expects.
  * @file
  */
-import { AttributeValue, SpanKind, SpanStatusCode } from '@opentelemetry/api';
-import { ReadableSpan } from '@opentelemetry/sdk-trace-base';
+import type { AttributeValue } from '@opentelemetry/api';
+import { SpanKind, SpanStatusCode } from '@opentelemetry/api';
+import type { ReadableSpan } from '@opentelemetry/sdk-trace-base';
 import {
   CLOUDPLATFORMVALUES_AWS_EC2,
   CLOUDPLATFORMVALUES_AWS_ECS,
@@ -47,7 +48,7 @@ import {
   SEMRESATTRS_TELEMETRY_SDK_LANGUAGE,
   SEMRESATTRS_TELEMETRY_SDK_VERSION,
 } from '@opentelemetry/semantic-conventions';
-import { CauseParser } from './cause.parser.js';
+import type { CauseParser } from './cause.parser.js';
 import {
   XSEMATTRS_AWS_ACCOUNT,
   XSEMATTRS_AWS_BUCKET_KEY,
@@ -63,12 +64,20 @@ import {
   XSEMATTRS_AWS_TABLE_NAME_2,
   XSEMATTRS_AWS_XREQUEST_ID,
 } from './constants.js';
-import { HttpParser } from './http.parser.js';
-import { IdParser } from './id.parser.js';
-import { NameParser } from './name.parser.js';
-import { OriginParser } from './origin.parser.js';
+import type { HttpParser } from './http.parser.js';
+import type { IdParser } from './id.parser.js';
+import type { NameParser } from './name.parser.js';
+import type { OriginParser } from './origin.parser.js';
 import { hrt, toText, undef } from './utility.js';
-import { AWS, Cause, HTTP, Link, Log, Service, SQL } from './xray.document.js';
+import type {
+  AWS,
+  Cause,
+  HTTP,
+  Link,
+  Log,
+  Service,
+  SQL,
+} from './xray.document.js';
 
 export class EnhancedReadableSpan {
   private readonly DBS = [
@@ -326,7 +335,7 @@ export class EnhancedReadableSpan {
     )
       ? {
           url: this.span.name,
-          connection_string: `${this.span.attributes[SEMATTRS_DB_CONNECTION_STRING] || 'localhost'}/${this.span.attributes[SEMATTRS_DB_NAME] || ''}`,
+          connection_string: `${String(this.span.attributes[SEMATTRS_DB_CONNECTION_STRING] || 'localhost')}/${String(this.span.attributes[SEMATTRS_DB_NAME] || '')}`,
           database_type: toText(this.span.attributes[SEMATTRS_DB_SYSTEM]),
           user: toText(this.span.attributes[SEMATTRS_DB_USER]),
           sanitized_query: toText(this.span.attributes[SEMATTRS_DB_STATEMENT]),
