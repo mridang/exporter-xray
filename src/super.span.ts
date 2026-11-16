@@ -67,7 +67,7 @@ import { HttpParser } from './http.parser.js';
 import { IdParser } from './id.parser.js';
 import { NameParser } from './name.parser.js';
 import { OriginParser } from './origin.parser.js';
-import { hrt, str, undef } from './util.js';
+import { hrt, toText, undef } from './utility.js';
 import { AWS, Cause, HTTP, Link, Log, Service, SQL } from './xray.document.js';
 
 export class EnhancedReadableSpan {
@@ -106,7 +106,7 @@ export class EnhancedReadableSpan {
    * ```
    */
   public getNamespace(): 'aws' | 'remote' | undefined {
-    if (str(this.span.attributes[SEMATTRS_RPC_SYSTEM]) === 'aws-api') {
+    if (toText(this.span.attributes[SEMATTRS_RPC_SYSTEM]) === 'aws-api') {
       return 'aws';
     } else if (this.span.attributes[XSEMATTRS_AWS_SERVICE]) {
       return 'aws';
@@ -182,18 +182,21 @@ export class EnhancedReadableSpan {
   public getService(): Service {
     return {
       version:
-        str(this.span.resource.attributes[SEMRESATTRS_SERVICE_VERSION]) ||
-        str(this.span.resource.attributes[SEMRESATTRS_CONTAINER_IMAGE_TAG]) ||
+        toText(this.span.resource.attributes[SEMRESATTRS_SERVICE_VERSION]) ||
+        toText(
+          this.span.resource.attributes[SEMRESATTRS_CONTAINER_IMAGE_TAG],
+        ) ||
         'unknown',
       runtime:
-        str(this.span.resource.attributes[SEMRESATTRS_PROCESS_RUNTIME_NAME]) ||
-        'unknown',
+        toText(
+          this.span.resource.attributes[SEMRESATTRS_PROCESS_RUNTIME_NAME],
+        ) || 'unknown',
       runtime_version:
-        str(
+        toText(
           this.span.resource.attributes[SEMRESATTRS_PROCESS_RUNTIME_VERSION],
         ) || 'unknown',
       name:
-        str(this.span.resource.attributes[SEMRESATTRS_SERVICE_NAME]) ||
+        toText(this.span.resource.attributes[SEMRESATTRS_SERVICE_NAME]) ||
         'unknown',
     };
   }
@@ -300,7 +303,7 @@ export class EnhancedReadableSpan {
   }
 
   public getUser(): string | undefined {
-    return str(this.span.attributes[SEMATTRS_ENDUSER_ID]);
+    return toText(this.span.attributes[SEMATTRS_ENDUSER_ID]);
   }
 
   public getHttp(httpParser: HttpParser): HTTP | undefined {
@@ -319,39 +322,39 @@ export class EnhancedReadableSpan {
    */
   public getSql(): SQL | undefined {
     return this.DBS.includes(
-      str(this.span.attributes[SEMATTRS_DB_SYSTEM]) || '',
+      toText(this.span.attributes[SEMATTRS_DB_SYSTEM]) || '',
     )
       ? {
           url: this.span.name,
           connection_string: `${this.span.attributes[SEMATTRS_DB_CONNECTION_STRING] || 'localhost'}/${this.span.attributes[SEMATTRS_DB_NAME] || ''}`,
-          database_type: str(this.span.attributes[SEMATTRS_DB_SYSTEM]),
-          user: str(this.span.attributes[SEMATTRS_DB_USER]),
-          sanitized_query: str(this.span.attributes[SEMATTRS_DB_STATEMENT]),
+          database_type: toText(this.span.attributes[SEMATTRS_DB_SYSTEM]),
+          user: toText(this.span.attributes[SEMATTRS_DB_USER]),
+          sanitized_query: toText(this.span.attributes[SEMATTRS_DB_STATEMENT]),
         }
       : undefined;
   }
 
   public getAWS(): AWS {
     return {
-      account_id: str(this.span.attributes[XSEMATTRS_AWS_ACCOUNT]),
-      operation: str(
+      account_id: toText(this.span.attributes[XSEMATTRS_AWS_ACCOUNT]),
+      operation: toText(
         this.span.attributes[XSEMATTRS_AWS_OPERATION] ||
           this.span.attributes[SEMATTRS_RPC_METHOD],
       ),
-      region: str(this.span.attributes[XSEMATTRS_AWS_REGION]),
-      request_id: str(
+      region: toText(this.span.attributes[XSEMATTRS_AWS_REGION]),
+      request_id: toText(
         this.span.attributes[XSEMATTRS_AWS_REQUEST_ID] ||
           this.span.attributes[XSEMATTRS_AWS_REQUEST_ID_2],
       ),
-      id_2: str(this.span.attributes[XSEMATTRS_AWS_XREQUEST_ID]),
-      queue_url: str(
+      id_2: toText(this.span.attributes[XSEMATTRS_AWS_XREQUEST_ID]),
+      queue_url: toText(
         this.span.attributes[SEMATTRS_MESSAGING_URL] ||
           this.span.attributes[XSEMATTRS_AWS_QUEUE_URL] ||
           this.span.attributes[XSEMATTRS_AWS_QUEUE_URL_2],
       ),
-      message_id: str(this.span.attributes[SEMATTRS_MESSAGING_MESSAGE_ID]),
-      bucket_name: str(this.span.attributes[XSEMATTRS_AWS_BUCKET_NAME]),
-      key: str(this.span.attributes[XSEMATTRS_AWS_BUCKET_KEY]),
+      message_id: toText(this.span.attributes[SEMATTRS_MESSAGING_MESSAGE_ID]),
+      bucket_name: toText(this.span.attributes[XSEMATTRS_AWS_BUCKET_NAME]),
+      key: toText(this.span.attributes[XSEMATTRS_AWS_BUCKET_KEY]),
       table_name: Array.isArray(
         this.span.attributes[SEMATTRS_AWS_DYNAMODB_TABLE_NAMES],
       )
@@ -359,8 +362,8 @@ export class EnhancedReadableSpan {
             this.span.attributes[SEMATTRS_AWS_DYNAMODB_TABLE_NAMES] as (
               string | undefined
             )[]
-          ).find((val) => typeof val === 'string')
-        : str(
+          ).find((value) => typeof value === 'string')
+        : toText(
             this.span.attributes[XSEMATTRS_AWS_TABLE_NAME] ||
               this.span.attributes[XSEMATTRS_AWS_TABLE_NAME_2],
           ),
@@ -379,13 +382,15 @@ export class EnhancedReadableSpan {
       }),
       xray: {
         sdk:
-          str(
+          toText(
             this.span.resource.attributes[SEMRESATTRS_TELEMETRY_SDK_LANGUAGE] ||
               '?',
           ) +
           '/' +
-          str(this.span.resource.attributes[SEMRESATTRS_TELEMETRY_SDK_VERSION]),
-        sdk_version: str(
+          toText(
+            this.span.resource.attributes[SEMRESATTRS_TELEMETRY_SDK_VERSION],
+          ),
+        sdk_version: toText(
           this.span.resource.attributes[SEMRESATTRS_TELEMETRY_SDK_VERSION],
         ),
         auto_instrumentation:
@@ -396,13 +401,15 @@ export class EnhancedReadableSpan {
         this.span.resource.attributes[SEMRESATTRS_CLOUD_PLATFORM] ===
         CLOUDPLATFORMVALUES_AWS_EKS
           ? {
-              container_id: str(
+              container_id: toText(
                 this.span.resource.attributes[SEMRESATTRS_CONTAINER_ID],
               ),
-              cluster_name: str(
+              cluster_name: toText(
                 this.span.resource.attributes[SEMRESATTRS_K8S_CLUSTER_NAME],
               ),
-              pod: str(this.span.resource.attributes[SEMRESATTRS_K8S_POD_NAME]),
+              pod: toText(
+                this.span.resource.attributes[SEMRESATTRS_K8S_POD_NAME],
+              ),
             }
           : undefined,
       elastic_beanstalk:
@@ -411,7 +418,7 @@ export class EnhancedReadableSpan {
         this.span.resource.attributes[SEMRESATTRS_SERVICE_INSTANCE_ID] !==
           undefined
           ? {
-              environment: str(
+              environment: toText(
                 this.span.resource.attributes[
                   SEMRESATTRS_DEPLOYMENT_ENVIRONMENT
                 ],
@@ -421,7 +428,7 @@ export class EnhancedReadableSpan {
                   SEMRESATTRS_SERVICE_INSTANCE_ID
                 ] || '0',
               ),
-              version_label: str(
+              version_label: toText(
                 this.span.resource.attributes[SEMRESATTRS_SERVICE_VERSION],
               ),
             }
@@ -430,32 +437,32 @@ export class EnhancedReadableSpan {
         this.span.resource.attributes[SEMRESATTRS_CLOUD_PLATFORM] ===
         CLOUDPLATFORMVALUES_AWS_ECS
           ? {
-              container_name: str(
+              container_name: toText(
                 this.span.resource.attributes[SEMRESATTRS_CONTAINER_NAME],
               ),
-              container_id: str(
+              container_id: toText(
                 this.span.resource.attributes[SEMRESATTRS_CONTAINER_ID],
               ),
-              availability_zone: str(
+              availability_zone: toText(
                 this.span.resource.attributes[
                   SEMRESATTRS_CLOUD_AVAILABILITY_ZONE
                 ],
               ),
-              container_arn: str(
+              container_arn: toText(
                 this.span.resource.attributes[
                   SEMRESATTRS_AWS_ECS_CONTAINER_ARN
                 ],
               ),
-              cluster_arn: str(
+              cluster_arn: toText(
                 this.span.resource.attributes[SEMRESATTRS_AWS_ECS_CLUSTER_ARN],
               ),
-              task_arn: str(
+              task_arn: toText(
                 this.span.resource.attributes[SEMRESATTRS_AWS_ECS_TASK_ARN],
               ),
-              task_family: str(
+              task_family: toText(
                 this.span.resource.attributes[SEMRESATTRS_AWS_ECS_TASK_FAMILY],
               ),
-              launch_type: str(
+              launch_type: toText(
                 this.span.resource.attributes[SEMRESATTRS_AWS_ECS_LAUNCHTYPE],
               ),
             }
@@ -465,18 +472,18 @@ export class EnhancedReadableSpan {
           CLOUDPLATFORMVALUES_AWS_EC2 ||
         this.span.resource.attributes[SEMRESATTRS_HOST_ID] !== undefined
           ? {
-              instance_id: str(
+              instance_id: toText(
                 this.span.resource.attributes[SEMRESATTRS_HOST_ID],
               ),
-              availability_zone: str(
+              availability_zone: toText(
                 this.span.resource.attributes[
                   SEMRESATTRS_CLOUD_AVAILABILITY_ZONE
                 ],
               ),
-              instance_size: str(
+              instance_size: toText(
                 this.span.resource.attributes[SEMRESATTRS_HOST_TYPE],
               ),
-              ami_id: str(
+              ami_id: toText(
                 this.span.resource.attributes[SEMRESATTRS_HOST_IMAGE_ID],
               ),
             }

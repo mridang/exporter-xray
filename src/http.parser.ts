@@ -23,7 +23,7 @@ import {
   SEMATTRS_NET_PEER_PORT,
 } from '@opentelemetry/semantic-conventions';
 import { HTTP } from './xray.document.js';
-import { ip, num, str } from './util.js';
+import { ip, toNumber, toText } from './utility.js';
 
 /**
  * Returns the first truthy attribute value among the given keys.
@@ -116,17 +116,17 @@ export class DefaultHttpParser implements HttpParser {
     ].some((key) => attributes[key] !== undefined)
       ? {
           request: {
-            method: str(
+            method: toText(
               attributes[SEMATTRS_HTTP_METHOD] ||
                 attributes['http.request.method'],
             ),
-            client_ip: str(
-              ip(str(attributes[SEMATTRS_HTTP_CLIENT_IP])) ||
-                ip(str(attributes[SEMATTRS_NET_PEER_IP])) ||
-                ip(str(attributes['network.peer.address'])) ||
-                ip(str(attributes['client.address'])),
+            client_ip: toText(
+              ip(toText(attributes[SEMATTRS_HTTP_CLIENT_IP])) ||
+                ip(toText(attributes[SEMATTRS_NET_PEER_IP])) ||
+                ip(toText(attributes['network.peer.address'])) ||
+                ip(toText(attributes['client.address'])),
             ),
-            user_agent: str(
+            user_agent: toText(
               attributes[SEMATTRS_HTTP_USER_AGENT] ||
                 attributes['user_agent.original'],
             ),
@@ -138,14 +138,14 @@ export class DefaultHttpParser implements HttpParser {
             url: this.parseUrl(attributes, kind),
           },
           response: {
-            status: num(
-              str(attributes[SEMATTRS_HTTP_STATUS_CODE]) ||
-                str(attributes['http.response.status_code']),
+            status: toNumber(
+              toText(attributes[SEMATTRS_HTTP_STATUS_CODE]) ||
+                toText(attributes['http.response.status_code']),
             ),
             content_length:
               attributes[SEMATTRS_MESSAGE_TYPE] === 'RECEIVED'
-                ? num(
-                    str(
+                ? toNumber(
+                    toText(
                       attributes[SEMATTRS_MESSAGING_MESSAGE_PAYLOAD_SIZE_BYTES],
                     ),
                   )
@@ -175,7 +175,7 @@ export class DefaultHttpParser implements HttpParser {
       SEMATTRS_NET_HOST_NAME,
       'host.name',
       'server.address',
-    ].some((attr) => attributes[attr] !== undefined);
+    ].some((attribute) => attributes[attribute] !== undefined);
     if (!hasUrlAttribute) {
       return undefined;
     }
@@ -196,13 +196,14 @@ export class DefaultHttpParser implements HttpParser {
    */
   private parseServerUrl(attributes: Attributes): string {
     return (
-      str(attributes[SEMATTRS_HTTP_URL] || attributes['url.full']) ||
+      toText(attributes[SEMATTRS_HTTP_URL] || attributes['url.full']) ||
       this.toURL({
         scheme:
-          str(attributes[SEMATTRS_HTTP_SCHEME] || attributes['url.scheme']) ||
-          'http',
+          toText(
+            attributes[SEMATTRS_HTTP_SCHEME] || attributes['url.scheme'],
+          ) || 'http',
         host:
-          str(
+          toText(
             firstAttribute(attributes, [
               SEMATTRS_HTTP_HOST,
               SEMATTRS_HTTP_SERVER_NAME,
@@ -211,11 +212,11 @@ export class DefaultHttpParser implements HttpParser {
               'server.address',
             ]),
           ) || 'host',
-        port: str(
+        port: toText(
           attributes[SEMATTRS_NET_HOST_PORT] || attributes['server.port'],
         ),
         path:
-          str(attributes[SEMATTRS_HTTP_TARGET] || attributes['url.path']) ||
+          toText(attributes[SEMATTRS_HTTP_TARGET] || attributes['url.path']) ||
           '/',
       })
     );
@@ -233,19 +234,20 @@ export class DefaultHttpParser implements HttpParser {
    */
   private parseClientUrl(attributes: Attributes): string {
     return (
-      str(attributes[SEMATTRS_HTTP_URL] || attributes['url.full']) ||
+      toText(attributes[SEMATTRS_HTTP_URL] || attributes['url.full']) ||
       this.toURL({
         scheme:
-          str(attributes[SEMATTRS_HTTP_SCHEME] || attributes['url.scheme']) ||
-          'http',
+          toText(
+            attributes[SEMATTRS_HTTP_SCHEME] || attributes['url.scheme'],
+          ) || 'http',
         host:
-          str(
+          toText(
             attributes[SEMATTRS_HTTP_HOST] ||
               attributes[SEMATTRS_NET_PEER_NAME] ||
               attributes[SEMATTRS_NET_PEER_IP],
           ) || 'host',
-        port: str(attributes[SEMATTRS_NET_PEER_PORT]),
-        path: str(attributes[SEMATTRS_HTTP_TARGET]) || '/',
+        port: toText(attributes[SEMATTRS_NET_PEER_PORT]),
+        path: toText(attributes[SEMATTRS_HTTP_TARGET]) || '/',
       })
     );
   }

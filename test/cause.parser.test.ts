@@ -10,6 +10,9 @@ import {
   SEMATTRS_EXCEPTION_TYPE,
 } from '@opentelemetry/semantic-conventions';
 import { DefaultCauseParser } from '../src';
+
+/** Matches a 16-character lowercase hexadecimal identifier. */
+const HEX_ID_PATTERN = /^[0-9a-f]{16}$/;
 import { SpanKind } from '@opentelemetry/api';
 
 describe('cause.parser test', () => {
@@ -47,7 +50,7 @@ describe('cause.parser test', () => {
     expect(causeParser.getCause(span)).toEqual({
       exceptions: [
         {
-          id: expect.stringMatching(/^[0-9a-f]{16}$/),
+          id: expect.stringMatching(HEX_ID_PATTERN),
           type: 'Error',
           message: 'An error occurred',
           remote: true,
@@ -89,14 +92,14 @@ describe('cause.parser test', () => {
     expect(causeParser.getCause(span)).toEqual({
       exceptions: [
         {
-          id: expect.stringMatching(/^[0-9a-f]{16}$/),
+          id: expect.stringMatching(HEX_ID_PATTERN),
           type: 'Error',
           message: 'First error',
           remote: true,
           stack: expect.any(Array),
         },
         {
-          id: expect.stringMatching(/^[0-9a-f]{16}$/),
+          id: expect.stringMatching(HEX_ID_PATTERN),
           type: 'TypeError',
           message: 'Second error',
           remote: true,

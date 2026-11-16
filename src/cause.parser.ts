@@ -5,13 +5,14 @@
 import { Cause } from './xray.document.js';
 import { ReadableSpan } from '@opentelemetry/sdk-trace-base';
 import { randomBytes } from 'node:crypto';
-import { str, undef } from './util.js';
+import { toText, undef } from './utility.js';
 import {
   SEMATTRS_EXCEPTION_MESSAGE,
   SEMATTRS_EXCEPTION_STACKTRACE,
   SEMATTRS_EXCEPTION_TYPE,
 } from '@opentelemetry/semantic-conventions';
 import { SpanKind } from '@opentelemetry/api';
+// eslint-disable-next-line e18e/ban-dependencies -- error-stack-parser-es is not verified to parse stacks identically, so the swap is deferred
 import ErrorStackParser from 'error-stack-parser';
 
 export interface CauseParser {
@@ -70,8 +71,8 @@ export class DefaultCauseParser implements CauseParser {
               .filter((event) => event.name === 'exception')
               .map((event) => ({
                 id: this.idGen(),
-                type: str(event.attributes?.[SEMATTRS_EXCEPTION_TYPE]),
-                message: str(event.attributes?.[SEMATTRS_EXCEPTION_MESSAGE]),
+                type: toText(event.attributes?.[SEMATTRS_EXCEPTION_TYPE]),
+                message: toText(event.attributes?.[SEMATTRS_EXCEPTION_MESSAGE]),
                 remote: [SpanKind.PRODUCER, SpanKind.CLIENT].includes(
                   span.kind,
                 ),

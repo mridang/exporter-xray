@@ -35,7 +35,7 @@ export { DefaultNameParser } from './name.parser.js';
 export type { OriginParser } from './origin.parser.js';
 export { DefaultOriginParser } from './origin.parser.js';
 export { EnhancedReadableSpan } from './super.span.js';
-export { hrt, str, ip, undef, num } from './util.js';
+export { hrt, toText as str, ip, undef, toNumber as num } from './utility.js';
 export type {
   AWS,
   Request,
