@@ -24,11 +24,11 @@ export function hrt(timestamp: [number, number]): number {
  * @returns The object converted to string.
  * @example
  * ```ts
- * str(42); // Returns '42'.
- * str(undefined); // Returns undefined.
+ * toText(42); // Returns '42'.
+ * toText(undefined); // Returns undefined.
  * ```
  */
-export function str(aValue: unknown): string | undefined {
+export function toText(aValue: unknown): string | undefined {
   return aValue ? aValue?.toString() : undefined;
 }
 
@@ -50,7 +50,7 @@ export function ip(ip?: string): string | undefined {
 /**
  * Returns the array if it contains elements, otherwise undefined.
  * @template T - The type of the array elements.
- * @param arr - The array to check.
+ * @param array - The array to check.
  * @returns The array if not empty, otherwise undefined.
  * @example
  * ```ts
@@ -58,24 +58,24 @@ export function ip(ip?: string): string | undefined {
  * undef([]); // Returns undefined.
  * ```
  */
-export function undef<T>(arr: T[]): T[] | undefined {
-  return arr?.length > 0 ? arr : undefined;
+export function undef<T>(array: T[]): T[] | undefined {
+  return array?.length > 0 ? array : undefined;
 }
 
 /**
  * Converts an unknown input to a number if possible, otherwise returns undefined.
- * @param num - The input to convert.
+ * @param value - The input to convert.
  * @returns The number if it is a valid number, otherwise undefined.
  * @example
  * ```ts
- * num('12.5'); // Returns 12.5.
- * num('abc'); // Returns undefined.
+ * toNumber('12.5'); // Returns 12.5.
+ * toNumber('abc'); // Returns undefined.
  * ```
  */
-export function num(num: unknown): undefined | number {
-  if (!num) {
+export function toNumber(value: unknown): undefined | number {
+  if (!value) {
     return undefined;
   }
-  const parsed = Number(num);
+  const parsed = Number(value);
   return Number.isNaN(parsed) ? undefined : parsed;
 }

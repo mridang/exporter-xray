@@ -30,23 +30,36 @@ const WILDCARDS = {
   '?': '[^/]',
 };
 
+/** A backslash that escapes a leading `#` or `!`. */
+const ESCAPED_LEADING = /^\\(?=[#!])/;
+
+/** A slash at the start or at the end of a pattern. */
+const LEADING_SLASH = /^\//;
+const TRAILING_SLASH = /\/$/;
+
+/** The backslash that escapes a character in a gitignore pattern. */
+const ESCAPE = /^\\/;
+
+/** Every token of a gitignore pattern that needs translating. */
+const TOKENS = /\*\*\/|\/\*\*|\*\*|\*|\?|\\.|[.+^${}()|/]/g;
+
 const ignoredPatterns = gitignore
   .split(/\r?\n/)
   .map((line) => line.trimEnd())
   .filter((line) => line !== '' && !line.startsWith('#'))
   .map((line) => {
     const negated = line.startsWith('!');
-    const entry = (negated ? line.slice(1) : line).replace(/^\\(?=[#!])/, '');
+    const entry = (negated ? line.slice(1) : line).replace(ESCAPED_LEADING, '');
 
     const hasInnerSlash = entry.slice(0, -1).includes('/');
     const anchored = entry.startsWith('/') || hasInnerSlash;
 
     const regex = entry
-      .replace(/^\//, '')
-      .replace(/\/$/, '')
+      .replace(LEADING_SLASH, '')
+      .replace(TRAILING_SLASH, '')
       .replaceAll(
-        /\*\*\/|\/\*\*|\*\*|\*|\?|\\.|[.+^${}()|/]/g,
-        (token) => WILDCARDS[token] ?? `\\${token.replace(/^\\/, '')}`,
+        TOKENS,
+        (token) => WILDCARDS[token] ?? `\\${token.replace(ESCAPE, '')}`,
       );
 
     const prefix = anchored ? '' : '(?:.*/)?';

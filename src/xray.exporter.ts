@@ -104,9 +104,8 @@ export default class XraySpanExporter implements SpanExporter {
         return emptyDeep(trace) as XrayTraceDataSegmentDocument;
       });
 
-    this.segmentEmitters.forEach((segmentEmitter) =>
-      this.emitTo(segmentEmitter, trace, spans.length, resultCallback),
-    );
+    for (const segmentEmitter of this.segmentEmitters)
+      void this.emitTo(segmentEmitter, trace, spans.length, resultCallback);
   }
 
   /**
@@ -147,7 +146,8 @@ export default class XraySpanExporter implements SpanExporter {
    */
   shutdown(): Promise<void> {
     // No implementation for shutdown logic since there's no cleanup needed.
-    this.segmentEmitters.forEach((segmentEmitter) => segmentEmitter.shutdown());
+    for (const segmentEmitter of this.segmentEmitters)
+      segmentEmitter.shutdown();
     return Promise.resolve();
   }
 
