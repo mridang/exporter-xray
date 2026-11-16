@@ -3,18 +3,18 @@
  * @file
  */
 
-import { ReadableSpan, TimedEvent } from '@opentelemetry/sdk-trace-base';
-import {
+import type { ReadableSpan, TimedEvent } from '@opentelemetry/sdk-trace-base';
+import type {
   Attributes,
   HrTime,
   Link,
   SpanContext,
   SpanKind,
   SpanStatus,
-  TraceFlags,
 } from '@opentelemetry/api';
-import { IResource } from '@opentelemetry/resources';
-import { InstrumentationScope } from '@opentelemetry/core/build/src/common/types';
+import { TraceFlags } from '@opentelemetry/api';
+import type { Resource } from '@opentelemetry/resources';
+import type { InstrumentationScope } from '@opentelemetry/core';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 
@@ -32,8 +32,8 @@ interface SpanData {
   links: Link[];
   events: TimedEvent[];
   ended: boolean;
-  resource: IResource;
-  instrumentationLibrary: InstrumentationScope;
+  resource: Resource;
+  instrumentationScope: InstrumentationScope;
   droppedAttributesCount: number;
   droppedEventsCount: number;
   droppedLinksCount: number;
@@ -51,8 +51,8 @@ export class WrappedReadableSpan implements ReadableSpan {
   readonly events: TimedEvent[];
   readonly duration: HrTime;
   readonly ended: boolean;
-  readonly resource: IResource;
-  readonly instrumentationLibrary: InstrumentationScope;
+  readonly resource: Resource;
+  readonly instrumentationScope: InstrumentationScope;
   readonly droppedAttributesCount: number;
   readonly droppedEventsCount: number;
   readonly droppedLinksCount: number;
@@ -75,7 +75,7 @@ export class WrappedReadableSpan implements ReadableSpan {
     this.events = spanData.events;
     this.ended = spanData.ended;
     this.resource = spanData.resource;
-    this.instrumentationLibrary = spanData.instrumentationLibrary;
+    this.instrumentationScope = spanData.instrumentationScope;
     this.droppedAttributesCount = spanData.droppedAttributesCount;
     this.droppedEventsCount = spanData.droppedEventsCount;
     this.droppedLinksCount = spanData.droppedLinksCount;

@@ -126,7 +126,7 @@ export interface Log {
 export interface Link {
   id: string;
   trace_id: string;
-  attributes: { [key: string]: unknown | undefined };
+  attributes: { [key: string]: unknown };
 }
 
 /**

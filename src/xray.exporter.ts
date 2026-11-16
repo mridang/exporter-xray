@@ -3,20 +3,27 @@
  * @file
  */
 import { diag } from '@opentelemetry/api';
-import { ExportResult, ExportResultCode } from '@opentelemetry/core';
-import { ReadableSpan, SpanExporter } from '@opentelemetry/sdk-trace-base';
+import type { ExportResult } from '@opentelemetry/core';
+import { ExportResultCode } from '@opentelemetry/core';
+import type { ReadableSpan, SpanExporter } from '@opentelemetry/sdk-trace-base';
 import { emptyDeep } from 'empty-deep';
-import { CauseParser, DefaultCauseParser } from './cause.parser.js';
+import type { CauseParser } from './cause.parser.js';
+import { DefaultCauseParser } from './cause.parser.js';
 import { SDKBasedSegmentEmitter } from './emitter/sdk.emitter.js';
-import { SegmentEmitter } from './emitter/segment.emitter.js';
+import type { SegmentEmitter } from './emitter/segment.emitter.js';
 import { UDPDaemonSegmentEmitter } from './emitter/udp.emitter.js';
-import { DefaultHttpParser, HttpParser } from './http.parser.js';
-import { DefaultIdParser, IdParser } from './id.parser.js';
-import { DefaultNameParser, NameParser } from './name.parser.js';
-import { DefaultOriginParser, OriginParser } from './origin.parser.js';
+import type { HttpParser } from './http.parser.js';
+import { DefaultHttpParser } from './http.parser.js';
+import type { IdParser } from './id.parser.js';
+import { DefaultIdParser } from './id.parser.js';
+import type { NameParser } from './name.parser.js';
+import { DefaultNameParser } from './name.parser.js';
+import type { OriginParser } from './origin.parser.js';
+import { DefaultOriginParser } from './origin.parser.js';
 import { EnhancedReadableSpan } from './super.span.js';
-import { DefaultTraceFilter, TraceFilter } from './trace.filter.js';
-import { XrayTraceDataSegmentDocument } from './xray.document.js';
+import type { TraceFilter } from './trace.filter.js';
+import { DefaultTraceFilter } from './trace.filter.js';
+import type { XrayTraceDataSegmentDocument } from './xray.document.js';
 
 /**
  * Creates an instance of XraySpanExporter.
@@ -127,7 +134,7 @@ export default class XraySpanExporter implements SpanExporter {
   ): Promise<void> {
     try {
       await segmentEmitter.emit(trace);
-      diag['debug'](`Sent ${spanCount} spans to X-Ray.`);
+      diag.debug(`Sent ${spanCount} spans to X-Ray.`);
       resultCallback({ code: ExportResultCode.SUCCESS });
     } catch (error) {
       diag.warn(`Encountered an error when sending the spans to X-Ray.`);
@@ -144,11 +151,10 @@ export default class XraySpanExporter implements SpanExporter {
    * await exporter.shutdown();
    * ```
    */
-  shutdown(): Promise<void> {
+  async shutdown(): Promise<void> {
     // No implementation for shutdown logic since there's no cleanup needed.
     for (const segmentEmitter of this.segmentEmitters)
       segmentEmitter.shutdown();
-    return Promise.resolve();
   }
 
   /**

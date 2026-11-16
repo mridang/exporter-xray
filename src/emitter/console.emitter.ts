@@ -3,15 +3,11 @@
  * @file
  */
 
-import { SegmentEmitter } from './segment.emitter.js';
-import { XrayTraceDataSegmentDocument } from '../xray.document.js';
+import type { SegmentEmitter } from './segment.emitter.js';
+import type { XrayTraceDataSegmentDocument } from '../xray.document.js';
 
 // noinspection JSUnusedGlobalSymbols
 export class ConsoleEmitter implements SegmentEmitter {
-  constructor() {
-    //
-  }
-
   shutdown() {
     //
   }
