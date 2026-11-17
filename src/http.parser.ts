@@ -2,9 +2,7 @@
  * Extracts HTTP request and response details from OpenTelemetry spans.
  * @file
  */
-import type { Attributes } from '@opentelemetry/api';
 import { SpanKind } from '@opentelemetry/api';
-import type { ReadableSpan } from '@opentelemetry/sdk-trace-base';
 import {
   SEMATTRS_HTTP_CLIENT_IP,
   SEMATTRS_HTTP_HOST,
@@ -23,8 +21,10 @@ import {
   SEMATTRS_NET_PEER_NAME,
   SEMATTRS_NET_PEER_PORT,
 } from '@opentelemetry/semantic-conventions';
-import type { HTTP } from './xray.document.js';
 import { ip, toNumber, toText } from './utility.js';
+import type { Attributes, AttributeValue } from '@opentelemetry/api';
+import type { ReadableSpan } from '@opentelemetry/sdk-trace-base';
+import type { HTTP } from './xray.document.js';
 
 /**
  * Returns the first truthy attribute value among the given keys.
@@ -36,7 +36,10 @@ import { ip, toNumber, toText } from './utility.js';
  * firstAttribute({ a: '', b: 'x' }, ['a', 'b']); // Returns 'x'.
  * ```
  */
-function firstAttribute(attributes: Attributes, keys: string[]): unknown {
+function firstAttribute(
+  attributes: Attributes,
+  keys: string[],
+): AttributeValue | undefined {
   return keys.map((key) => attributes[key]).find(Boolean);
 }
 

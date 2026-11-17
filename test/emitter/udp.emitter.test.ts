@@ -18,6 +18,7 @@ const mockSend = jest.fn<DaemonSocket['send']>(
 const mockClose = jest.fn<DaemonSocket['close']>();
 const mockUnref = jest.fn<Socket['unref']>();
 
+// eslint-disable-next-line tslop/no-module-mocking -- proves the real node:dgram socket is never created when a socket is injected
 jest.unstable_mockModule('node:dgram', () => ({
   createSocket: createSocketMock,
 }));
@@ -61,6 +62,7 @@ describe('udp.emitter test', () => {
     expect(mockUnref).not.toHaveBeenCalled();
   });
 
+  // eslint-disable-next-line tslop/no-call-only-assertions -- closing the injected socket is the only observable effect of shutdown
   it('should close the socket on shutdown', () => {
     process.env.AWS_XRAY_DAEMON_ADDRESS = '127.0.0.1:3000';
     const emitter = new UDPDaemonSegmentEmitter(mockSocket);

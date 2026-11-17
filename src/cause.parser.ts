@@ -2,10 +2,7 @@
  * Extracts the error cause, including exception details, from OpenTelemetry span events.
  * @file
  */
-import type { Cause } from './xray.document.js';
-import type { ReadableSpan } from '@opentelemetry/sdk-trace-base';
 import { randomBytes } from 'node:crypto';
-import { toText, undef } from './utility.js';
 import {
   SEMATTRS_EXCEPTION_MESSAGE,
   SEMATTRS_EXCEPTION_STACKTRACE,
@@ -14,6 +11,9 @@ import {
 import { SpanKind } from '@opentelemetry/api';
 // eslint-disable-next-line e18e/ban-dependencies -- error-stack-parser-es is not verified to parse stacks identically, so the swap is deferred
 import ErrorStackParser from 'error-stack-parser';
+import { toText, undef } from './utility.js';
+import type { ReadableSpan } from '@opentelemetry/sdk-trace-base';
+import type { Cause } from './xray.document.js';
 
 export interface CauseParser {
   getCause(span: ReadableSpan): Cause | undefined;
@@ -78,13 +78,11 @@ export class DefaultCauseParser implements CauseParser {
                 ),
                 stack: ErrorStackParser.parse({
                   stack: event.attributes?.[SEMATTRS_EXCEPTION_STACKTRACE],
-                } as Error).map((stack) => {
-                  return {
-                    label: stack.functionName || 'anonymous',
-                    line: stack.lineNumber,
-                    path: stack.fileName,
-                  };
-                }),
+                } as Error).map((stack) => ({
+                  label: stack.functionName || 'anonymous',
+                  line: stack.lineNumber,
+                  path: stack.fileName,
+                })),
               })),
           ),
         }

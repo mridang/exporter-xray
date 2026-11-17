@@ -2,8 +2,6 @@
  * Derives the AWS X-Ray segment name from the attributes of an OpenTelemetry span.
  * @file
  */
-import type { ReadableSpan } from '@opentelemetry/sdk-trace-base';
-import type { Attributes } from '@opentelemetry/api';
 import { SpanKind } from '@opentelemetry/api';
 import {
   SEMATTRS_DB_CONNECTION_STRING,
@@ -16,6 +14,8 @@ import {
   SEMRESATTRS_SERVICE_NAME,
 } from '@opentelemetry/semantic-conventions';
 import { toText } from './utility.js';
+import type { Attributes } from '@opentelemetry/api';
+import type { ReadableSpan } from '@opentelemetry/sdk-trace-base';
 
 export interface NameParser {
   parseName(span: ReadableSpan): string;
@@ -61,13 +61,12 @@ export class DefaultNameParser implements NameParser {
       (current) => this.getHttpHost(current),
       (current) => this.getNetPeerName(current),
     ];
-    for (const candidate of candidates) {
-      const name = candidate(span);
-      if (name) {
-        return name;
-      }
-    }
-    return 'span';
+    return (
+      candidates
+        .values()
+        .map((candidate) => candidate(span))
+        .find(Boolean) ?? 'span'
+    );
   }
 
   private getLocalServiceName({
@@ -90,14 +89,12 @@ export class DefaultNameParser implements NameParser {
     if (
       [SpanKind.CLIENT, SpanKind.PRODUCER, SpanKind.CONSUMER].includes(kind)
     ) {
-      let name = toText(attributes['aws.remote.service']);
+      const name = toText(attributes['aws.remote.service']);
       if (name) {
-        name =
-          toText(attributes[SEMATTRS_RPC_SYSTEM]) === 'aws-api' &&
+        return toText(attributes[SEMATTRS_RPC_SYSTEM]) === 'aws-api' &&
           name.startsWith('AWS.SDK.')
-            ? name.slice(8)
-            : name;
-        return name;
+          ? name.slice(8)
+          : name;
       }
     }
     return undefined;
