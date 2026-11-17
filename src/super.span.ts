@@ -154,7 +154,7 @@ export class EnhancedReadableSpan {
         undefined
       );
     }
-    return this.span.status?.code === SpanStatusCode.ERROR ? true : undefined;
+    return this.span.status.code === SpanStatusCode.ERROR ? true : undefined;
   }
 
   /**
@@ -292,11 +292,11 @@ export class EnhancedReadableSpan {
    */
   public getLinks(idParser: IdParser): Link[] | undefined {
     return undef(
-      this.span.links?.map((link) => ({
+      this.span.links.map((link) => ({
         id: link.context.spanId,
         trace_id: idParser.parseId(link.context.traceId),
         attributes: Object.fromEntries(
-          Object.entries(link.attributes || {})
+          Object.entries(link.attributes ?? {})
             .filter(([, value]) => value !== undefined)
             .map(([key, value]) => [key, value]),
         ),
@@ -337,6 +337,9 @@ export class EnhancedReadableSpan {
   }
 
   public getAWS(): AWS {
+    const tableNames = this.span.attributes[SEMATTRS_AWS_DYNAMODB_TABLE_NAMES];
+    const logGroupNames =
+      this.span.resource.attributes[SEMRESATTRS_AWS_LOG_GROUP_NAMES];
     return {
       account_id: toText(this.span.attributes[XSEMATTRS_AWS_ACCOUNT]),
       operation: toText(
@@ -357,29 +360,16 @@ export class EnhancedReadableSpan {
       message_id: toText(this.span.attributes[SEMATTRS_MESSAGING_MESSAGE_ID]),
       bucket_name: toText(this.span.attributes[XSEMATTRS_AWS_BUCKET_NAME]),
       key: toText(this.span.attributes[XSEMATTRS_AWS_BUCKET_KEY]),
-      table_name: Array.isArray(
-        this.span.attributes[SEMATTRS_AWS_DYNAMODB_TABLE_NAMES],
-      )
-        ? (
-            this.span.attributes[SEMATTRS_AWS_DYNAMODB_TABLE_NAMES] as (
-              string | undefined
-            )[]
-          ).find((value) => typeof value === 'string')
+      table_name: Array.isArray(tableNames)
+        ? tableNames.find((value) => typeof value === 'string')
         : toText(
             this.span.attributes[XSEMATTRS_AWS_TABLE_NAME] ||
               this.span.attributes[XSEMATTRS_AWS_TABLE_NAME_2],
           ),
-      cloudwatch_logs: (
-        (this.span.resource.attributes[SEMRESATTRS_AWS_LOG_GROUP_NAMES] ||
-          []) as Array<string>
-      ).map((name, index): Log => ({
-        log_group: name,
-        arn: (
-          this.span.resource.attributes[
-            SEMRESATTRS_AWS_LOG_GROUP_NAMES
-          ] as Array<string>
-        )[index],
-      })),
+      cloudwatch_logs: (Array.isArray(logGroupNames)
+        ? logGroupNames.filter((name) => typeof name === 'string')
+        : []
+      ).map((name): Log => ({ log_group: name, arn: name })),
       xray: {
         sdk: `${toText(
           this.span.resource.attributes[SEMRESATTRS_TELEMETRY_SDK_LANGUAGE] ||

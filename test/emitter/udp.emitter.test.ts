@@ -83,9 +83,9 @@ describe('udp.emitter test', () => {
     const { 0: message, 3: port, 4: address } = mockSend.mock.calls[0];
     expect(port).toBe(2000);
     expect(address).toBe('127.0.0.1');
-    expect(
-      (JSON.parse(message.toString().split('\n', 2)[1]) as { name: string })
-        .name,
-    ).toBe('test-segment');
+    expect(JSON.parse(message.toString().split('\n', 2)[1])).toHaveProperty(
+      'name',
+      'test-segment',
+    );
   });
 });

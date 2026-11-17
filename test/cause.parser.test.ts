@@ -10,6 +10,7 @@ import {
   SEMATTRS_EXCEPTION_TYPE,
 } from '@opentelemetry/semantic-conventions';
 import { DefaultCauseParser } from '../src/index.js';
+import { spanOf } from './test.span.js';
 import type { ReadableSpan } from '@opentelemetry/sdk-trace-base';
 
 /** Matches a 16-character lowercase hexadecimal identifier. */
@@ -23,17 +24,13 @@ describe('cause.parser test', () => {
   });
 
   test('should return undefined if no exception events are present', () => {
-    const span: ReadableSpan = {
-      events: [],
-      kind: SpanKind.INTERNAL,
-      // other necessary properties for ReadableSpan
-    } as unknown as ReadableSpan;
+    const span: ReadableSpan = spanOf({ events: [], kind: SpanKind.INTERNAL });
 
     expect(causeParser.getCause(span)).toBeUndefined();
   });
 
   test('should return a cause object if exception events are present', () => {
-    const span: ReadableSpan = {
+    const span: ReadableSpan = spanOf({
       events: [
         {
           name: 'exception',
@@ -45,7 +42,7 @@ describe('cause.parser test', () => {
         },
       ],
       kind: SpanKind.CLIENT,
-    } as unknown as ReadableSpan;
+    });
 
     expect(causeParser.getCause(span)).toEqual({
       exceptions: [
@@ -67,7 +64,7 @@ describe('cause.parser test', () => {
   });
 
   test('should correctly parse multiple exception events', () => {
-    const span: ReadableSpan = {
+    const span: ReadableSpan = spanOf({
       events: [
         {
           name: 'exception',
@@ -87,7 +84,7 @@ describe('cause.parser test', () => {
         },
       ],
       kind: SpanKind.PRODUCER,
-    } as unknown as ReadableSpan;
+    });
 
     expect(causeParser.getCause(span)).toEqual({
       exceptions: [
