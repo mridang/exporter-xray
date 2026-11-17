@@ -2,7 +2,6 @@
  * Maps the cloud platform of a span's resource to an AWS X-Ray origin.
  * @file
  */
-import type { ReadableSpan } from '@opentelemetry/sdk-trace-base';
 import {
   CLOUDPLATFORMVALUES_AWS_EC2,
   CLOUDPLATFORMVALUES_AWS_ECS,
@@ -13,6 +12,7 @@ import {
   SEMRESATTRS_CLOUD_PLATFORM,
   SEMRESATTRS_CLOUD_PROVIDER,
 } from '@opentelemetry/semantic-conventions';
+import type { ReadableSpan } from '@opentelemetry/sdk-trace-base';
 
 export interface OriginParser {
   getOrigin(span: ReadableSpan): string | undefined;

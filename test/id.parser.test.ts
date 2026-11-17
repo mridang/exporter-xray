@@ -3,8 +3,8 @@
  * @file
  */
 
-import { DefaultIdParser } from '../src/index.js';
 import { AWSXRayIdGenerator } from '@opentelemetry/id-generator-aws-xray';
+import { DefaultIdParser } from '../src/index.js';
 
 describe('id.parser test', () => {
   const parser = new DefaultIdParser();

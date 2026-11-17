@@ -2,9 +2,7 @@
  * Exposes OpenTelemetry span data in the shape AWS X-Ray expects.
  * @file
  */
-import type { AttributeValue } from '@opentelemetry/api';
 import { SpanKind, SpanStatusCode } from '@opentelemetry/api';
-import type { ReadableSpan } from '@opentelemetry/sdk-trace-base';
 import {
   CLOUDPLATFORMVALUES_AWS_EC2,
   CLOUDPLATFORMVALUES_AWS_ECS,
@@ -48,7 +46,6 @@ import {
   SEMRESATTRS_TELEMETRY_SDK_LANGUAGE,
   SEMRESATTRS_TELEMETRY_SDK_VERSION,
 } from '@opentelemetry/semantic-conventions';
-import type { CauseParser } from './cause.parser.js';
 import {
   XSEMATTRS_AWS_ACCOUNT,
   XSEMATTRS_AWS_BUCKET_KEY,
@@ -64,11 +61,14 @@ import {
   XSEMATTRS_AWS_TABLE_NAME_2,
   XSEMATTRS_AWS_XREQUEST_ID,
 } from './constants.js';
+import { hrt, toText, undef } from './utility.js';
+import type { AttributeValue } from '@opentelemetry/api';
+import type { ReadableSpan } from '@opentelemetry/sdk-trace-base';
+import type { CauseParser } from './cause.parser.js';
 import type { HttpParser } from './http.parser.js';
 import type { IdParser } from './id.parser.js';
 import type { NameParser } from './name.parser.js';
 import type { OriginParser } from './origin.parser.js';
-import { hrt, toText, undef } from './utility.js';
 import type {
   AWS,
   Cause,
@@ -115,15 +115,13 @@ export class EnhancedReadableSpan {
    * ```
    */
   public getNamespace(): 'aws' | 'remote' | undefined {
-    if (toText(this.span.attributes[SEMATTRS_RPC_SYSTEM]) === 'aws-api') {
+    if (
+      toText(this.span.attributes[SEMATTRS_RPC_SYSTEM]) === 'aws-api' ||
+      this.span.attributes[XSEMATTRS_AWS_SERVICE]
+    ) {
       return 'aws';
-    } else if (this.span.attributes[XSEMATTRS_AWS_SERVICE]) {
-      return 'aws';
-    } else if (this.span.kind === SpanKind.CLIENT) {
-      return 'remote';
-    } else {
-      return undefined;
     }
+    return this.span.kind === SpanKind.CLIENT ? 'remote' : undefined;
   }
 
   /**
@@ -155,9 +153,8 @@ export class EnhancedReadableSpan {
         Number(this.span.attributes[SEMATTRS_HTTP_STATUS_CODE] || 0) <= 599 ||
         undefined
       );
-    } else {
-      return this.span.status?.code === SpanStatusCode.ERROR ? true : undefined;
     }
+    return this.span.status?.code === SpanStatusCode.ERROR ? true : undefined;
   }
 
   /**
@@ -295,19 +292,15 @@ export class EnhancedReadableSpan {
    */
   public getLinks(idParser: IdParser): Link[] | undefined {
     return undef(
-      this.span.links?.map((link) => {
-        return {
-          id: link.context.spanId,
-          trace_id: idParser.parseId(link.context.traceId),
-          attributes: Object.fromEntries(
-            Object.entries(link.attributes || {})
-              .filter(([, value]) => value !== undefined)
-              .map(([key, value]) => {
-                return [key, value];
-              }),
-          ),
-        };
-      }),
+      this.span.links?.map((link) => ({
+        id: link.context.spanId,
+        trace_id: idParser.parseId(link.context.traceId),
+        attributes: Object.fromEntries(
+          Object.entries(link.attributes || {})
+            .filter(([, value]) => value !== undefined)
+            .map(([key, value]) => [key, value]),
+        ),
+      })),
     );
   }
 
@@ -379,26 +372,21 @@ export class EnhancedReadableSpan {
       cloudwatch_logs: (
         (this.span.resource.attributes[SEMRESATTRS_AWS_LOG_GROUP_NAMES] ||
           []) as Array<string>
-      ).map((name, index): Log => {
-        return {
-          log_group: name,
-          arn: (
-            this.span.resource.attributes[
-              SEMRESATTRS_AWS_LOG_GROUP_NAMES
-            ] as Array<string>
-          )[index],
-        };
-      }),
+      ).map((name, index): Log => ({
+        log_group: name,
+        arn: (
+          this.span.resource.attributes[
+            SEMRESATTRS_AWS_LOG_GROUP_NAMES
+          ] as Array<string>
+        )[index],
+      })),
       xray: {
-        sdk:
-          toText(
-            this.span.resource.attributes[SEMRESATTRS_TELEMETRY_SDK_LANGUAGE] ||
-              '?',
-          ) +
-          '/' +
-          toText(
-            this.span.resource.attributes[SEMRESATTRS_TELEMETRY_SDK_VERSION],
-          ),
+        sdk: `${toText(
+          this.span.resource.attributes[SEMRESATTRS_TELEMETRY_SDK_LANGUAGE] ||
+            '?',
+        )}/${toText(
+          this.span.resource.attributes[SEMRESATTRS_TELEMETRY_SDK_VERSION],
+        )}`,
         sdk_version: toText(
           this.span.resource.attributes[SEMRESATTRS_TELEMETRY_SDK_VERSION],
         ),
@@ -508,21 +496,18 @@ export class EnhancedReadableSpan {
     indexedAttributes: string[],
   ): { [key: string]: string | number | boolean } | undefined {
     const attributes = this.span.attributes;
-    const annotations: { [key: string]: string | number | boolean } = {};
 
-    for (const key of Object.keys(attributes)) {
-      const value = attributes[key] as AttributeValue | null | undefined;
-      if (
-        value !== undefined &&
-        value !== null &&
-        !Array.isArray(value) &&
-        indexedAttributes.includes(key)
-      ) {
-        annotations[key] = value;
-      }
-    }
-
-    return annotations;
+    return Object.fromEntries(
+      Object.keys(attributes).flatMap((key) => {
+        if (!indexedAttributes.includes(key)) {
+          return [];
+        }
+        const value = attributes[key] as AttributeValue | null | undefined;
+        return value !== undefined && value !== null && !Array.isArray(value)
+          ? [[key, value] as const]
+          : [];
+      }),
+    );
   }
 
   getMetadata(): { [key: string]: { [key: string]: unknown } } | undefined {

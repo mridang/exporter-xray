@@ -31,20 +31,20 @@ const WILDCARDS = {
 };
 
 /** A backslash that escapes a leading `#` or `!`. */
-const ESCAPED_LEADING = /^\\(?=[#!])/;
+const ESCAPED_LEADING = /^\\(?=[#!])/u;
 
 /** A slash at the start or at the end of a pattern. */
-const LEADING_SLASH = /^\//;
-const TRAILING_SLASH = /\/$/;
+const LEADING_SLASH = /^\//u;
+const TRAILING_SLASH = /\/$/u;
 
 /** The backslash that escapes a character in a gitignore pattern. */
-const ESCAPE = /^\\/;
+const ESCAPE = /^\\/u;
 
 /** Every token of a gitignore pattern that needs translating. */
-const TOKENS = /\*\*\/|\/\*\*|\*\*|\*|\?|\\.|[.+^${}()|/]/g;
+const TOKENS = /\*\*\/|\/\*\*|\*\*|\*|\?|\\.|[.+^${}()|/]/gu;
 
 const ignoredPatterns = gitignore
-  .split(/\r?\n/)
+  .split(/\r?\n/u)
   .map((line) => line.trimEnd())
   .filter((line) => line !== '' && !line.startsWith('#'))
   .map((line) => {

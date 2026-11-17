@@ -3,6 +3,9 @@
  * @file
  */
 
+import { readFile } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
+import { TraceFlags } from '@opentelemetry/api';
 import type { ReadableSpan, TimedEvent } from '@opentelemetry/sdk-trace-base';
 import type {
   Attributes,
@@ -12,11 +15,8 @@ import type {
   SpanKind,
   SpanStatus,
 } from '@opentelemetry/api';
-import { TraceFlags } from '@opentelemetry/api';
 import type { Resource } from '@opentelemetry/resources';
 import type { InstrumentationScope } from '@opentelemetry/core';
-import { readFile } from 'node:fs/promises';
-import { fileURLToPath } from 'node:url';
 
 interface SpanData {
   traceId: string;

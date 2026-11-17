@@ -3,26 +3,26 @@
  * @file
  */
 import { diag } from '@opentelemetry/api';
-import type { ExportResult } from '@opentelemetry/core';
 import { ExportResultCode } from '@opentelemetry/core';
-import type { ReadableSpan, SpanExporter } from '@opentelemetry/sdk-trace-base';
 import { emptyDeep } from 'empty-deep';
-import type { CauseParser } from './cause.parser.js';
 import { DefaultCauseParser } from './cause.parser.js';
 import { SDKBasedSegmentEmitter } from './emitter/sdk.emitter.js';
-import type { SegmentEmitter } from './emitter/segment.emitter.js';
 import { UDPDaemonSegmentEmitter } from './emitter/udp.emitter.js';
-import type { HttpParser } from './http.parser.js';
 import { DefaultHttpParser } from './http.parser.js';
-import type { IdParser } from './id.parser.js';
 import { DefaultIdParser } from './id.parser.js';
-import type { NameParser } from './name.parser.js';
 import { DefaultNameParser } from './name.parser.js';
-import type { OriginParser } from './origin.parser.js';
 import { DefaultOriginParser } from './origin.parser.js';
 import { EnhancedReadableSpan } from './super.span.js';
-import type { TraceFilter } from './trace.filter.js';
 import { DefaultTraceFilter } from './trace.filter.js';
+import type { TraceFilter } from './trace.filter.js';
+import type { OriginParser } from './origin.parser.js';
+import type { NameParser } from './name.parser.js';
+import type { IdParser } from './id.parser.js';
+import type { HttpParser } from './http.parser.js';
+import type { SegmentEmitter } from './emitter/segment.emitter.js';
+import type { CauseParser } from './cause.parser.js';
+import type { ReadableSpan, SpanExporter } from '@opentelemetry/sdk-trace-base';
+import type { ExportResult } from '@opentelemetry/core';
 import type { XrayTraceDataSegmentDocument } from './xray.document.js';
 
 /**
@@ -80,6 +80,7 @@ export default class XraySpanExporter implements SpanExporter {
     resultCallback: (result: ExportResult) => void,
   ) {
     const trace: XrayTraceDataSegmentDocument[] = spans
+      .values()
       .map((span) => new EnhancedReadableSpan(span))
       .map((span): XrayTraceDataSegmentDocument => ({
         id: span.getSpanId(),
@@ -104,15 +105,14 @@ export default class XraySpanExporter implements SpanExporter {
         type: span.getType(),
         links: span.getLinks(this.idParser),
       }))
-      .filter((trace) => {
-        return this.traceFilter.doFilter(trace);
-      })
-      .map((trace) => {
-        return emptyDeep(trace) as XrayTraceDataSegmentDocument;
-      });
+      .filter((trace) => this.traceFilter.doFilter(trace))
+      .map((trace) => emptyDeep(trace) as XrayTraceDataSegmentDocument)
+      .toArray();
 
-    for (const segmentEmitter of this.segmentEmitters)
+    // eslint-disable-next-line functional/no-loop-statements -- each emitter is started in registration order
+    for (const segmentEmitter of this.segmentEmitters) {
       void this.emitTo(segmentEmitter, trace, spans.length, resultCallback);
+    }
   }
 
   /**
@@ -153,8 +153,10 @@ export default class XraySpanExporter implements SpanExporter {
    */
   async shutdown(): Promise<void> {
     // No implementation for shutdown logic since there's no cleanup needed.
-    for (const segmentEmitter of this.segmentEmitters)
+    // eslint-disable-next-line functional/no-loop-statements -- every emitter is shut down for its side effect
+    for (const segmentEmitter of this.segmentEmitters) {
       segmentEmitter.shutdown();
+    }
   }
 
   /**

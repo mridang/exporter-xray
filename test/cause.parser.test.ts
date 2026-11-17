@@ -3,17 +3,17 @@
  * @file
  */
 
-import type { ReadableSpan } from '@opentelemetry/sdk-trace-base';
+import { SpanKind } from '@opentelemetry/api';
 import {
   SEMATTRS_EXCEPTION_MESSAGE,
   SEMATTRS_EXCEPTION_STACKTRACE,
   SEMATTRS_EXCEPTION_TYPE,
 } from '@opentelemetry/semantic-conventions';
 import { DefaultCauseParser } from '../src/index.js';
+import type { ReadableSpan } from '@opentelemetry/sdk-trace-base';
 
 /** Matches a 16-character lowercase hexadecimal identifier. */
-const HEX_ID_PATTERN = /^[0-9a-f]{16}$/;
-import { SpanKind } from '@opentelemetry/api';
+const HEX_ID_PATTERN = /^[0-9a-f]{16}$/u;
 
 describe('cause.parser test', () => {
   let causeParser: DefaultCauseParser;

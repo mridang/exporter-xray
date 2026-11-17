@@ -2,9 +2,9 @@
  * Sends X-Ray trace segments to the X-Ray daemon over UDP.
  * @file
  */
+import { createSocket } from 'node:dgram';
 import type { SegmentEmitter } from './segment.emitter.js';
 import type { XrayTraceDataSegmentDocument } from '../xray.document.js';
-import { createSocket } from 'node:dgram';
 
 /**
  * The subset of a UDP socket that the emitter uses.
@@ -37,7 +37,7 @@ export interface DaemonSocket {
  * {@link https://docs.aws.amazon.com/xray/latest/devguide/xray-daemon.html AWS X-Ray Daemon documentation}.
  */
 export class UDPDaemonSegmentEmitter implements SegmentEmitter {
-  private readonly daemonConfig = {
+  private daemonConfig = {
     udp_ip: '127.0.0.1',
     udp_port: 2000,
   };
@@ -74,10 +74,10 @@ export class UDPDaemonSegmentEmitter implements SegmentEmitter {
    */
   async emit(trace: XrayTraceDataSegmentDocument[]): Promise<void> {
     const formatted = trace.map(
-      (segment) =>
-        '{"format":"json","version":1}' + '\n' + JSON.stringify(segment),
+      (segment) => `{"format":"json","version":1}\n${JSON.stringify(segment)}`,
     );
 
+    // eslint-disable-next-line functional/no-loop-statements -- datagrams are sent one at a time, in order
     for (const data of formatted) {
       await new Promise<void>((resolve, reject) => {
         const message = Buffer.from(data);
@@ -122,8 +122,10 @@ export class UDPDaemonSegmentEmitter implements SegmentEmitter {
       if (!addr[0]) {
         throw new Error('Invalid Daemon Address. You must specify an IP.');
       }
-      this.daemonConfig.udp_ip = addr[0];
-      this.daemonConfig.udp_port = Number.parseInt(addr[1]);
+      this.daemonConfig = {
+        udp_ip: addr[0],
+        udp_port: Number.parseInt(addr[1], 10),
+      };
     } else if (splitAddress.length === 2) {
       const part1 = splitAddress[0].split(':');
       const part2 = splitAddress[1].split(':');
@@ -132,8 +134,10 @@ export class UDPDaemonSegmentEmitter implements SegmentEmitter {
         [part2[0], part2],
       ];
       const addrMap: { [key: string]: string[] } = Object.fromEntries(entries);
-      this.daemonConfig.udp_ip = addrMap.udp[1];
-      this.daemonConfig.udp_port = Number.parseInt(addrMap.udp[2]);
+      this.daemonConfig = {
+        udp_ip: addrMap.udp[1],
+        udp_port: Number.parseInt(addrMap.udp[2], 10),
+      };
     } else {
       // Any other format leaves the default daemon address in place.
     }
