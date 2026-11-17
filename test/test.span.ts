@@ -5,14 +5,14 @@
 
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
-import { TraceFlags } from '@opentelemetry/api';
+import { SpanKind, SpanStatusCode, TraceFlags } from '@opentelemetry/api';
+import { resourceFromAttributes } from '@opentelemetry/resources';
 import type { ReadableSpan, TimedEvent } from '@opentelemetry/sdk-trace-base';
 import type {
   Attributes,
   HrTime,
   Link,
   SpanContext,
-  SpanKind,
   SpanStatus,
 } from '@opentelemetry/api';
 import type { Resource } from '@opentelemetry/resources';
@@ -37,6 +37,19 @@ interface SpanData {
   droppedAttributesCount: number;
   droppedEventsCount: number;
   droppedLinksCount: number;
+}
+
+function isSpanData(value: unknown): value is SpanData {
+  if (typeof value !== 'object' || value === null) {
+    return false;
+  }
+  const fields: Record<string, unknown> = Object.fromEntries(
+    Object.entries(value),
+  );
+  return (
+    ['traceId', 'id', 'name'].every((key) => typeof fields[key] === 'string') &&
+    ['timestamp', 'duration'].every((key) => typeof fields[key] === 'number')
+  );
 }
 
 export class WrappedReadableSpan implements ReadableSpan {
@@ -109,8 +122,54 @@ export class WrappedReadableSpan implements ReadableSpan {
       new URL(`samples/${filename}`, import.meta.url),
     );
     const rawData = await readFile(filePath, 'utf8');
-    return (JSON.parse(rawData) as SpanData[]).map(
-      (span) => new WrappedReadableSpan(span),
-    );
+    const spans: unknown = JSON.parse(rawData);
+    if (!Array.isArray(spans) || !spans.every(isSpanData)) {
+      throw new TypeError(`${filename} must hold a list of spans`);
+    }
+    return spans.map((span) => new WrappedReadableSpan(span));
   }
+}
+
+/**
+ * Builds a complete span with empty defaults, so a test states only what it needs.
+ * @param [overrides] - The values the test cares about.
+ * @param [overrides.attributes] - The span attributes.
+ * @param [overrides.events] - The span events, without their timestamps.
+ * @param [overrides.kind] - The span kind.
+ * @param [overrides.resourceAttributes] - The attributes of the span's resource.
+ * @returns The span.
+ * @example
+ * ```ts
+ * spanOf({ attributes: { 'http.status_code': 429 } });
+ * ```
+ */
+export function spanOf(
+  overrides: {
+    attributes?: Attributes;
+    events?: Pick<TimedEvent, 'name' | 'attributes'>[];
+    kind?: SpanKind;
+    resourceAttributes?: Attributes;
+  } = {},
+): ReadableSpan {
+  return new WrappedReadableSpan({
+    traceId: '',
+    id: '',
+    name: '',
+    kind: overrides.kind ?? SpanKind.INTERNAL,
+    timestamp: 0,
+    duration: 0,
+    status: { code: SpanStatusCode.UNSET },
+    attributes: overrides.attributes ?? {},
+    links: [],
+    events: (overrides.events ?? []).map((event) => ({
+      ...event,
+      time: [0, 0],
+    })),
+    ended: true,
+    resource: resourceFromAttributes(overrides.resourceAttributes ?? {}),
+    instrumentationScope: { name: '' },
+    droppedAttributesCount: 0,
+    droppedEventsCount: 0,
+    droppedLinksCount: 0,
+  });
 }

@@ -105,8 +105,9 @@ export default class XraySpanExporter implements SpanExporter {
         type: span.getType(),
         links: span.getLinks(this.idParser),
       }))
-      .filter((trace) => this.traceFilter.doFilter(trace))
-      .map((trace) => emptyDeep(trace) as XrayTraceDataSegmentDocument)
+      .filter((segment) => this.traceFilter.doFilter(segment))
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- emptyDeep is typed as Partial<T> | undefined, but it only strips empty values from a complete document; accepting partial documents in SegmentEmitter would change that public interface
+      .map((segment) => emptyDeep(segment) as XrayTraceDataSegmentDocument)
       .toArray();
 
     // eslint-disable-next-line functional/no-loop-statements -- each emitter is started in registration order
@@ -138,7 +139,10 @@ export default class XraySpanExporter implements SpanExporter {
       resultCallback({ code: ExportResultCode.SUCCESS });
     } catch (error) {
       diag.warn(`Encountered an error when sending the spans to X-Ray.`);
-      resultCallback({ code: ExportResultCode.FAILED, error: error as Error });
+      resultCallback({
+        code: ExportResultCode.FAILED,
+        error: error instanceof Error ? error : new Error(String(error)),
+      });
     }
   }
 

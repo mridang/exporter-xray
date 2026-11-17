@@ -5,14 +5,15 @@
 
 import { SEMATTRS_ENDUSER_ID } from '@opentelemetry/semantic-conventions';
 import { EnhancedReadableSpan } from '../src/index.js';
+import { spanOf } from './test.span.js';
 import type { ReadableSpan } from '@opentelemetry/sdk-trace-base';
 
 describe('super.span test', () => {
   describe('isThrottled', () => {
     it('should return true if HTTP status code is 429 and others should be undefined', () => {
-      const span: ReadableSpan = {
+      const span: ReadableSpan = spanOf({
         attributes: { 'http.status_code': 429 },
-      } as unknown as ReadableSpan;
+      });
       const enhancedSpan = new EnhancedReadableSpan(span);
 
       expect(enhancedSpan.isThrottled()).toBe(true);
@@ -21,16 +22,16 @@ describe('super.span test', () => {
     });
 
     it('should return undefined if HTTP status code is not 429', () => {
-      const span: ReadableSpan = {
+      const span: ReadableSpan = spanOf({
         attributes: { 'http.status_code': 500 },
-      } as unknown as ReadableSpan;
+      });
       const enhancedSpan = new EnhancedReadableSpan(span);
 
       expect(enhancedSpan.isThrottled()).toBeUndefined();
     });
 
     it('should return undefined if HTTP status code is not set', () => {
-      const span: ReadableSpan = { attributes: {} } as unknown as ReadableSpan;
+      const span: ReadableSpan = spanOf({ attributes: {} });
       const enhancedSpan = new EnhancedReadableSpan(span);
 
       expect(enhancedSpan.isThrottled()).toBeUndefined();
@@ -39,9 +40,9 @@ describe('super.span test', () => {
 
   describe('isFault', () => {
     it('should return true if HTTP status code is in the range of 500-599 and others should be undefined', () => {
-      const span: ReadableSpan = {
+      const span: ReadableSpan = spanOf({
         attributes: { 'http.status_code': 500 },
-      } as unknown as ReadableSpan;
+      });
       const enhancedSpan = new EnhancedReadableSpan(span);
 
       expect(enhancedSpan.isFault()).toBe(true);
@@ -50,16 +51,16 @@ describe('super.span test', () => {
     });
 
     it('should return undefined if HTTP status code is less than 500', () => {
-      const span: ReadableSpan = {
+      const span: ReadableSpan = spanOf({
         attributes: { 'http.status_code': 400 },
-      } as unknown as ReadableSpan;
+      });
       const enhancedSpan = new EnhancedReadableSpan(span);
 
       expect(enhancedSpan.isFault()).toBeUndefined();
     });
 
     it('should return undefined if HTTP status code is not set', () => {
-      const span: ReadableSpan = { attributes: {} } as unknown as ReadableSpan;
+      const span: ReadableSpan = spanOf({ attributes: {} });
       const enhancedSpan = new EnhancedReadableSpan(span);
 
       expect(enhancedSpan.isFault()).toBeUndefined();
@@ -68,9 +69,9 @@ describe('super.span test', () => {
 
   describe('isError', () => {
     it('should return true if HTTP status code is in the range of 400-499 and others should be undefined', () => {
-      const span: ReadableSpan = {
+      const span: ReadableSpan = spanOf({
         attributes: { 'http.status_code': 400 },
-      } as unknown as ReadableSpan;
+      });
       const enhancedSpan = new EnhancedReadableSpan(span);
 
       expect(enhancedSpan.isError()).toBe(true);
@@ -79,34 +80,34 @@ describe('super.span test', () => {
     });
 
     it('should return undefined if HTTP status code is less than 400', () => {
-      const span: ReadableSpan = {
+      const span: ReadableSpan = spanOf({
         attributes: { 'http.status_code': 200 },
-      } as unknown as ReadableSpan;
+      });
       const enhancedSpan = new EnhancedReadableSpan(span);
 
       expect(enhancedSpan.isError()).toBeUndefined();
     });
 
     it('should return undefined if HTTP status code is not set', () => {
-      const span: ReadableSpan = { attributes: {} } as unknown as ReadableSpan;
+      const span: ReadableSpan = spanOf({ attributes: {} });
       const enhancedSpan = new EnhancedReadableSpan(span);
 
       expect(enhancedSpan.isError()).toBeUndefined();
     });
 
     it('should return user if enduser.id is set', () => {
-      const span: ReadableSpan = {
+      const span: ReadableSpan = spanOf({
         attributes: { [SEMATTRS_ENDUSER_ID]: 'test' },
-      } as unknown as ReadableSpan;
+      });
       const enhancedSpan = new EnhancedReadableSpan(span);
 
       expect(enhancedSpan.getUser()).toEqual('test');
     });
 
     it('should return indexed attributes as annotations', () => {
-      const span: ReadableSpan = {
+      const span: ReadableSpan = spanOf({
         attributes: { [SEMATTRS_ENDUSER_ID]: 'test' },
-      } as unknown as ReadableSpan;
+      });
       const enhancedSpan = new EnhancedReadableSpan(span);
 
       expect(enhancedSpan.getAnnotations([SEMATTRS_ENDUSER_ID])).toEqual({

@@ -76,9 +76,16 @@ export class DefaultCauseParser implements CauseParser {
                 remote: [SpanKind.PRODUCER, SpanKind.CLIENT].includes(
                   span.kind,
                 ),
-                stack: ErrorStackParser.parse({
-                  stack: event.attributes?.[SEMATTRS_EXCEPTION_STACKTRACE],
-                } as Error).map((stack) => ({
+                stack: ErrorStackParser.parse(
+                  Object.assign(
+                    new Error(
+                      toText(event.attributes?.[SEMATTRS_EXCEPTION_MESSAGE]),
+                    ),
+                    {
+                      stack: event.attributes?.[SEMATTRS_EXCEPTION_STACKTRACE],
+                    },
+                  ),
+                ).map((stack) => ({
                   label: stack.functionName || 'anonymous',
                   line: stack.lineNumber,
                   path: stack.fileName,

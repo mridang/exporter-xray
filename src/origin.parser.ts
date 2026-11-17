@@ -31,10 +31,7 @@ export class DefaultOriginParser implements OriginParser {
    * ```
    */
   public getOrigin(span: ReadableSpan): string | undefined {
-    const attributes = span.resource?.attributes;
-    if (!attributes) {
-      return undefined;
-    }
+    const attributes = span.resource.attributes;
     if (attributes[SEMRESATTRS_CLOUD_PROVIDER] !== CLOUDPROVIDERVALUES_AWS) {
       return undefined;
     }

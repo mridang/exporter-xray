@@ -30,12 +30,12 @@ export function hrt(timestamp: [number, number]): number {
  */
 export function toText(aValue: unknown): string | undefined {
   // eslint-disable-next-line @typescript-eslint/no-base-to-string -- toText is exported as str and takes unknown, but its callers pass attribute values, which are primitives or arrays with their own string form
-  return aValue ? aValue?.toString() : undefined;
+  return aValue ? aValue.toString() : undefined;
 }
 
 /**
  * Validates an IP address.
- * @param [ip] - The IP address to validate.
+ * @param [address] - The IP address to validate.
  * @returns The validated IP address, or undefined
  * if invalid.
  * @example
@@ -44,8 +44,8 @@ export function toText(aValue: unknown): string | undefined {
  * ip('not-an-ip'); // Returns undefined.
  * ```
  */
-export function ip(ip?: string): string | undefined {
-  return net.isIP(ip || '') ? ip : undefined;
+export function ip(address?: string): string | undefined {
+  return net.isIP(address || '') ? address : undefined;
 }
 
 /**
@@ -60,7 +60,7 @@ export function ip(ip?: string): string | undefined {
  * ```
  */
 export function undef<T>(array: T[]): T[] | undefined {
-  return array?.length > 0 ? array : undefined;
+  return array.length > 0 ? array : undefined;
 }
 
 /**

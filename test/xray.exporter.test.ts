@@ -9,20 +9,57 @@ import { ExportResultCode } from '@opentelemetry/core';
 import { WrappedReadableSpan } from './test.span.js';
 import type { XrayTraceDataSegmentDocument } from '../src/index.js';
 
-const ips = JSON.parse(
+const parsedIps: unknown = JSON.parse(
   await readFile(new URL('fixtures/ips.json', import.meta.url), 'utf8'),
-) as { clientIp: string };
+);
+if (
+  typeof parsedIps !== 'object' ||
+  parsedIps === null ||
+  !('clientIp' in parsedIps) ||
+  typeof parsedIps.clientIp !== 'string'
+) {
+  throw new TypeError('fixtures/ips.json must hold a clientIp string');
+}
+const ips = { clientIp: parsedIps.clientIp };
+
+type SentCommand = { input: { TraceSegmentDocuments?: string[] } };
+
+function parseDocument(json: string): XrayTraceDataSegmentDocument {
+  const document: unknown = JSON.parse(json);
+  if (typeof document !== 'object' || document === null) {
+    throw new TypeError('A trace segment document must be an object');
+  }
+  const fields: Record<string, unknown> = Object.fromEntries(
+    Object.entries(document),
+  );
+  if (
+    typeof fields.id !== 'string' ||
+    typeof fields.name !== 'string' ||
+    typeof fields.start_time !== 'number'
+  ) {
+    throw new TypeError(
+      'A trace segment document needs an id, a name and a start time',
+    );
+  }
+  return {
+    ...fields,
+    id: fields.id,
+    name: fields.name,
+    start_time: fields.start_time,
+  };
+}
+
+const send = jest
+  .fn<
+    (command: SentCommand) => Promise<{ UnprocessedTraceSegments: string[] }>
+  >()
+  .mockResolvedValue({ UnprocessedTraceSegments: [] });
 
 // eslint-disable-next-line tslop/no-module-mocking -- the exporter builds its XRayClient internally, so the SDK module is the only seam
 jest.unstable_mockModule('@aws-sdk/client-xray', () => ({
-  XRayClient: jest.fn().mockImplementation(() => ({
-    send: jest
-      .fn<() => Promise<{ UnprocessedTraceSegments: string[] }>>()
-      .mockResolvedValue({
-        UnprocessedTraceSegments: [],
-      }),
-    destroy: jest.fn(),
-  })),
+  XRayClient: jest
+    .fn()
+    .mockImplementation(() => ({ send, destroy: jest.fn() })),
   PutTraceSegmentsCommand: jest.fn().mockImplementation(
     (input) => ({ input }), // Mock implementation to capture the input
   ),
@@ -38,24 +75,13 @@ const {
   SDKBasedSegmentEmitter,
 } = await import('../src/index.js');
 
-type SentCommand = { input: { TraceSegmentDocuments?: string[] } };
-
-type MockXRayClient = InstanceType<typeof XRayClient> & {
-  send: jest.Mock<
-    (command: SentCommand) => Promise<{ UnprocessedTraceSegments: string[] }>
-  >;
-  destroy: jest.Mock;
-};
-
 // eslint-disable-next-line sonarjs/max-lines-per-function -- large fixture-driven describe block
 describe('xray.exporter test', () => {
   let exporter: InstanceType<typeof XraySpanExporter>;
-  let mockXRayClient: MockXRayClient;
 
   beforeAll(() => {
-    mockXRayClient = new XRayClient() as unknown as MockXRayClient;
     exporter = new XraySpanExporter(
-      [new SDKBasedSegmentEmitter(mockXRayClient)],
+      [new SDKBasedSegmentEmitter(new XRayClient())],
       new DefaultIdParser(Number.MAX_VALUE, Number.MAX_VALUE),
       new DefaultCauseParser(() => '0'),
       new DefaultHttpParser(),
@@ -76,10 +102,10 @@ describe('xray.exporter test', () => {
       }),
     ).toEqual({ code: ExportResultCode.SUCCESS });
 
-    const commandArg = mockXRayClient.send.mock.calls[0][0];
+    const commandArg = send.mock.calls[0][0];
     expect({
-      documents: commandArg.input.TraceSegmentDocuments?.map(
-        (json) => JSON.parse(json) as XrayTraceDataSegmentDocument,
+      documents: commandArg.input.TraceSegmentDocuments?.map((json) =>
+        parseDocument(json),
       ),
     }).toEqual({
       documents: [
@@ -301,10 +327,10 @@ describe('xray.exporter test', () => {
       }),
     ).toEqual({ code: ExportResultCode.SUCCESS });
 
-    const commandArg = mockXRayClient.send.mock.calls[0][0];
+    const commandArg = send.mock.calls[0][0];
     expect({
-      documents: commandArg.input.TraceSegmentDocuments?.map(
-        (json) => JSON.parse(json) as XrayTraceDataSegmentDocument,
+      documents: commandArg.input.TraceSegmentDocuments?.map((json) =>
+        parseDocument(json),
       ),
     }).toEqual({
       documents: [
@@ -483,10 +509,10 @@ describe('xray.exporter test', () => {
       }),
     ).toEqual({ code: ExportResultCode.SUCCESS });
 
-    const commandArg = mockXRayClient.send.mock.calls[0][0];
+    const commandArg = send.mock.calls[0][0];
     expect({
-      documents: commandArg.input.TraceSegmentDocuments?.map(
-        (json) => JSON.parse(json) as XrayTraceDataSegmentDocument,
+      documents: commandArg.input.TraceSegmentDocuments?.map((json) =>
+        parseDocument(json),
       ),
     }).toEqual({
       documents: [
@@ -603,10 +629,10 @@ describe('xray.exporter test', () => {
       }),
     ).toEqual({ code: ExportResultCode.SUCCESS });
 
-    const commandArg = mockXRayClient.send.mock.calls[0][0];
+    const commandArg = send.mock.calls[0][0];
     expect({
-      documents: commandArg.input.TraceSegmentDocuments?.map(
-        (json) => JSON.parse(json) as XrayTraceDataSegmentDocument,
+      documents: commandArg.input.TraceSegmentDocuments?.map((json) =>
+        parseDocument(json),
       ),
     }).toEqual({
       documents: [
